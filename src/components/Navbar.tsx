@@ -1,11 +1,13 @@
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X } from "lucide-react";
+import { Menu, X, LogOut, User, Shield } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/contexts/AuthContext";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
+  const { user, isAdmin, signOut } = useAuth();
 
   const navLinks = [
     { name: "Home", path: "/" },
@@ -41,10 +43,40 @@ const Navbar = () => {
                 {link.name}
               </Link>
             ))}
+            {isAdmin && (
+              <Link
+                to="/admin"
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 flex items-center ${
+                  isActive("/admin")
+                    ? "text-primary bg-secondary"
+                    : "text-muted-foreground hover:text-foreground hover:bg-secondary/50"
+                }`}
+              >
+                <Shield className="h-4 w-4 mr-1" />
+                Admin
+              </Link>
+            )}
           </div>
 
           {/* CTA Button - Desktop */}
-          <div className="hidden md:block">
+          <div className="hidden md:flex items-center gap-2">
+            {user ? (
+              <Button
+                variant="outline"
+                onClick={() => signOut()}
+                className="border-primary/50"
+              >
+                <LogOut className="h-4 w-4 mr-2" />
+                Sign Out
+              </Button>
+            ) : (
+              <Button asChild variant="outline" className="border-primary/50">
+                <Link to="/auth">
+                  <User className="h-4 w-4 mr-2" />
+                  Sign In
+                </Link>
+              </Button>
+            )}
             <Button asChild variant="default" className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold glow-metallic">
               <Link to="/contact">Get Started</Link>
             </Button>
@@ -78,6 +110,41 @@ const Navbar = () => {
                   {link.name}
                 </Link>
               ))}
+              {isAdmin && (
+                <Link
+                  to="/admin"
+                  onClick={() => setIsOpen(false)}
+                  className={`px-4 py-3 rounded-lg text-sm font-medium transition-all flex items-center ${
+                    isActive("/admin")
+                      ? "text-primary bg-secondary"
+                      : "text-muted-foreground hover:text-foreground hover:bg-secondary/50"
+                  }`}
+                >
+                  <Shield className="h-4 w-4 mr-2" />
+                  Admin
+                </Link>
+              )}
+              {user ? (
+                <button
+                  onClick={() => {
+                    signOut();
+                    setIsOpen(false);
+                  }}
+                  className="px-4 py-3 rounded-lg text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-secondary/50 transition-all flex items-center"
+                >
+                  <LogOut className="h-4 w-4 mr-2" />
+                  Sign Out
+                </button>
+              ) : (
+                <Link
+                  to="/auth"
+                  onClick={() => setIsOpen(false)}
+                  className="px-4 py-3 rounded-lg text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-secondary/50 transition-all flex items-center"
+                >
+                  <User className="h-4 w-4 mr-2" />
+                  Sign In
+                </Link>
+              )}
               <Button asChild variant="default" className="w-full mt-4 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold">
                 <Link to="/contact" onClick={() => setIsOpen(false)}>
                   Get Started

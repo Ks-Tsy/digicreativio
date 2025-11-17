@@ -1,48 +1,36 @@
+import { useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { supabase } from "@/integrations/supabase/client";
+import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
-import { ArrowRight, ExternalLink } from "lucide-react";
+import { ExternalLink } from "lucide-react";
 
 const Portfolio = () => {
-  const projects = [
-    {
-      title: "Brand Identity Design",
-      category: "Branding",
-      description: "Complete brand identity system including logo, colors, and guidelines for a tech startup.",
-      tags: ["Logo Design", "Branding", "Identity"],
-    },
-    {
-      title: "E-Commerce Website",
-      category: "Web Design",
-      description: "Modern, conversion-optimized e-commerce platform with seamless user experience.",
-      tags: ["Web Design", "UI/UX", "E-Commerce"],
-    },
-    {
-      title: "Marketing Campaign",
-      category: "Graphic Design",
-      description: "Comprehensive marketing materials for a product launch including social media and print.",
-      tags: ["Graphic Design", "Marketing", "Social Media"],
-    },
-    {
-      title: "Mobile App Interface",
-      category: "UI/UX Design",
-      description: "Intuitive and beautiful mobile app interface design with user-centered approach.",
-      tags: ["UI Design", "Mobile", "App Design"],
-    },
-    {
-      title: "Digital Illustrations",
-      category: "Digital Art",
-      description: "Custom digital artwork and character designs for a gaming company.",
-      tags: ["Digital Art", "Illustration", "Character Design"],
-    },
-    {
-      title: "Corporate Rebranding",
-      category: "Branding",
-      description: "Complete visual identity refresh for an established corporation.",
-      tags: ["Branding", "Identity", "Corporate"],
-    },
-  ];
+  const [projects, setProjects] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    loadPortfolio();
+  }, []);
+
+  const loadPortfolio = async () => {
+    const { data } = await supabase
+      .from("portfolio_items")
+      .select("*")
+      .order("display_order", { ascending: true });
+    
+    setProjects(data || []);
+    setLoading(false);
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen pt-20">
@@ -63,72 +51,61 @@ const Portfolio = () => {
       {/* Portfolio Grid */}
       <section className="py-24">
         <div className="container mx-auto px-4 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {projects.map((project, index) => (
-              <Card
-                key={index}
-                className="group glass border-border/50 hover:border-primary/50 transition-all duration-300 hover:shadow-lg hover:shadow-primary/10 cursor-pointer animate-fade-in-up overflow-hidden"
-                style={{ animationDelay: `${index * 100}ms` }}
-              >
-                {/* Project Image Placeholder */}
-                <div className="relative h-64 bg-gradient-to-br from-charcoal to-charcoal-light overflow-hidden">
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="text-6xl font-bold text-primary/20">{project.title.charAt(0)}</div>
+          {projects.length === 0 ? (
+            <div className="text-center py-12">
+              <p className="text-muted-foreground text-lg">No portfolio items yet. Check back soon!</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {projects.map((project, index) => (
+                <Card
+                  key={project.id}
+                  className="group glass border-border/50 hover:border-primary/50 transition-all duration-300 hover:shadow-lg hover:shadow-primary/10 cursor-pointer animate-fade-in-up overflow-hidden"
+                  style={{ animationDelay: `${index * 100}ms` }}
+                >
+                  {/* Project Image */}
+                  <div className="relative h-64 overflow-hidden">
+                    <img
+                      src={project.image_url}
+                      alt={project.title}
+                      className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+                    />
+                    {project.project_url && (
+                      <div className="absolute inset-0 bg-gradient-to-t from-background/90 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="border-primary/50 hover:bg-primary/10"
+                          asChild
+                        >
+                          <a href={project.project_url} target="_blank" rel="noopener noreferrer">
+                            <ExternalLink className="w-4 h-4 mr-2" />
+                            View Project
+                          </a>
+                        </Button>
+                      </div>
+                    )}
                   </div>
-                  <div className="absolute inset-0 bg-gradient-to-t from-background/90 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                    <Button variant="outline" size="sm" className="border-primary/50 hover:bg-primary/10">
-                      <ExternalLink className="w-4 h-4 mr-2" />
-                      View Project
-                    </Button>
-                  </div>
-                </div>
 
-                <CardContent className="p-6">
-                  <div className="mb-3">
-                    <Badge variant="secondary" className="bg-primary/10 text-primary border-none">
-                      {project.category}
-                    </Badge>
-                  </div>
-                  <h3 className="text-xl font-bold mb-2 text-foreground group-hover:text-primary transition-colors">
-                    {project.title}
-                  </h3>
-                  <p className="text-muted-foreground mb-4 text-sm leading-relaxed">{project.description}</p>
-                  <div className="flex flex-wrap gap-2">
-                    {project.tags.map((tag, idx) => (
-                      <Badge key={idx} variant="outline" className="text-xs border-border/50">
-                        {tag}
+                  <CardContent className="p-6">
+                    <div className="mb-3">
+                      <Badge className="bg-primary/10 text-primary border-primary/20">
+                        {project.category}
                       </Badge>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-24 bg-secondary/30">
-        <div className="container mx-auto px-4 lg:px-8">
-          <Card className="glass border-primary/30 overflow-hidden max-w-4xl mx-auto">
-            <CardContent className="p-12 md:p-16 text-center relative">
-              <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-accent/5 z-0" />
-              <div className="relative z-10">
-                <h2 className="text-4xl md:text-5xl font-bold mb-4">
-                  Like What You <span className="text-gradient">See</span>?
-                </h2>
-                <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-                  Let's create something amazing together. Start your project today.
-                </p>
-                <Button asChild size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold glow-metallic text-lg px-8">
-                  <Link to="/contact">
-                    Start Your Project
-                    <ArrowRight className="ml-2 h-5 w-5" />
-                  </Link>
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
+                    </div>
+                    <h3 className="text-xl font-bold text-foreground mb-2 group-hover:text-primary transition-colors">
+                      {project.title}
+                    </h3>
+                    {project.description && (
+                      <p className="text-muted-foreground text-sm line-clamp-2">
+                        {project.description}
+                      </p>
+                    )}
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          )}
         </div>
       </section>
     </div>
