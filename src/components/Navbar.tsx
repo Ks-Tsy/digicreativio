@@ -60,7 +60,7 @@ const Navbar = () => {
 
           {/* CTA Button - Desktop */}
           <div className="hidden md:flex items-center gap-2">
-            {user ? (
+            {isAdmin && user && (
               <Button
                 variant="outline"
                 onClick={() => signOut()}
@@ -68,13 +68,6 @@ const Navbar = () => {
               >
                 <LogOut className="h-4 w-4 mr-2" />
                 Sign Out
-              </Button>
-            ) : (
-              <Button asChild variant="outline" className="border-primary/50">
-                <Link to="/auth">
-                  <User className="h-4 w-4 mr-2" />
-                  Sign In
-                </Link>
               </Button>
             )}
             <Button asChild variant="default" className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold glow-metallic">
@@ -124,7 +117,7 @@ const Navbar = () => {
                   Admin
                 </Link>
               )}
-              {user ? (
+              {isAdmin && user && (
                 <button
                   onClick={() => {
                     signOut();
@@ -135,15 +128,6 @@ const Navbar = () => {
                   <LogOut className="h-4 w-4 mr-2" />
                   Sign Out
                 </button>
-              ) : (
-                <Link
-                  to="/auth"
-                  onClick={() => setIsOpen(false)}
-                  className="px-4 py-3 rounded-lg text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-secondary/50 transition-all flex items-center"
-                >
-                  <User className="h-4 w-4 mr-2" />
-                  Sign In
-                </Link>
               )}
               <Button asChild variant="default" className="w-full mt-4 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold">
                 <Link to="/contact" onClick={() => setIsOpen(false)}>
