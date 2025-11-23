@@ -11,7 +11,8 @@ import { useToast } from "@/hooks/use-toast";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Loader2, Plus, Trash2 } from "lucide-react";
+import { Loader2, Plus, Trash2, Upload } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 export default function Admin() {
   const { user, isAdmin, loading } = useAuth();
@@ -21,11 +22,13 @@ export default function Admin() {
   const [portfolioItems, setPortfolioItems] = useState<any[]>([]);
   const [loadingData, setLoadingData] = useState(true);
   const [showAddForm, setShowAddForm] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [newItem, setNewItem] = useState({
     title: "",
     description: "",
     image_url: "",
-    category: "",
+    category: "image",
     project_url: "",
   });
 
@@ -80,33 +83,71 @@ export default function Admin() {
     }
   };
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setSelectedFile(e.target.files[0]);
+    }
+  };
+
   const handleAddPortfolioItem = async (e: React.FormEvent) => {
     e.preventDefault();
+    setUploading(true);
     
-    const { error } = await supabase
-      .from("portfolio_items")
-      .insert([newItem]);
+    try {
+      let fileUrl = newItem.image_url;
 
-    if (error) {
+      // If a file is selected, upload it
+      if (selectedFile) {
+        const fileExt = selectedFile.name.split('.').pop();
+        const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
+        const filePath = `${fileName}`;
+
+        const { error: uploadError } = await supabase.storage
+          .from('portfolio-files')
+          .upload(filePath, selectedFile);
+
+        if (uploadError) {
+          throw uploadError;
+        }
+
+        const { data: { publicUrl } } = supabase.storage
+          .from('portfolio-files')
+          .getPublicUrl(filePath);
+
+        fileUrl = publicUrl;
+      }
+
+      const { error } = await supabase
+        .from("portfolio_items")
+        .insert([{ ...newItem, image_url: fileUrl }]);
+
+      if (error) {
+        throw error;
+      }
+
+      toast({
+        title: "Success",
+        description: "Portfolio item added successfully",
+      });
+      
+      setNewItem({
+        title: "",
+        description: "",
+        image_url: "",
+        category: "image",
+        project_url: "",
+      });
+      setSelectedFile(null);
+      setShowAddForm(false);
+      loadData();
+    } catch (error: any) {
       toast({
         title: "Error",
         description: error.message,
         variant: "destructive",
       });
-    } else {
-      toast({
-        title: "Success",
-        description: "Portfolio item added successfully",
-      });
-      setNewItem({
-        title: "",
-        description: "",
-        image_url: "",
-        category: "",
-        project_url: "",
-      });
-      setShowAddForm(false);
-      loadData();
+    } finally {
+      setUploading(false);
     }
   };
 
@@ -231,21 +272,48 @@ export default function Admin() {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="image_url">Image URL</Label>
+                    <Label htmlFor="category">Category</Label>
+                    <Select
+                      value={newItem.category}
+                      onValueChange={(value) => setNewItem({ ...newItem, category: value })}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select category" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="image">Image</SelectItem>
+                        <SelectItem value="video">Video</SelectItem>
+                        <SelectItem value="web">Web</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="file">Upload File (Image/Video)</Label>
+                    <div className="flex items-center gap-2">
+                      <Input
+                        id="file"
+                        type="file"
+                        accept="image/*,video/*"
+                        onChange={handleFileChange}
+                        className="flex-1"
+                      />
+                      {selectedFile && (
+                        <span className="text-sm text-muted-foreground">
+                          {selectedFile.name}
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-xs text-muted-foreground">
+                      Or enter a URL below instead
+                    </p>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="image_url">File URL (optional if file uploaded)</Label>
                     <Input
                       id="image_url"
                       value={newItem.image_url}
                       onChange={(e) => setNewItem({ ...newItem, image_url: e.target.value })}
-                      required
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="category">Category</Label>
-                    <Input
-                      id="category"
-                      value={newItem.category}
-                      onChange={(e) => setNewItem({ ...newItem, category: e.target.value })}
-                      required
+                      placeholder="https://example.com/image.jpg"
                     />
                   </div>
                   <div className="space-y-2">
@@ -257,7 +325,19 @@ export default function Admin() {
                     />
                   </div>
                   <div className="flex gap-2">
-                    <Button type="submit">Add Item</Button>
+                    <Button type="submit" disabled={uploading}>
+                      {uploading ? (
+                        <>
+                          <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                          Uploading...
+                        </>
+                      ) : (
+                        <>
+                          <Upload className="h-4 w-4 mr-2" />
+                          Add Item
+                        </>
+                      )}
+                    </Button>
                     <Button type="button" variant="outline" onClick={() => setShowAddForm(false)}>
                       Cancel
                     </Button>
