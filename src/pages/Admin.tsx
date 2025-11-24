@@ -11,7 +11,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Loader2, Plus, Trash2, Upload, Users, FileText, Database, BarChart3, Shield, LogOut, Eye, Edit, RefreshCw, Settings, FileEdit, Save, X } from "lucide-react";
+import { Loader2, Plus, Trash2, Upload, Users, FileText, Database, BarChart3, Shield, LogOut, Eye, Edit, RefreshCw, Settings, FileEdit, Save, X, Share2 } from "lucide-react";
 import { ShortId } from "@/components/ShortId";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -54,6 +54,18 @@ export default function Admin() {
   const [siteContent, setSiteContent] = useState<any[]>([]);
   const [siteSettings, setSiteSettings] = useState<any[]>([]);
   const [editingContent, setEditingContent] = useState<any>(null);
+  
+  // Social links management state
+  const [socialLinks, setSocialLinks] = useState<any[]>([]);
+  const [showAddSocialForm, setShowAddSocialForm] = useState(false);
+  const [editingSocialLink, setEditingSocialLink] = useState<any>(null);
+  const [newSocialLink, setNewSocialLink] = useState({
+    platform: "",
+    url: "",
+    icon_name: "",
+    display_order: 0,
+    is_active: true
+  });
 
   useEffect(() => {
     if (!loading && (!user || !isAdmin)) {
@@ -105,12 +117,19 @@ export default function Admin() {
       .select("*")
       .order("setting_type", { ascending: true });
     
+    // Load social links
+    const { data: socialData } = await supabase
+      .from("social_links")
+      .select("*")
+      .order("display_order", { ascending: true });
+    
     setContacts(contactData || []);
     setPortfolioItems(portfolioData || []);
     setUsers(profilesData || []);
     setUserRoles(rolesData || []);
     setSiteContent(contentData || []);
     setSiteSettings(settingsData || []);
+    setSocialLinks(socialData || []);
 
     // Calculate stats
     setStats({
@@ -333,6 +352,80 @@ export default function Admin() {
       loadData();
     }
   };
+  
+  // Social links management functions
+  const handleAddSocialLink = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    const { error } = await supabase
+      .from("social_links")
+      .insert([newSocialLink]);
+
+    if (error) {
+      toast({
+        title: "Error",
+        description: "Failed to add social link",
+        variant: "destructive",
+      });
+    } else {
+      toast({
+        title: "Success",
+        description: "Social link added successfully",
+      });
+      setNewSocialLink({
+        platform: "",
+        url: "",
+        icon_name: "",
+        display_order: 0,
+        is_active: true
+      });
+      setShowAddSocialForm(false);
+      loadData();
+    }
+  };
+  
+  const handleUpdateSocialLink = async (id: string, updates: any) => {
+    const { error } = await supabase
+      .from("social_links")
+      .update({ ...updates, updated_at: new Date().toISOString() })
+      .eq("id", id);
+
+    if (error) {
+      toast({
+        title: "Error",
+        description: "Failed to update social link",
+        variant: "destructive",
+      });
+    } else {
+      toast({
+        title: "Success",
+        description: "Social link updated successfully",
+      });
+      setEditingSocialLink(null);
+      loadData();
+    }
+  };
+  
+  const handleDeleteSocialLink = async (id: string) => {
+    const { error } = await supabase
+      .from("social_links")
+      .delete()
+      .eq("id", id);
+
+    if (error) {
+      toast({
+        title: "Error",
+        description: "Failed to delete social link",
+        variant: "destructive",
+      });
+    } else {
+      toast({
+        title: "Success",
+        description: "Social link deleted successfully",
+      });
+      loadData();
+    }
+  };
 
   // Database management functions
   const loadTableData = async (tableName: "contact_submissions" | "portfolio_items" | "profiles" | "user_roles" | "site_content" | "site_settings") => {
@@ -459,7 +552,7 @@ export default function Admin() {
       </div>
       
       <Tabs defaultValue="overview" className="w-full">
-        <TabsList className="grid w-full grid-cols-7 max-w-full mb-8">
+        <TabsList className="grid w-full grid-cols-8 max-w-full mb-8">
           <TabsTrigger value="overview">
             <BarChart3 className="h-4 w-4 mr-2" />
             Overview
@@ -471,6 +564,10 @@ export default function Admin() {
           <TabsTrigger value="settings">
             <Settings className="h-4 w-4 mr-2" />
             Settings
+          </TabsTrigger>
+          <TabsTrigger value="social">
+            <Share2 className="h-4 w-4 mr-2" />
+            Social
           </TabsTrigger>
           <TabsTrigger value="users">
             <Users className="h-4 w-4 mr-2" />
@@ -694,6 +791,213 @@ export default function Admin() {
                   </div>
                 </div>
               </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Social Links Management Tab */}
+        <TabsContent value="social" className="mt-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>Social Media Links</CardTitle>
+              <CardDescription>Manage your social media links displayed in the footer</CardDescription>
+              <Button onClick={() => setShowAddSocialForm(true)} className="mt-4">
+                <Plus className="h-4 w-4 mr-2" />
+                Add Social Link
+              </Button>
+            </CardHeader>
+            <CardContent>
+              {showAddSocialForm && (
+                <Card className="mb-6 bg-muted/50">
+                  <CardHeader>
+                    <CardTitle className="text-lg">Add New Social Link</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <form onSubmit={handleAddSocialLink} className="space-y-4">
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <Label htmlFor="platform">Platform Name</Label>
+                          <Input
+                            id="platform"
+                            value={newSocialLink.platform}
+                            onChange={(e) => setNewSocialLink({ ...newSocialLink, platform: e.target.value })}
+                            placeholder="Facebook, Instagram, etc."
+                            required
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="icon_name">Icon Name (Lucide)</Label>
+                          <Input
+                            id="icon_name"
+                            value={newSocialLink.icon_name}
+                            onChange={(e) => setNewSocialLink({ ...newSocialLink, icon_name: e.target.value })}
+                            placeholder="Facebook, Instagram, Linkedin, etc."
+                            required
+                          />
+                        </div>
+                      </div>
+                      <div>
+                        <Label htmlFor="url">URL</Label>
+                        <Input
+                          id="url"
+                          type="url"
+                          value={newSocialLink.url}
+                          onChange={(e) => setNewSocialLink({ ...newSocialLink, url: e.target.value })}
+                          placeholder="https://facebook.com/yourpage"
+                          required
+                        />
+                      </div>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <Label htmlFor="display_order">Display Order</Label>
+                          <Input
+                            id="display_order"
+                            type="number"
+                            value={newSocialLink.display_order}
+                            onChange={(e) => setNewSocialLink({ ...newSocialLink, display_order: parseInt(e.target.value) })}
+                            min="0"
+                          />
+                        </div>
+                        <div className="flex items-center space-x-2 pt-6">
+                          <input
+                            type="checkbox"
+                            id="is_active"
+                            checked={newSocialLink.is_active}
+                            onChange={(e) => setNewSocialLink({ ...newSocialLink, is_active: e.target.checked })}
+                            className="rounded"
+                          />
+                          <Label htmlFor="is_active">Active</Label>
+                        </div>
+                      </div>
+                      <div className="flex gap-2">
+                        <Button type="submit">Add Social Link</Button>
+                        <Button type="button" variant="outline" onClick={() => setShowAddSocialForm(false)}>
+                          Cancel
+                        </Button>
+                      </div>
+                    </form>
+                  </CardContent>
+                </Card>
+              )}
+
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Platform</TableHead>
+                    <TableHead>URL</TableHead>
+                    <TableHead>Icon</TableHead>
+                    <TableHead>Order</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead>Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {socialLinks.length === 0 ? (
+                    <TableRow>
+                      <TableCell colSpan={6} className="text-center text-muted-foreground">
+                        No social links found. Add one to get started.
+                      </TableCell>
+                    </TableRow>
+                  ) : (
+                    socialLinks.map((link) => (
+                      <TableRow key={link.id}>
+                        <TableCell>
+                          {editingSocialLink?.id === link.id ? (
+                            <Input
+                              value={editingSocialLink.platform}
+                              onChange={(e) => setEditingSocialLink({ ...editingSocialLink, platform: e.target.value })}
+                            />
+                          ) : (
+                            link.platform
+                          )}
+                        </TableCell>
+                        <TableCell>
+                          {editingSocialLink?.id === link.id ? (
+                            <Input
+                              value={editingSocialLink.url}
+                              onChange={(e) => setEditingSocialLink({ ...editingSocialLink, url: e.target.value })}
+                            />
+                          ) : (
+                            <a href={link.url} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
+                              {link.url}
+                            </a>
+                          )}
+                        </TableCell>
+                        <TableCell>
+                          {editingSocialLink?.id === link.id ? (
+                            <Input
+                              value={editingSocialLink.icon_name}
+                              onChange={(e) => setEditingSocialLink({ ...editingSocialLink, icon_name: e.target.value })}
+                            />
+                          ) : (
+                            link.icon_name
+                          )}
+                        </TableCell>
+                        <TableCell>
+                          {editingSocialLink?.id === link.id ? (
+                            <Input
+                              type="number"
+                              value={editingSocialLink.display_order}
+                              onChange={(e) => setEditingSocialLink({ ...editingSocialLink, display_order: parseInt(e.target.value) })}
+                            />
+                          ) : (
+                            link.display_order
+                          )}
+                        </TableCell>
+                        <TableCell>
+                          {editingSocialLink?.id === link.id ? (
+                            <input
+                              type="checkbox"
+                              checked={editingSocialLink.is_active}
+                              onChange={(e) => setEditingSocialLink({ ...editingSocialLink, is_active: e.target.checked })}
+                            />
+                          ) : (
+                            <Badge variant={link.is_active ? "default" : "secondary"}>
+                              {link.is_active ? "Active" : "Inactive"}
+                            </Badge>
+                          )}
+                        </TableCell>
+                        <TableCell>
+                          {editingSocialLink?.id === link.id ? (
+                            <div className="flex gap-2">
+                              <Button
+                                size="sm"
+                                onClick={() => handleUpdateSocialLink(link.id, editingSocialLink)}
+                              >
+                                <Save className="h-4 w-4" />
+                              </Button>
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() => setEditingSocialLink(null)}
+                              >
+                                <X className="h-4 w-4" />
+                              </Button>
+                            </div>
+                          ) : (
+                            <div className="flex gap-2">
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() => setEditingSocialLink(link)}
+                              >
+                                <Edit className="h-4 w-4" />
+                              </Button>
+                              <Button
+                                size="sm"
+                                variant="destructive"
+                                onClick={() => handleDeleteSocialLink(link.id)}
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
+                            </div>
+                          )}
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  )}
+                </TableBody>
+              </Table>
             </CardContent>
           </Card>
         </TabsContent>
