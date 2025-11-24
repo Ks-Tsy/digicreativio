@@ -11,11 +11,12 @@ import { useToast } from "@/hooks/use-toast";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Loader2, Plus, Trash2, Upload, Users, FileText, Database, BarChart3, Shield } from "lucide-react";
+import { Loader2, Plus, Trash2, Upload, Users, FileText, Database, BarChart3, Shield, LogOut, Eye, Edit, RefreshCw } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 export default function Admin() {
-  const { user, isAdmin, loading } = useAuth();
+  const { user, isAdmin, loading, signOut } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
   const [contacts, setContacts] = useState<any[]>([]);
@@ -39,6 +40,14 @@ export default function Admin() {
     category: "image",
     project_url: "",
   });
+  
+  // Database management state
+  const [selectedTable, setSelectedTable] = useState<"contact_submissions" | "portfolio_items" | "profiles" | "user_roles">("contact_submissions");
+  const [tableData, setTableData] = useState<any[]>([]);
+  const [tableColumns, setTableColumns] = useState<string[]>([]);
+  const [loadingTable, setLoadingTable] = useState(false);
+  const [editingRecord, setEditingRecord] = useState<any>(null);
+  const [showAddRecordForm, setShowAddRecordForm] = useState(false);
 
   useEffect(() => {
     if (!loading && (!user || !isAdmin)) {
@@ -256,6 +265,95 @@ export default function Admin() {
     }
   };
 
+  const handleLogout = async () => {
+    await signOut();
+    navigate("/auth");
+  };
+
+  // Database management functions
+  const loadTableData = async (tableName: "contact_submissions" | "portfolio_items" | "profiles" | "user_roles") => {
+    setLoadingTable(true);
+    setSelectedTable(tableName);
+    
+    try {
+      const { data, error } = await supabase
+        .from(tableName)
+        .select("*")
+        .order("created_at", { ascending: false });
+
+      if (error) throw error;
+
+      if (data && data.length > 0) {
+        setTableColumns(Object.keys(data[0]));
+        setTableData(data);
+      } else {
+        setTableColumns([]);
+        setTableData([]);
+      }
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: `Failed to load table data: ${error.message}`,
+        variant: "destructive",
+      });
+      setTableData([]);
+      setTableColumns([]);
+    } finally {
+      setLoadingTable(false);
+    }
+  };
+
+  const handleDeleteRecord = async (tableName: "contact_submissions" | "portfolio_items" | "profiles" | "user_roles", id: string) => {
+    const { error } = await supabase
+      .from(tableName)
+      .delete()
+      .eq("id", id);
+
+    if (error) {
+      toast({
+        title: "Error",
+        description: "Failed to delete record",
+        variant: "destructive",
+      });
+    } else {
+      toast({
+        title: "Success",
+        description: "Record deleted successfully",
+      });
+      loadTableData(tableName);
+      loadData();
+    }
+  };
+
+  const handleUpdateRecord = async (tableName: "contact_submissions" | "portfolio_items" | "profiles" | "user_roles", id: string, updates: any) => {
+    const { error } = await supabase
+      .from(tableName)
+      .update(updates)
+      .eq("id", id);
+
+    if (error) {
+      toast({
+        title: "Error",
+        description: "Failed to update record",
+        variant: "destructive",
+      });
+    } else {
+      toast({
+        title: "Success",
+        description: "Record updated successfully",
+      });
+      setEditingRecord(null);
+      loadTableData(tableName);
+      loadData();
+    }
+  };
+
+  useEffect(() => {
+    if (selectedTable && user && isAdmin) {
+      loadTableData(selectedTable);
+    }
+  }, [selectedTable, user, isAdmin]);
+
   if (loading || loadingData) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -266,15 +364,34 @@ export default function Admin() {
 
   return (
     <div className="container mx-auto py-8 px-4">
-      <div className="flex items-center justify-between mb-8">
-        <div>
-          <h1 className="text-4xl font-bold">Admin Dashboard</h1>
-          <p className="text-muted-foreground mt-2">Complete control center for your website</p>
-        </div>
-        <Badge variant="outline" className="text-lg px-4 py-2">
-          <Shield className="h-4 w-4 mr-2" />
-          Administrator
-        </Badge>
+      {/* User Info Header */}
+      <Card className="mb-6 bg-gradient-to-r from-primary/10 to-primary/5">
+        <CardContent className="flex items-center justify-between py-4">
+          <div className="flex items-center gap-4">
+            <div className="h-12 w-12 rounded-full bg-primary/20 flex items-center justify-center">
+              <Shield className="h-6 w-6 text-primary" />
+            </div>
+            <div>
+              <p className="text-sm text-muted-foreground">Logged in as</p>
+              <p className="text-lg font-semibold">{user?.email}</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-3">
+            <Badge variant="default" className="text-base px-4 py-2">
+              <Shield className="h-4 w-4 mr-2" />
+              Administrator
+            </Badge>
+            <Button variant="outline" onClick={handleLogout}>
+              <LogOut className="h-4 w-4 mr-2" />
+              Logout
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+
+      <div className="mb-8">
+        <h1 className="text-4xl font-bold">Admin Dashboard</h1>
+        <p className="text-muted-foreground mt-2">Complete control center for your website</p>
       </div>
       
       <Tabs defaultValue="overview" className="w-full">
@@ -651,71 +768,172 @@ export default function Admin() {
         </TabsContent>
 
         {/* Database Management Tab */}
-        <TabsContent value="database" className="mt-6">
-          <div className="grid gap-6 md:grid-cols-2">
-            <Card>
-              <CardHeader>
-                <CardTitle>Database Tables</CardTitle>
-                <CardDescription>Overview of all database tables</CardDescription>
+        <TabsContent value="database" className="mt-6 space-y-6">
+          <div className="grid gap-6 md:grid-cols-4">
+            <Card className="cursor-pointer hover:bg-accent transition-colors" onClick={() => loadTableData("contact_submissions")}>
+              <CardHeader className="pb-3">
+                <CardTitle className="text-base">Contact Submissions</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="flex items-center justify-between p-3 border rounded-lg">
-                  <div>
-                    <p className="font-medium">contact_submissions</p>
-                    <p className="text-sm text-muted-foreground">{stats.totalContacts} records</p>
-                  </div>
-                  <Badge variant="outline">Active</Badge>
-                </div>
-                <div className="flex items-center justify-between p-3 border rounded-lg">
-                  <div>
-                    <p className="font-medium">portfolio_items</p>
-                    <p className="text-sm text-muted-foreground">{stats.totalPortfolio} records</p>
-                  </div>
-                  <Badge variant="outline">Active</Badge>
-                </div>
-                <div className="flex items-center justify-between p-3 border rounded-lg">
-                  <div>
-                    <p className="font-medium">profiles</p>
-                    <p className="text-sm text-muted-foreground">{stats.totalUsers} records</p>
-                  </div>
-                  <Badge variant="outline">Active</Badge>
-                </div>
-                <div className="flex items-center justify-between p-3 border rounded-lg">
-                  <div>
-                    <p className="font-medium">user_roles</p>
-                    <p className="text-sm text-muted-foreground">{userRoles.length} records</p>
-                  </div>
-                  <Badge variant="outline">Active</Badge>
-                </div>
+              <CardContent>
+                <div className="text-2xl font-bold">{stats.totalContacts}</div>
+                <p className="text-xs text-muted-foreground">records</p>
               </CardContent>
             </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle>Storage Buckets</CardTitle>
-                <CardDescription>File storage overview</CardDescription>
+            
+            <Card className="cursor-pointer hover:bg-accent transition-colors" onClick={() => loadTableData("portfolio_items")}>
+              <CardHeader className="pb-3">
+                <CardTitle className="text-base">Portfolio Items</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="flex items-center justify-between p-3 border rounded-lg">
-                  <div>
-                    <p className="font-medium">portfolio-files</p>
-                    <p className="text-sm text-muted-foreground">Images & Videos</p>
-                  </div>
-                  <Badge variant="outline">Public</Badge>
-                </div>
+              <CardContent>
+                <div className="text-2xl font-bold">{stats.totalPortfolio}</div>
+                <p className="text-xs text-muted-foreground">records</p>
+              </CardContent>
+            </Card>
+            
+            <Card className="cursor-pointer hover:bg-accent transition-colors" onClick={() => loadTableData("profiles")}>
+              <CardHeader className="pb-3">
+                <CardTitle className="text-base">User Profiles</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">{stats.totalUsers}</div>
+                <p className="text-xs text-muted-foreground">records</p>
+              </CardContent>
+            </Card>
+            
+            <Card className="cursor-pointer hover:bg-accent transition-colors" onClick={() => loadTableData("user_roles")}>
+              <CardHeader className="pb-3">
+                <CardTitle className="text-base">User Roles</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">{userRoles.length}</div>
+                <p className="text-xs text-muted-foreground">records</p>
               </CardContent>
             </Card>
           </div>
 
-          <Card className="mt-6">
+          <Card>
             <CardHeader>
-              <CardTitle>Database Access</CardTitle>
-              <CardDescription>For advanced database management, access the backend interface</CardDescription>
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle>Table: {selectedTable}</CardTitle>
+                  <CardDescription>View and manage all records in this table</CardDescription>
+                </div>
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => loadTableData(selectedTable)}
+                  disabled={loadingTable}
+                >
+                  <RefreshCw className={`h-4 w-4 mr-2 ${loadingTable ? 'animate-spin' : ''}`} />
+                  Refresh
+                </Button>
+              </div>
             </CardHeader>
             <CardContent>
-              <p className="text-sm text-muted-foreground mb-4">
-                Access the full database management interface to run queries, view logs, and manage advanced settings.
-              </p>
+              {loadingTable ? (
+                <div className="flex justify-center py-8">
+                  <Loader2 className="h-8 w-8 animate-spin" />
+                </div>
+              ) : tableData.length === 0 ? (
+                <div className="text-center py-8 text-muted-foreground">
+                  No records found in this table
+                </div>
+              ) : (
+                <ScrollArea className="h-[500px]">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        {tableColumns.map((col) => (
+                          <TableHead key={col} className="font-semibold">
+                            {col}
+                          </TableHead>
+                        ))}
+                        <TableHead className="font-semibold">Actions</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {tableData.map((record) => (
+                        <TableRow key={record.id}>
+                          {tableColumns.map((col) => (
+                            <TableCell key={col} className="max-w-xs">
+                              {editingRecord?.id === record.id ? (
+                                <Input
+                                  value={(editingRecord as any)[col] || ''}
+                                  onChange={(e) => setEditingRecord({
+                                    ...(editingRecord as any),
+                                    [col]: e.target.value
+                                  })}
+                                  className="min-w-[100px]"
+                                />
+                              ) : (
+                                <div className="truncate" title={String(record[col])}>
+                                  {col.includes('created_at') || col.includes('updated_at')
+                                    ? new Date(record[col]).toLocaleString()
+                                    : String(record[col] || 'N/A')}
+                                </div>
+                              )}
+                            </TableCell>
+                          ))}
+                          <TableCell>
+                            <div className="flex gap-2">
+                              {editingRecord?.id === record.id ? (
+                                <>
+                                  <Button
+                                    size="sm"
+                                    onClick={() => handleUpdateRecord(selectedTable, record.id, editingRecord)}
+                                  >
+                                    Save
+                                  </Button>
+                                  <Button
+                                    size="sm"
+                                    variant="outline"
+                                    onClick={() => setEditingRecord(null)}
+                                  >
+                                    Cancel
+                                  </Button>
+                                </>
+                              ) : (
+                                <>
+                                  <Button
+                                    size="sm"
+                                    variant="outline"
+                                    onClick={() => setEditingRecord(record)}
+                                  >
+                                    <Edit className="h-4 w-4" />
+                                  </Button>
+                                  <Button
+                                    size="sm"
+                                    variant="destructive"
+                                    onClick={() => handleDeleteRecord(selectedTable, record.id)}
+                                  >
+                                    <Trash2 className="h-4 w-4" />
+                                  </Button>
+                                </>
+                              )}
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </ScrollArea>
+              )}
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Storage Buckets</CardTitle>
+              <CardDescription>Manage file storage buckets</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center justify-between p-4 border rounded-lg">
+                <div>
+                  <p className="font-medium">portfolio-files</p>
+                  <p className="text-sm text-muted-foreground">Images & Videos storage</p>
+                </div>
+                <Badge variant="outline">Public</Badge>
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
