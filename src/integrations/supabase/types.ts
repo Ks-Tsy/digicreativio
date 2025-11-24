@@ -101,6 +101,66 @@ export type Database = {
         }
         Relationships: []
       }
+      site_content: {
+        Row: {
+          content_data: Json
+          content_type: string
+          created_at: string
+          id: string
+          page_name: string
+          section_name: string
+          updated_at: string
+        }
+        Insert: {
+          content_data?: Json
+          content_type?: string
+          created_at?: string
+          id?: string
+          page_name: string
+          section_name: string
+          updated_at?: string
+        }
+        Update: {
+          content_data?: Json
+          content_type?: string
+          created_at?: string
+          id?: string
+          page_name?: string
+          section_name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      site_settings: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          setting_key: string
+          setting_type: string
+          setting_value: Json
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          setting_key: string
+          setting_type?: string
+          setting_value?: Json
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          setting_key?: string
+          setting_type?: string
+          setting_value?: Json
+          updated_at?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string

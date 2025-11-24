@@ -11,7 +11,8 @@ import { useToast } from "@/hooks/use-toast";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Loader2, Plus, Trash2, Upload, Users, FileText, Database, BarChart3, Shield, LogOut, Eye, Edit, RefreshCw } from "lucide-react";
+import { Loader2, Plus, Trash2, Upload, Users, FileText, Database, BarChart3, Shield, LogOut, Eye, Edit, RefreshCw, Settings, FileEdit, Save, X } from "lucide-react";
+import { ShortId } from "@/components/ShortId";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
@@ -42,12 +43,17 @@ export default function Admin() {
   });
   
   // Database management state
-  const [selectedTable, setSelectedTable] = useState<"contact_submissions" | "portfolio_items" | "profiles" | "user_roles">("contact_submissions");
+  const [selectedTable, setSelectedTable] = useState<"contact_submissions" | "portfolio_items" | "profiles" | "user_roles" | "site_content" | "site_settings">("contact_submissions");
   const [tableData, setTableData] = useState<any[]>([]);
   const [tableColumns, setTableColumns] = useState<string[]>([]);
   const [loadingTable, setLoadingTable] = useState(false);
   const [editingRecord, setEditingRecord] = useState<any>(null);
   const [showAddRecordForm, setShowAddRecordForm] = useState(false);
+  
+  // Content management state
+  const [siteContent, setSiteContent] = useState<any[]>([]);
+  const [siteSettings, setSiteSettings] = useState<any[]>([]);
+  const [editingContent, setEditingContent] = useState<any>(null);
 
   useEffect(() => {
     if (!loading && (!user || !isAdmin)) {
@@ -87,10 +93,24 @@ export default function Admin() {
       .from("user_roles")
       .select("*");
     
+    // Load site content
+    const { data: contentData } = await supabase
+      .from("site_content")
+      .select("*")
+      .order("page_name", { ascending: true });
+    
+    // Load site settings
+    const { data: settingsData } = await supabase
+      .from("site_settings")
+      .select("*")
+      .order("setting_type", { ascending: true });
+    
     setContacts(contactData || []);
     setPortfolioItems(portfolioData || []);
     setUsers(profilesData || []);
     setUserRoles(rolesData || []);
+    setSiteContent(contentData || []);
+    setSiteSettings(settingsData || []);
 
     // Calculate stats
     setStats({
@@ -270,8 +290,52 @@ export default function Admin() {
     navigate("/auth");
   };
 
+  // Content management functions
+  const handleUpdateContent = async (id: string, newData: any) => {
+    const { error } = await supabase
+      .from("site_content")
+      .update({ content_data: newData, updated_at: new Date().toISOString() })
+      .eq("id", id);
+
+    if (error) {
+      toast({
+        title: "Error",
+        description: "Failed to update content",
+        variant: "destructive",
+      });
+    } else {
+      toast({
+        title: "Success",
+        description: "Content updated successfully",
+      });
+      setEditingContent(null);
+      loadData();
+    }
+  };
+  
+  const handleUpdateSetting = async (id: string, newValue: any) => {
+    const { error } = await supabase
+      .from("site_settings")
+      .update({ setting_value: newValue, updated_at: new Date().toISOString() })
+      .eq("id", id);
+
+    if (error) {
+      toast({
+        title: "Error",
+        description: "Failed to update setting",
+        variant: "destructive",
+      });
+    } else {
+      toast({
+        title: "Success",
+        description: "Setting updated successfully",
+      });
+      loadData();
+    }
+  };
+
   // Database management functions
-  const loadTableData = async (tableName: "contact_submissions" | "portfolio_items" | "profiles" | "user_roles") => {
+  const loadTableData = async (tableName: "contact_submissions" | "portfolio_items" | "profiles" | "user_roles" | "site_content" | "site_settings") => {
     setLoadingTable(true);
     setSelectedTable(tableName);
     
@@ -303,7 +367,7 @@ export default function Admin() {
     }
   };
 
-  const handleDeleteRecord = async (tableName: "contact_submissions" | "portfolio_items" | "profiles" | "user_roles", id: string) => {
+  const handleDeleteRecord = async (tableName: "contact_submissions" | "portfolio_items" | "profiles" | "user_roles" | "site_content" | "site_settings", id: string) => {
     const { error } = await supabase
       .from(tableName)
       .delete()
@@ -325,7 +389,7 @@ export default function Admin() {
     }
   };
 
-  const handleUpdateRecord = async (tableName: "contact_submissions" | "portfolio_items" | "profiles" | "user_roles", id: string, updates: any) => {
+  const handleUpdateRecord = async (tableName: "contact_submissions" | "portfolio_items" | "profiles" | "user_roles" | "site_content" | "site_settings", id: string, updates: any) => {
     const { error } = await supabase
       .from(tableName)
       .update(updates)
@@ -395,10 +459,18 @@ export default function Admin() {
       </div>
       
       <Tabs defaultValue="overview" className="w-full">
-        <TabsList className="grid w-full grid-cols-5 max-w-3xl mb-8">
+        <TabsList className="grid w-full grid-cols-7 max-w-full mb-8">
           <TabsTrigger value="overview">
             <BarChart3 className="h-4 w-4 mr-2" />
             Overview
+          </TabsTrigger>
+          <TabsTrigger value="content">
+            <FileEdit className="h-4 w-4 mr-2" />
+            Content
+          </TabsTrigger>
+          <TabsTrigger value="settings">
+            <Settings className="h-4 w-4 mr-2" />
+            Settings
           </TabsTrigger>
           <TabsTrigger value="users">
             <Users className="h-4 w-4 mr-2" />
@@ -417,6 +489,129 @@ export default function Admin() {
             Database
           </TabsTrigger>
         </TabsList>
+
+        {/* Content Management Tab */}
+        <TabsContent value="content" className="mt-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>Site Content Management</CardTitle>
+              <CardDescription>Edit page content for Home, About, Services, and Contact</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {siteContent.map((content) => (
+                  <Card key={content.id} className="border-border/50">
+                    <CardHeader className="pb-3">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <CardTitle className="text-lg capitalize">{content.page_name} - {content.section_name}</CardTitle>
+                          <CardDescription>
+                            <ShortId id={content.id} prefix="Content" />
+                          </CardDescription>
+                        </div>
+                        {editingContent?.id === content.id ? (
+                          <div className="flex gap-2">
+                            <Button
+                              size="sm"
+                              onClick={() => handleUpdateContent(content.id, editingContent.content_data)}
+                            >
+                              <Save className="h-4 w-4 mr-2" />
+                              Save
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => setEditingContent(null)}
+                            >
+                              <X className="h-4 w-4 mr-2" />
+                              Cancel
+                            </Button>
+                          </div>
+                        ) : (
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => setEditingContent(content)}
+                          >
+                            <Edit className="h-4 w-4 mr-2" />
+                            Edit
+                          </Button>
+                        )}
+                      </div>
+                    </CardHeader>
+                    <CardContent>
+                      {editingContent?.id === content.id ? (
+                        <Textarea
+                          value={JSON.stringify(editingContent.content_data, null, 2)}
+                          onChange={(e) => {
+                            try {
+                              const parsed = JSON.parse(e.target.value);
+                              setEditingContent({ ...editingContent, content_data: parsed });
+                            } catch (err) {
+                              // Invalid JSON, keep editing
+                            }
+                          }}
+                          className="font-mono text-sm min-h-[200px]"
+                          placeholder="JSON content"
+                        />
+                      ) : (
+                        <div className="bg-muted/30 p-4 rounded-md">
+                          <pre className="text-sm overflow-auto">
+                            {JSON.stringify(content.content_data, null, 2)}
+                          </pre>
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Settings Tab */}
+        <TabsContent value="settings" className="mt-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>Site Settings</CardTitle>
+              <CardDescription>Configure global site settings</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {siteSettings.map((setting) => (
+                  <Card key={setting.id} className="border-border/50">
+                    <CardHeader className="pb-3">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <CardTitle className="text-base">{setting.setting_key}</CardTitle>
+                          <CardDescription className="mt-1">
+                            <ShortId id={setting.id} prefix="Setting" />
+                            <span className="ml-2">• {setting.description}</span>
+                          </CardDescription>
+                        </div>
+                        <Badge variant="outline">{setting.setting_type}</Badge>
+                      </div>
+                    </CardHeader>
+                    <CardContent>
+                      <Textarea
+                        value={JSON.stringify(setting.setting_value, null, 2)}
+                        onChange={(e) => {
+                          try {
+                            const parsed = JSON.parse(e.target.value);
+                            handleUpdateSetting(setting.id, parsed);
+                          } catch (err) {
+                            // Invalid JSON
+                          }
+                        }}
+                        className="font-mono text-sm min-h-[100px]"
+                      />
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
 
         {/* Overview Tab */}
         <TabsContent value="overview" className="space-y-6">
@@ -514,6 +709,7 @@ export default function Admin() {
               <Table>
                 <TableHeader>
                   <TableRow>
+                    <TableHead>ID</TableHead>
                     <TableHead>Email</TableHead>
                     <TableHead>Full Name</TableHead>
                     <TableHead>Role</TableHead>
@@ -524,6 +720,9 @@ export default function Admin() {
                 <TableBody>
                   {users.map((user) => (
                     <TableRow key={user.id}>
+                      <TableCell>
+                        <ShortId id={user.id} prefix="User" />
+                      </TableCell>
                       <TableCell>{user.email}</TableCell>
                       <TableCell>{user.full_name || 'N/A'}</TableCell>
                       <TableCell>
@@ -665,6 +864,7 @@ export default function Admin() {
               <Table>
                 <TableHeader>
                   <TableRow>
+                    <TableHead>ID</TableHead>
                     <TableHead>Preview</TableHead>
                     <TableHead>Title</TableHead>
                     <TableHead>Category</TableHead>
@@ -675,6 +875,9 @@ export default function Admin() {
                 <TableBody>
                   {portfolioItems.map((item) => (
                     <TableRow key={item.id}>
+                      <TableCell>
+                        <ShortId id={item.id} prefix="Item" />
+                      </TableCell>
                       <TableCell>
                         {item.category === 'video' ? (
                           <div className="h-12 w-12 bg-muted rounded flex items-center justify-center">
@@ -717,6 +920,7 @@ export default function Admin() {
               <Table>
                 <TableHeader>
                   <TableRow>
+                    <TableHead>ID</TableHead>
                     <TableHead>Name</TableHead>
                     <TableHead>Email</TableHead>
                     <TableHead>Message</TableHead>
@@ -728,6 +932,9 @@ export default function Admin() {
                 <TableBody>
                   {contacts.map((contact) => (
                     <TableRow key={contact.id}>
+                      <TableCell>
+                        <ShortId id={contact.id} prefix="Contact" />
+                      </TableCell>
                       <TableCell className="font-medium">{contact.name}</TableCell>
                       <TableCell>{contact.email}</TableCell>
                       <TableCell className="max-w-xs truncate">{contact.message}</TableCell>
