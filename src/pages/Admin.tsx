@@ -15,6 +15,8 @@ import { Loader2, Plus, Trash2, Upload, Users, FileText, Database, BarChart3, Sh
 import { ShortId } from "@/components/ShortId";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { DraggableSocialLinks } from "@/components/admin/DraggableSocialLinks";
+import { DraggablePortfolioItems } from "@/components/admin/DraggablePortfolioItems";
 
 export default function Admin() {
   const { user, isAdmin, loading, signOut } = useAuth();
@@ -58,7 +60,6 @@ export default function Admin() {
   // Social links management state
   const [socialLinks, setSocialLinks] = useState<any[]>([]);
   const [showAddSocialForm, setShowAddSocialForm] = useState(false);
-  const [editingSocialLink, setEditingSocialLink] = useState<any>(null);
   const [newSocialLink, setNewSocialLink] = useState({
     platform: "",
     url: "",
@@ -401,7 +402,6 @@ export default function Admin() {
         title: "Success",
         description: "Social link updated successfully",
       });
-      setEditingSocialLink(null);
       loadData();
     }
   };
@@ -880,124 +880,18 @@ export default function Admin() {
                 </Card>
               )}
 
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Platform</TableHead>
-                    <TableHead>URL</TableHead>
-                    <TableHead>Icon</TableHead>
-                    <TableHead>Order</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>Actions</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {socialLinks.length === 0 ? (
-                    <TableRow>
-                      <TableCell colSpan={6} className="text-center text-muted-foreground">
-                        No social links found. Add one to get started.
-                      </TableCell>
-                    </TableRow>
-                  ) : (
-                    socialLinks.map((link) => (
-                      <TableRow key={link.id}>
-                        <TableCell>
-                          {editingSocialLink?.id === link.id ? (
-                            <Input
-                              value={editingSocialLink.platform}
-                              onChange={(e) => setEditingSocialLink({ ...editingSocialLink, platform: e.target.value })}
-                            />
-                          ) : (
-                            link.platform
-                          )}
-                        </TableCell>
-                        <TableCell>
-                          {editingSocialLink?.id === link.id ? (
-                            <Input
-                              value={editingSocialLink.url}
-                              onChange={(e) => setEditingSocialLink({ ...editingSocialLink, url: e.target.value })}
-                            />
-                          ) : (
-                            <a href={link.url} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
-                              {link.url}
-                            </a>
-                          )}
-                        </TableCell>
-                        <TableCell>
-                          {editingSocialLink?.id === link.id ? (
-                            <Input
-                              value={editingSocialLink.icon_name}
-                              onChange={(e) => setEditingSocialLink({ ...editingSocialLink, icon_name: e.target.value })}
-                            />
-                          ) : (
-                            link.icon_name
-                          )}
-                        </TableCell>
-                        <TableCell>
-                          {editingSocialLink?.id === link.id ? (
-                            <Input
-                              type="number"
-                              value={editingSocialLink.display_order}
-                              onChange={(e) => setEditingSocialLink({ ...editingSocialLink, display_order: parseInt(e.target.value) })}
-                            />
-                          ) : (
-                            link.display_order
-                          )}
-                        </TableCell>
-                        <TableCell>
-                          {editingSocialLink?.id === link.id ? (
-                            <input
-                              type="checkbox"
-                              checked={editingSocialLink.is_active}
-                              onChange={(e) => setEditingSocialLink({ ...editingSocialLink, is_active: e.target.checked })}
-                            />
-                          ) : (
-                            <Badge variant={link.is_active ? "default" : "secondary"}>
-                              {link.is_active ? "Active" : "Inactive"}
-                            </Badge>
-                          )}
-                        </TableCell>
-                        <TableCell>
-                          {editingSocialLink?.id === link.id ? (
-                            <div className="flex gap-2">
-                              <Button
-                                size="sm"
-                                onClick={() => handleUpdateSocialLink(link.id, editingSocialLink)}
-                              >
-                                <Save className="h-4 w-4" />
-                              </Button>
-                              <Button
-                                size="sm"
-                                variant="outline"
-                                onClick={() => setEditingSocialLink(null)}
-                              >
-                                <X className="h-4 w-4" />
-                              </Button>
-                            </div>
-                          ) : (
-                            <div className="flex gap-2">
-                              <Button
-                                size="sm"
-                                variant="outline"
-                                onClick={() => setEditingSocialLink(link)}
-                              >
-                                <Edit className="h-4 w-4" />
-                              </Button>
-                              <Button
-                                size="sm"
-                                variant="destructive"
-                                onClick={() => handleDeleteSocialLink(link.id)}
-                              >
-                                <Trash2 className="h-4 w-4" />
-                              </Button>
-                            </div>
-                          )}
-                        </TableCell>
-                      </TableRow>
-                    ))
-                  )}
-                </TableBody>
-              </Table>
+              {socialLinks.length === 0 ? (
+                <div className="text-center text-muted-foreground py-8">
+                  No social links found. Add one to get started.
+                </div>
+              ) : (
+                <DraggableSocialLinks
+                  socialLinks={socialLinks}
+                  onReorder={loadData}
+                  onUpdate={handleUpdateSocialLink}
+                  onDelete={handleDeleteSocialLink}
+                />
+              )}
             </CardContent>
           </Card>
         </TabsContent>
@@ -1165,50 +1059,17 @@ export default function Admin() {
                 </form>
               )}
               
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>ID</TableHead>
-                    <TableHead>Preview</TableHead>
-                    <TableHead>Title</TableHead>
-                    <TableHead>Category</TableHead>
-                    <TableHead>Created</TableHead>
-                    <TableHead>Actions</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {portfolioItems.map((item) => (
-                    <TableRow key={item.id}>
-                      <TableCell>
-                        <ShortId id={item.id} prefix="Item" />
-                      </TableCell>
-                      <TableCell>
-                        {item.category === 'video' ? (
-                          <div className="h-12 w-12 bg-muted rounded flex items-center justify-center">
-                            <FileText className="h-6 w-6" />
-                          </div>
-                        ) : (
-                          <img src={item.image_url} alt={item.title} className="h-12 w-12 object-cover rounded" />
-                        )}
-                      </TableCell>
-                      <TableCell className="font-medium">{item.title}</TableCell>
-                      <TableCell>
-                        <Badge variant="outline">{item.category}</Badge>
-                      </TableCell>
-                      <TableCell>{new Date(item.created_at).toLocaleDateString()}</TableCell>
-                      <TableCell>
-                        <Button
-                          variant="destructive"
-                          size="sm"
-                          onClick={() => handleDeletePortfolioItem(item.id)}
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+              {portfolioItems.length === 0 ? (
+                <div className="text-center text-muted-foreground py-8">
+                  No portfolio items found. Add one to get started.
+                </div>
+              ) : (
+                <DraggablePortfolioItems
+                  portfolioItems={portfolioItems}
+                  onReorder={loadData}
+                  onDelete={handleDeletePortfolioItem}
+                />
+              )}
             </CardContent>
           </Card>
         </TabsContent>
