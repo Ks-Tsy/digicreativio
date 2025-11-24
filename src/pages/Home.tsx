@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Palette, Sparkles, Code, Layers, ArrowRight } from "lucide-react";
 import heroImage from "@/assets/hero-image.jpg";
+import logo from "@/assets/logo-enhanced.png";
 
 const Home = () => {
   const services = [
@@ -44,15 +45,22 @@ const Home = () => {
         <div className="absolute inset-0 bg-gradient-to-b from-background via-background/80 to-background z-0" />
         
         <div className="container mx-auto px-4 lg:px-8 relative z-10 pt-20">
-          <div className="max-w-4xl mx-auto text-center animate-fade-in">
-            <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
+          <div className="max-w-4xl mx-auto text-center">
+            <div className="mb-8 animate-scale-in">
+              <img 
+                src={logo} 
+                alt="DigiCreativio Logo" 
+                className="mx-auto w-64 md:w-80 h-auto object-contain animate-fade-in"
+              />
+            </div>
+            <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight animate-fade-in" style={{ animationDelay: '200ms' }}>
               Elevate Your Brand with{" "}
               <span className="text-gradient">Digital Creativity</span>
             </h1>
-            <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-2xl mx-auto">
+            <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-2xl mx-auto animate-fade-in" style={{ animationDelay: '400ms' }}>
               We craft stunning digital experiences that inspire, engage, and drive results for your business.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in" style={{ animationDelay: '600ms' }}>
               <Button asChild size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold glow-metallic text-lg px-8">
                 <Link to="/contact">
                   Start Your Project
