@@ -1,9 +1,32 @@
+import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
 import { Link } from "react-router-dom";
-import { Facebook, Instagram, Linkedin, Twitter, Mail } from "lucide-react";
+import { Mail } from "lucide-react";
+import * as LucideIcons from "lucide-react";
 import logo from "@/assets/logo-enhanced.png";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
+  const [socialLinks, setSocialLinks] = useState<any[]>([]);
+
+  useEffect(() => {
+    loadSocialLinks();
+  }, []);
+
+  const loadSocialLinks = async () => {
+    const { data } = await supabase
+      .from("social_links")
+      .select("*")
+      .eq("is_active", true)
+      .order("display_order", { ascending: true });
+    
+    setSocialLinks(data || []);
+  };
+
+  const renderIcon = (iconName: string) => {
+    const Icon = (LucideIcons as any)[iconName];
+    return Icon ? <Icon size={20} /> : null;
+  };
 
   return (
     <footer className="bg-card border-t border-border/50">
@@ -63,18 +86,18 @@ const Footer = () => {
           <div>
             <h4 className="text-sm font-semibold text-foreground mb-4">Connect</h4>
             <div className="flex space-x-4 mb-4">
-              <a href="#" className="text-muted-foreground hover:text-primary transition-colors" aria-label="Facebook">
-                <Facebook size={20} />
-              </a>
-              <a href="#" className="text-muted-foreground hover:text-primary transition-colors" aria-label="Instagram">
-                <Instagram size={20} />
-              </a>
-              <a href="#" className="text-muted-foreground hover:text-primary transition-colors" aria-label="LinkedIn">
-                <Linkedin size={20} />
-              </a>
-              <a href="#" className="text-muted-foreground hover:text-primary transition-colors" aria-label="Twitter">
-                <Twitter size={20} />
-              </a>
+              {socialLinks.map((link) => (
+                <a 
+                  key={link.id}
+                  href={link.url} 
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-muted-foreground hover:text-primary transition-colors" 
+                  aria-label={link.platform}
+                >
+                  {renderIcon(link.icon_name)}
+                </a>
+              ))}
             </div>
             <a href="mailto:hello@digicreativio.com" className="flex items-center text-sm text-muted-foreground hover:text-primary transition-colors">
               <Mail size={16} className="mr-2" />
