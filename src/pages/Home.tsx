@@ -58,7 +58,7 @@ const Home = () => {
               <span className="text-gradient">Digital Creativity</span>
             </h1>
             <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-2xl mx-auto animate-fade-in" style={{ animationDelay: '400ms' }}>
-              We craft stunning digital experiences that inspire, engage, and drive results for your business.
+              Crafting the Future of Digital
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in" style={{ animationDelay: '600ms' }}>
               <Button asChild size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold glow-metallic text-lg px-8">
