@@ -53,9 +53,12 @@ const Home = () => {
                 className="mx-auto w-64 md:w-80 h-auto object-contain animate-fade-in"
               />
             </div>
-            <h1 className="text-5xl md:text-7xl font-bold mb-8 leading-tight animate-fade-in" style={{ animationDelay: '200ms' }}>
+            <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight animate-fade-in" style={{ animationDelay: '200ms' }}>
               <span className="text-gradient">Crafting the Future of Digital</span>
             </h1>
+            <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-2xl mx-auto animate-fade-in" style={{ animationDelay: '400ms' }}>
+              Stunning visuals, memorable brands, and exceptional web experiences tailored to your vision
+            </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in" style={{ animationDelay: '600ms' }}>
               <Button asChild size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold glow-metallic text-lg px-8">
                 <Link to="/contact">
