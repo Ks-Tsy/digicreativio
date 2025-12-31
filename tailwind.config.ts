@@ -59,6 +59,24 @@ export default {
           DEFAULT: "hsl(var(--charcoal))",
           light: "hsl(var(--charcoal-light))",
         },
+        success: {
+          DEFAULT: "hsl(var(--success))",
+          foreground: "hsl(var(--success-foreground))",
+        },
+        warning: {
+          DEFAULT: "hsl(var(--warning))",
+          foreground: "hsl(var(--warning-foreground))",
+        },
+        info: {
+          DEFAULT: "hsl(var(--info))",
+          foreground: "hsl(var(--info-foreground))",
+        },
+        admin: {
+          sidebar: "hsl(var(--admin-sidebar))",
+          "sidebar-hover": "hsl(var(--admin-sidebar-hover))",
+          "sidebar-active": "hsl(var(--admin-sidebar-active))",
+          header: "hsl(var(--admin-header))",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
