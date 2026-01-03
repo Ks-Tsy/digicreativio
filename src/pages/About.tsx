@@ -1,7 +1,21 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Target, Eye, Award, Users } from "lucide-react";
+import { useSiteContent } from "@/hooks/useSiteContent";
 
 const About = () => {
+  const { content: heroContent } = useSiteContent("about", "hero");
+  const { content: storyContent } = useSiteContent("about", "story");
+
+  const heroData = heroContent?.content_data as {
+    title?: string;
+    subtitle?: string;
+  } | null;
+
+  const storyData = storyContent?.content_data as {
+    title?: string;
+    content?: string;
+  } | null;
+
   const values = [
     {
       icon: Target,
@@ -32,10 +46,10 @@ const About = () => {
         <div className="container mx-auto px-4 lg:px-8">
           <div className="max-w-4xl mx-auto text-center animate-fade-in">
             <h1 className="text-5xl md:text-6xl font-bold mb-6">
-              About <span className="text-gradient">DigiCreativio</span>
+              {heroData?.title || "About DigiCreativio"}
             </h1>
             <p className="text-xl text-muted-foreground leading-relaxed">
-              We are a passionate team of designers, artists, and strategists dedicated to crafting digital experiences that make a lasting impact.
+              {heroData?.subtitle || "We are a passionate team of designers, artists, and strategists dedicated to crafting digital experiences that make a lasting impact."}
             </p>
           </div>
         </div>
@@ -47,10 +61,10 @@ const About = () => {
           <div className="max-w-4xl mx-auto">
             <Card className="glass border-border/50">
               <CardContent className="p-8 md:p-12">
-                <h2 className="text-3xl font-bold mb-6 text-gradient">Our Story</h2>
+                <h2 className="text-3xl font-bold mb-6 text-gradient">{storyData?.title || "Our Story"}</h2>
                 <div className="space-y-4 text-muted-foreground leading-relaxed">
                   <p>
-                    DigiCreativio was born from a simple belief: that great design has the power to transform businesses and connect with people on a deeper level. Since our founding, we've been committed to pushing the boundaries of creativity while delivering practical, results-driven solutions.
+                    {storyData?.content || "DigiCreativio was born from a simple belief: that great design has the power to transform businesses and connect with people on a deeper level. Since our founding, we've been committed to pushing the boundaries of creativity while delivering practical, results-driven solutions."}
                   </p>
                   <p>
                     Our journey began with a small team of passionate designers who shared a vision of creating a different kind of creative agency—one that combines artistic excellence with strategic thinking, technical expertise with human-centered design.

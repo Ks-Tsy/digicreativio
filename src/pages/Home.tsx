@@ -4,8 +4,31 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Palette, Sparkles, Code, Layers, ArrowRight } from "lucide-react";
 import heroImage from "@/assets/hero-image.jpg";
 import logo from "@/assets/logo-enhanced.png";
+import { useSiteContent } from "@/hooks/useSiteContent";
 
 const Home = () => {
+  const { content: heroContent } = useSiteContent("home", "hero");
+  const { content: servicesContent } = useSiteContent("home", "services_section");
+  const { content: ctaContent } = useSiteContent("home", "cta_section");
+
+  const heroData = heroContent?.content_data as {
+    title?: string;
+    subtitle?: string;
+    cta_primary?: string;
+    cta_secondary?: string;
+  } | null;
+
+  const servicesData = servicesContent?.content_data as {
+    title?: string;
+    subtitle?: string;
+  } | null;
+
+  const ctaData = ctaContent?.content_data as {
+    title?: string;
+    subtitle?: string;
+    cta_text?: string;
+  } | null;
+
   const services = [
     {
       icon: Palette,
@@ -54,20 +77,20 @@ const Home = () => {
               />
             </div>
             <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight animate-fade-in" style={{ animationDelay: '200ms' }}>
-              <span className="text-gradient">Crafting the Future of Digital</span>
+              <span className="text-gradient">{heroData?.title || "Crafting the Future of Digital"}</span>
             </h1>
             <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-2xl mx-auto animate-fade-in" style={{ animationDelay: '400ms' }}>
-              Stunning visuals, memorable brands, and exceptional web experiences tailored to your vision
+              {heroData?.subtitle || "Stunning visuals, memorable brands, and exceptional web experiences tailored to your vision"}
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in" style={{ animationDelay: '600ms' }}>
               <Button asChild size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold glow-metallic text-lg px-8">
                 <Link to="/contact">
-                  Start Your Project
+                  {heroData?.cta_primary || "Start Your Project"}
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>
               </Button>
               <Button asChild size="lg" variant="outline" className="text-lg px-8 border-primary/50 hover:bg-primary/10">
-                <Link to="/portfolio">View Our Work</Link>
+                <Link to="/portfolio">{heroData?.cta_secondary || "View Our Work"}</Link>
               </Button>
             </div>
           </div>
@@ -82,7 +105,7 @@ const Home = () => {
               Our <span className="text-gradient">Services</span>
             </h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Comprehensive creative solutions tailored to your unique needs
+              {servicesData?.subtitle || "Comprehensive creative solutions tailored to your unique needs"}
             </p>
           </div>
 
@@ -123,14 +146,14 @@ const Home = () => {
               <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-accent/5 z-0" />
               <div className="relative z-10">
                 <h2 className="text-4xl md:text-5xl font-bold mb-4">
-                  Ready to <span className="text-gradient">Transform</span> Your Brand?
+                  {ctaData?.title || "Ready to Transform Your Brand?"}
                 </h2>
                 <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-                  Let's collaborate to create something extraordinary. Get in touch today and let's bring your vision to life.
+                  {ctaData?.subtitle || "Let's collaborate to create something extraordinary. Get in touch today and let's bring your vision to life."}
                 </p>
                 <Button asChild size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold glow-metallic text-lg px-8">
                   <Link to="/contact">
-                    Get Started Today
+                    {ctaData?.cta_text || "Get Started Today"}
                     <ArrowRight className="ml-2 h-5 w-5" />
                   </Link>
                 </Button>

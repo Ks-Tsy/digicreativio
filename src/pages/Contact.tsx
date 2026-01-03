@@ -7,8 +7,23 @@ import { Mail, Phone, MapPin, Send } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { useSiteContent } from "@/hooks/useSiteContent";
 
 const Contact = () => {
+  const { content: heroContent } = useSiteContent("contact", "hero");
+  const { content: infoContent } = useSiteContent("contact", "info");
+
+  const heroData = heroContent?.content_data as {
+    title?: string;
+    subtitle?: string;
+  } | null;
+
+  const infoData = infoContent?.content_data as {
+    email?: string;
+    phone?: string;
+    address?: string;
+  } | null;
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -47,6 +62,10 @@ const Contact = () => {
     });
   };
 
+  const contactEmail = infoData?.email || "digicreativio@gmail.com";
+  const contactPhone = infoData?.phone || "+1 (234) 567-890";
+  const contactAddress = infoData?.address || "123 Creative Street, Design City, DC 12345";
+
   return (
     <div className="min-h-screen pt-20">
       {/* Hero Section */}
@@ -54,10 +73,10 @@ const Contact = () => {
         <div className="container mx-auto px-4 lg:px-8">
           <div className="max-w-4xl mx-auto text-center animate-fade-in">
             <h1 className="text-5xl md:text-6xl font-bold mb-6">
-              Get in <span className="text-gradient">Touch</span>
+              {heroData?.title || "Get in Touch"}
             </h1>
             <p className="text-xl text-muted-foreground leading-relaxed">
-              Have a project in mind? Let's discuss how we can help bring your vision to life
+              {heroData?.subtitle || "Have a project in mind? Let's discuss how we can help bring your vision to life"}
             </p>
           </div>
         </div>
@@ -77,8 +96,8 @@ const Contact = () => {
                     </div>
                     <div>
                       <h3 className="font-semibold text-foreground mb-1">Email Us</h3>
-                      <a href="mailto:hello@digicreativio.com" className="text-muted-foreground hover:text-primary transition-colors">
-                        hello@digicreativio.com
+                      <a href={`mailto:${contactEmail}`} className="text-muted-foreground hover:text-primary transition-colors">
+                        {contactEmail}
                       </a>
                     </div>
                   </div>
@@ -93,8 +112,8 @@ const Contact = () => {
                     </div>
                     <div>
                       <h3 className="font-semibold text-foreground mb-1">Call Us</h3>
-                      <a href="tel:+1234567890" className="text-muted-foreground hover:text-primary transition-colors">
-                        +1 (234) 567-890
+                      <a href={`tel:${contactPhone.replace(/\D/g, '')}`} className="text-muted-foreground hover:text-primary transition-colors">
+                        {contactPhone}
                       </a>
                     </div>
                   </div>
@@ -110,8 +129,7 @@ const Contact = () => {
                     <div>
                       <h3 className="font-semibold text-foreground mb-1">Visit Us</h3>
                       <p className="text-muted-foreground">
-                        123 Creative Street<br />
-                        Design City, DC 12345
+                        {contactAddress}
                       </p>
                     </div>
                   </div>
