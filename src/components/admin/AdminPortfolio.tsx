@@ -22,6 +22,7 @@ import {
 import { Plus, Upload, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { useActivityLog } from "@/hooks/useActivityLog";
 import { DraggablePortfolioItems } from "./DraggablePortfolioItems";
 
 interface AdminPortfolioProps {
@@ -31,6 +32,7 @@ interface AdminPortfolioProps {
 
 export function AdminPortfolio({ portfolioItems, onRefresh }: AdminPortfolioProps) {
   const { toast } = useToast();
+  const { logActivity } = useActivityLog();
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -78,6 +80,12 @@ export function AdminPortfolio({ portfolioItems, onRefresh }: AdminPortfolioProp
 
       if (error) throw error;
 
+      await logActivity({
+        actionType: "create",
+        entityType: "portfolio_item",
+        entityName: newItem.title,
+      });
+
       toast({
         title: "Success",
         description: "Portfolio item added successfully",
@@ -105,6 +113,7 @@ export function AdminPortfolio({ portfolioItems, onRefresh }: AdminPortfolioProp
   };
 
   const handleDelete = async (id: string) => {
+    const item = portfolioItems.find(p => p.id === id);
     const { error } = await supabase.from("portfolio_items").delete().eq("id", id);
 
     if (error) {
@@ -114,6 +123,12 @@ export function AdminPortfolio({ portfolioItems, onRefresh }: AdminPortfolioProp
         variant: "destructive",
       });
     } else {
+      await logActivity({
+        actionType: "delete",
+        entityType: "portfolio_item",
+        entityId: id,
+        entityName: item?.title,
+      });
       toast({
         title: "Success",
         description: "Portfolio item deleted successfully",
