@@ -43,10 +43,16 @@ Deno.serve(async (req) => {
       { role: "user", content: message },
     ];
 
-    // Call Lovable AI (using gemini-2.5-flash for fast, cost-effective responses)
-    const response = await fetch("https://api.lovable.dev/v1/chat/completions", {
+    // Call Lovable AI Gateway (using gemini-2.5-flash for fast, cost-effective responses)
+    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
+    if (!LOVABLE_API_KEY) {
+      throw new Error("LOVABLE_API_KEY is not configured");
+    }
+
+    const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
       headers: {
+        "Authorization": `Bearer ${LOVABLE_API_KEY}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
