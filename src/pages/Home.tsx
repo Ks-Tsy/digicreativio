@@ -103,7 +103,7 @@ const Home = () => {
             animationDelay: "300ms",
             animationFillMode: "forwards"
           }}>
-              <span className="text-gradient">{heroData?.title || "Crafting the Future"}</span>
+              <span className="text-gradient text-justify text-gray-400 bg-gray-400">{heroData?.title || "Crafting the Future"}</span>
               <br />
               <span className="text-gradient-white"></span>
             </h1>
