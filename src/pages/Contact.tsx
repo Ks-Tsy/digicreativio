@@ -38,21 +38,44 @@ const Contact = () => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    const { error } = await supabase
-      .from("contact_submissions")
-      .insert([{
-        name: formData.name,
-        email: formData.email,
-        message: `Subject: ${formData.subject}\nPhone: ${formData.phone}\n\n${formData.message}`,
-      }]);
+    try {
+      // Client-side validation
+      if (formData.name.trim().length < 2) {
+        toast.error("Name must be at least 2 characters");
+        setIsSubmitting(false);
+        return;
+      }
+      if (formData.message.trim().length < 10) {
+        toast.error("Message must be at least 10 characters");
+        setIsSubmitting(false);
+        return;
+      }
 
-    if (error) {
+      // Submit via Edge Function for server-side validation
+      const { data, error } = await supabase.functions.invoke("submit-contact", {
+        body: {
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          subject: formData.subject,
+          message: formData.message,
+        },
+      });
+
+      if (error) {
+        throw error;
+      }
+
+      if (data?.error) {
+        toast.error(data.error);
+      } else {
+        toast.success("Message sent successfully! We'll get back to you soon.");
+        setFormData({ name: "", email: "", phone: "", subject: "", message: "" });
+        setIsSubmitted(true);
+        setTimeout(() => setIsSubmitted(false), 5000);
+      }
+    } catch (error: any) {
       toast.error("Failed to send message. Please try again.");
-    } else {
-      toast.success("Message sent successfully! We'll get back to you soon.");
-      setFormData({ name: "", email: "", phone: "", subject: "", message: "" });
-      setIsSubmitted(true);
-      setTimeout(() => setIsSubmitted(false), 5000);
     }
 
     setIsSubmitting(false);

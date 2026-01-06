@@ -67,7 +67,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setIsAdmin(false);
       }
     } catch (error) {
-      console.error("Error checking admin role:", error);
+      // Silent fail - don't log sensitive auth errors in production
       setIsAdmin(false);
     }
   };
