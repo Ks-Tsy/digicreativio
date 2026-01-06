@@ -13,6 +13,7 @@ import {
   ChevronLeft,
   ChevronRight,
   Activity,
+  Star,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -26,6 +27,7 @@ const menuItems = [
   { id: "overview", label: "Overview", icon: LayoutDashboard },
   { id: "content", label: "Content", icon: FileText },
   { id: "portfolio", label: "Portfolio", icon: FolderOpen },
+  { id: "testimonials", label: "Testimonials", icon: Star },
   { id: "contacts", label: "Contacts", icon: MessageSquare },
   { id: "users", label: "Users", icon: Users },
   { id: "social", label: "Social Links", icon: Share2 },
