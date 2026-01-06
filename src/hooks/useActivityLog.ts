@@ -14,7 +14,8 @@ type EntityType =
   | "user_role" 
   | "site_content" 
   | "social_link" 
-  | "site_setting";
+  | "site_setting"
+  | "testimonial";
 
 interface LogActivityParams {
   actionType: ActionType;

@@ -16,6 +16,7 @@ import { AdminSettings } from "@/components/admin/AdminSettings";
 import { AdminSocial } from "@/components/admin/AdminSocial";
 import { AdminDatabase } from "@/components/admin/AdminDatabase";
 import { AdminActivityLogs } from "@/components/admin/AdminActivityLogs";
+import { AdminTestimonials } from "@/components/admin/AdminTestimonials";
 
 export default function Admin() {
   const { user, isAdmin, loading, signOut } = useAuth();
@@ -32,6 +33,7 @@ export default function Admin() {
   const [siteSettings, setSiteSettings] = useState<any[]>([]);
   const [socialLinks, setSocialLinks] = useState<any[]>([]);
   const [activityLogs, setActivityLogs] = useState<any[]>([]);
+  const [testimonials, setTestimonials] = useState<any[]>([]);
   const [loadingData, setLoadingData] = useState(true);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   
@@ -57,7 +59,7 @@ export default function Admin() {
   const loadData = async () => {
     setLoadingData(true);
     
-    const [contactData, portfolioData, profilesData, rolesData, contentData, settingsData, socialData, logsData] = await Promise.all([
+    const [contactData, portfolioData, profilesData, rolesData, contentData, settingsData, socialData, logsData, testimonialsData] = await Promise.all([
       supabase.from("contact_submissions").select("*").order("created_at", { ascending: false }),
       supabase.from("portfolio_items").select("*").order("display_order", { ascending: true }),
       supabase.from("profiles").select("*").order("created_at", { ascending: false }),
@@ -66,6 +68,7 @@ export default function Admin() {
       supabase.from("site_settings").select("*").order("setting_type", { ascending: true }),
       supabase.from("social_links").select("*").order("display_order", { ascending: true }),
       supabase.from("activity_logs").select("*").order("created_at", { ascending: false }).limit(100),
+      supabase.from("testimonials").select("*").order("display_order", { ascending: true }),
     ]);
     
     setContacts(contactData.data || []);
@@ -76,6 +79,7 @@ export default function Admin() {
     setSiteSettings(settingsData.data || []);
     setSocialLinks(socialData.data || []);
     setActivityLogs(logsData.data || []);
+    setTestimonials(testimonialsData.data || []);
 
     setStats({
       totalContacts: contactData.data?.length || 0,
@@ -276,6 +280,9 @@ export default function Admin() {
           )}
           {activeTab === "activity" && (
             <AdminActivityLogs activityLogs={activityLogs} onRefresh={loadData} />
+          )}
+          {activeTab === "testimonials" && (
+            <AdminTestimonials testimonials={testimonials} onRefresh={loadData} />
           )}
           {activeTab === "database" && <AdminDatabase />}
         </div>
