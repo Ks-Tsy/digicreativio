@@ -4,7 +4,6 @@ import { cn } from "@/lib/utils";
 import {
   LayoutDashboard,
   FileText,
-  Settings,
   Users,
   FolderOpen,
   MessageSquare,
@@ -34,7 +33,6 @@ const menuItems = [
   { id: "users", label: "Users", icon: Users },
   { id: "social", label: "Social Links", icon: Share2 },
   { id: "activity", label: "Activity Logs", icon: Activity },
-  { id: "settings", label: "Settings", icon: Settings },
   { id: "database", label: "Database", icon: Database },
 ];
 

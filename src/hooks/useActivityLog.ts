@@ -6,7 +6,8 @@ type ActionType =
   | "delete" 
   | "role_change" 
   | "status_change"
-  | "reorder";
+  | "reorder"
+  | "import";
 
 type EntityType = 
   | "portfolio_item" 
