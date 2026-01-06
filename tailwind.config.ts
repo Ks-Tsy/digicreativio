@@ -15,7 +15,7 @@ export default {
   	extend: {
   		fontFamily: {
   			sans: [
-  				'Inter',
+  				'DM Sans',
   				'ui-sans-serif',
   				'system-ui',
   				'sans-serif',
@@ -35,7 +35,7 @@ export default {
   				'serif'
   			],
   			mono: [
-  				'JetBrains Mono',
+  				'Fira Code',
   				'ui-monospace',
   				'SFMono-Regular',
   				'Menlo',
@@ -46,6 +46,7 @@ export default {
   				'monospace'
   			],
   			serif: [
+  				'Lora',
   				'ui-serif',
   				'Georgia',
   				'Cambria',
@@ -118,15 +119,15 @@ export default {
   				DEFAULT: 'hsl(var(--info))',
   				foreground: 'hsl(var(--info-foreground))'
   			},
-			admin: {
-				sidebar: 'hsl(var(--admin-sidebar))',
-				'sidebar-hover': 'hsl(var(--admin-sidebar-hover))',
-				'sidebar-active': 'hsl(var(--admin-sidebar-active))',
-				'sidebar-border': 'hsl(var(--admin-sidebar-border))',
-				header: 'hsl(var(--admin-header))',
-				accent: 'hsl(var(--admin-accent))',
-				'accent-glow': 'hsl(var(--admin-accent-glow))'
-			}
+  			admin: {
+  				sidebar: 'hsl(var(--admin-sidebar))',
+  				'sidebar-hover': 'hsl(var(--admin-sidebar-hover))',
+  				'sidebar-active': 'hsl(var(--admin-sidebar-active))',
+  				'sidebar-border': 'hsl(var(--admin-sidebar-border))',
+  				header: 'hsl(var(--admin-header))',
+  				accent: 'hsl(var(--admin-accent))',
+  				'accent-glow': 'hsl(var(--admin-accent-glow))'
+  			}
   		},
   		borderRadius: {
   			lg: 'var(--radius)',
@@ -213,7 +214,7 @@ export default {
   					transform: 'scale(1)'
   				}
   			},
-  			'glow': {
+  			glow: {
   				'0%, 100%': {
   					boxShadow: '0 0 20px hsl(45 100% 60% / 0.3)'
   				},
@@ -278,7 +279,7 @@ export default {
   			'fade-in-left': 'fade-in-left 0.6s ease-out forwards',
   			'fade-in-right': 'fade-in-right 0.6s ease-out forwards',
   			'scale-in': 'scale-in 0.5s ease-out forwards',
-  			'glow': 'glow 3s ease-in-out infinite',
+  			glow: 'glow 3s ease-in-out infinite',
   			'spin-slow': 'spin-slow 20s linear infinite',
   			'bounce-soft': 'bounce-soft 2s ease-in-out infinite',
   			'gradient-shift': 'gradient-shift 8s ease infinite',
