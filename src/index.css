@@ -53,11 +53,14 @@
     --navy: 220 30% 8%;
     --navy-light: 220 25% 15%;
 
-    /* Admin dashboard colors */
-    --admin-sidebar: 220 20% 5%;
-    --admin-sidebar-hover: 220 20% 10%;
-    --admin-sidebar-active: 45 100% 60%;
-    --admin-header: 220 20% 6%;
+    /* Admin dashboard colors - Premium theme */
+    --admin-sidebar: 222 47% 6%;
+    --admin-sidebar-hover: 222 40% 12%;
+    --admin-sidebar-active: 199 89% 55%;
+    --admin-sidebar-border: 222 30% 15%;
+    --admin-header: 222 47% 5%;
+    --admin-accent: 199 89% 55%;
+    --admin-accent-glow: 199 89% 55% / 0.2;
 
     /* Status colors */
     --success: 142 76% 45%;
