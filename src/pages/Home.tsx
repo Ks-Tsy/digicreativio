@@ -138,7 +138,7 @@ const Home = () => {
             animationFillMode: "forwards"
           }}>
               {stats.map((stat, index) => <div key={index} className="text-center p-4">
-                  <div className="text-3xl md:text-4xl font-bold text-gradient mb-1">{stat.value}</div>
+                  <div className="text-3xl md:text-4xl font-bold text-gradient mb-1 text-gray-100">{stat.value}</div>
                   <div className="text-sm text-muted-foreground">{stat.label}</div>
                 </div>)}
             </div>
@@ -197,8 +197,8 @@ const Home = () => {
             <span className="inline-block px-4 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-medium mb-4 border border-primary/20">
               Our Expertise
             </span>
-            <h2 className="text-4xl md:text-6xl font-heading font-bold mb-6">
-              Creative <span className="text-gradient">Services</span>
+            <h2 className="text-4xl font-heading font-bold mb-6 text-gray-100 md:text-7xl">
+              Creative <span className="text-gradient text-gray-100">Services</span>
             </h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
               {servicesData?.subtitle || "Comprehensive creative solutions tailored to your unique needs and vision"}
@@ -251,8 +251,8 @@ const Home = () => {
             <span className="inline-block px-4 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-medium mb-4 border border-primary/20">
               Client Love
             </span>
-            <h2 className="text-4xl md:text-6xl font-heading font-bold mb-6">
-              What Our <span className="text-gradient">Clients Say</span>
+            <h2 className="text-4xl font-heading font-bold mb-6 text-gray-200 md:text-5xl">
+              What Our <span className="text-gradient text-gray-100">Clients Say</span>
             </h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
               Don't just take our word for it — hear from the brands we've helped transform
@@ -278,7 +278,7 @@ const Home = () => {
               <span className="inline-block px-4 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-medium mb-6 border border-primary/20">
                 Let's Create Together
               </span>
-              <h2 className="text-4xl md:text-5xl lg:text-6xl font-heading font-bold mb-6">
+              <h2 className="text-4xl md:text-5xl lg:text-6xl font-heading font-bold mb-6 text-gray-200">
                 {ctaData?.title || "Ready to Transform"}
                 <br />
                 <span className="text-gradient">Your Brand?</span>
