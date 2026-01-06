@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { useActivityLog } from "@/hooks/useActivityLog";
-import { Plus, Edit2, Trash2, Star, GripVertical, Loader2 } from "lucide-react";
+import { Plus, Star, Loader2 } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -25,7 +25,6 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import {
   Select,
@@ -34,6 +33,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { DraggableTestimonials } from "./DraggableTestimonials";
 
 interface Testimonial {
   id: string;
@@ -59,6 +59,7 @@ export function AdminTestimonials({ testimonials, onRefresh }: AdminTestimonials
   const { logActivity } = useActivityLog();
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<Testimonial | null>(null);
+  const [deleteId, setDeleteId] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
 
   const [formData, setFormData] = useState({
@@ -146,9 +147,11 @@ export function AdminTestimonials({ testimonials, onRefresh }: AdminTestimonials
     setSaving(false);
   };
 
-  const handleDelete = async (id: string) => {
-    const testimonial = testimonials.find(t => t.id === id);
-    const { error } = await supabase.from("testimonials").delete().eq("id", id);
+  const handleDelete = async () => {
+    if (!deleteId) return;
+    
+    const testimonial = testimonials.find(t => t.id === deleteId);
+    const { error } = await supabase.from("testimonials").delete().eq("id", deleteId);
 
     if (error) {
       toast({ title: "Error", description: error.message, variant: "destructive" });
@@ -156,12 +159,13 @@ export function AdminTestimonials({ testimonials, onRefresh }: AdminTestimonials
       await logActivity({
         actionType: "delete",
         entityType: "testimonial",
-        entityId: id,
+        entityId: deleteId,
         entityName: testimonial?.name,
       });
       toast({ title: "Success", description: "Testimonial deleted" });
       onRefresh();
     }
+    setDeleteId(null);
   };
 
   const handleToggleActive = async (id: string, isActive: boolean) => {
@@ -294,88 +298,54 @@ export function AdminTestimonials({ testimonials, onRefresh }: AdminTestimonials
         </Dialog>
       </div>
 
-      <div className="grid gap-4">
-        {testimonials.length === 0 ? (
-          <Card className="border-dashed">
-            <CardContent className="flex flex-col items-center justify-center py-12">
-              <Star className="h-12 w-12 text-muted-foreground/50 mb-4" />
-              <p className="text-muted-foreground">No testimonials yet</p>
-              <p className="text-sm text-muted-foreground">Add your first client testimonial</p>
-            </CardContent>
-          </Card>
-        ) : (
-          testimonials.map((item) => (
-            <Card key={item.id} className={!item.is_active ? "opacity-60" : ""}>
-              <CardContent className="p-4">
-                <div className="flex items-start gap-4">
-                  <div className="flex-shrink-0 cursor-grab">
-                    <GripVertical className="h-5 w-5 text-muted-foreground" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className="font-semibold">{item.name}</span>
-                      <span className="text-muted-foreground">•</span>
-                      <span className="text-sm text-muted-foreground">{item.role}</span>
-                      {item.company && (
-                        <>
-                          <span className="text-muted-foreground">•</span>
-                          <span className="text-sm text-muted-foreground">{item.company}</span>
-                        </>
-                      )}
-                    </div>
-                    <div className="flex gap-0.5 mb-2">
-                      {Array.from({ length: item.rating }).map((_, i) => (
-                        <Star key={i} className="h-4 w-4 fill-gold text-gold" />
-                      ))}
-                    </div>
-                    <p className="text-sm text-muted-foreground line-clamp-2">{item.content}</p>
-                  </div>
-                  <div className="flex items-center gap-2 flex-shrink-0">
-                    <Switch
-                      checked={item.is_active}
-                      onCheckedChange={(checked) => handleToggleActive(item.id, checked)}
-                    />
-                    <Dialog open={editingItem?.id === item.id} onOpenChange={(open) => !open && setEditingItem(null)}>
-                      <DialogTrigger asChild>
-                        <Button variant="ghost" size="icon" onClick={() => openEditDialog(item)}>
-                          <Edit2 className="h-4 w-4" />
-                        </Button>
-                      </DialogTrigger>
-                      <DialogContent className="max-w-lg">
-                        <DialogHeader>
-                          <DialogTitle>Edit Testimonial</DialogTitle>
-                        </DialogHeader>
-                        <TestimonialForm isEdit />
-                      </DialogContent>
-                    </Dialog>
-                    <AlertDialog>
-                      <AlertDialogTrigger asChild>
-                        <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive">
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      </AlertDialogTrigger>
-                      <AlertDialogContent>
-                        <AlertDialogHeader>
-                          <AlertDialogTitle>Delete Testimonial</AlertDialogTitle>
-                          <AlertDialogDescription>
-                            Are you sure you want to delete "{item.name}"'s testimonial? This action cannot be undone.
-                          </AlertDialogDescription>
-                        </AlertDialogHeader>
-                        <AlertDialogFooter>
-                          <AlertDialogCancel>Cancel</AlertDialogCancel>
-                          <AlertDialogAction onClick={() => handleDelete(item.id)} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
-                            Delete
-                          </AlertDialogAction>
-                        </AlertDialogFooter>
-                      </AlertDialogContent>
-                    </AlertDialog>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          ))
-        )}
-      </div>
+      {testimonials.length === 0 ? (
+        <Card className="border-dashed">
+          <CardContent className="flex flex-col items-center justify-center py-12">
+            <Star className="h-12 w-12 text-muted-foreground/50 mb-4" />
+            <p className="text-muted-foreground">No testimonials yet</p>
+            <p className="text-sm text-muted-foreground">Add your first client testimonial</p>
+          </CardContent>
+        </Card>
+      ) : (
+        <DraggableTestimonials
+          testimonials={testimonials}
+          onEdit={openEditDialog}
+          onDelete={(id) => setDeleteId(id)}
+          onToggleActive={handleToggleActive}
+          onReorder={onRefresh}
+        />
+      )}
+
+      {/* Edit Dialog */}
+      <Dialog open={!!editingItem} onOpenChange={(open) => !open && setEditingItem(null)}>
+        <DialogContent className="max-w-lg">
+          <DialogHeader>
+            <DialogTitle>Edit Testimonial</DialogTitle>
+          </DialogHeader>
+          <TestimonialForm isEdit />
+        </DialogContent>
+      </Dialog>
+
+      {/* Delete Confirmation */}
+      <AlertDialog open={!!deleteId} onOpenChange={(open) => !open && setDeleteId(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Testimonial</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete this testimonial? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction 
+              onClick={handleDelete} 
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
