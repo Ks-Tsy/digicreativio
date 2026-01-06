@@ -13,6 +13,7 @@ export default function Auth() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [showForgotPassword, setShowForgotPassword] = useState(false);
   const [showUpdatePassword, setShowUpdatePassword] = useState(false);
   const { signIn, user } = useAuth();
@@ -91,6 +92,16 @@ export default function Auth() {
 
   const handleUpdatePassword = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (newPassword !== confirmPassword) {
+      toast({
+        title: "Passwords don't match",
+        description: "Please make sure both passwords are the same.",
+        variant: "destructive",
+      });
+      return;
+    }
+    
     setIsLoading(true);
 
     const { error } = await supabase.auth.updateUser({ password: newPassword });
@@ -108,6 +119,7 @@ export default function Auth() {
       });
       setShowUpdatePassword(false);
       setNewPassword("");
+      setConfirmPassword("");
     }
 
     setIsLoading(false);
@@ -131,6 +143,18 @@ export default function Auth() {
                   placeholder="Enter new password"
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
+                  required
+                  minLength={6}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="confirm-password">Confirm Password</Label>
+                <Input
+                  id="confirm-password"
+                  type="password"
+                  placeholder="Confirm new password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
                   required
                   minLength={6}
                 />
