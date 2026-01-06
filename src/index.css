@@ -8,34 +8,34 @@
 
 @layer base {
   :root {
-    /* Core colors - Deep space dark theme with cyan accent */
-    --background: 222 47% 4%;
-    --foreground: 210 40% 98%;
+    /* Core colors - Deep dark theme with neutral silver accent */
+    --background: 0 0% 7%;
+    --foreground: 0 0% 98%;
 
-    --card: 222 47% 7%;
-    --card-foreground: 210 40% 98%;
+    --card: 0 0% 9%;
+    --card-foreground: 0 0% 98%;
 
-    --popover: 222 47% 8%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 0 0% 10%;
+    --popover-foreground: 0 0% 98%;
 
-    --primary: 199 89% 55%;
-    --primary-foreground: 222 47% 4%;
+    --primary: 0 0% 95%;
+    --primary-foreground: 0 0% 7%;
 
-    --secondary: 222 35% 14%;
-    --secondary-foreground: 210 40% 95%;
+    --secondary: 0 0% 14%;
+    --secondary-foreground: 0 0% 90%;
 
-    --muted: 222 30% 20%;
-    --muted-foreground: 215 20% 60%;
+    --muted: 0 0% 18%;
+    --muted-foreground: 0 0% 55%;
 
-    --accent: 199 89% 55%;
-    --accent-foreground: 222 47% 4%;
+    --accent: 0 0% 85%;
+    --accent-foreground: 0 0% 7%;
 
     --destructive: 0 72% 55%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 222 30% 18%;
-    --input: 222 30% 16%;
-    --ring: 199 89% 55%;
+    --border: 0 0% 18%;
+    --input: 0 0% 16%;
+    --ring: 0 0% 70%;
 
     --radius: 0.75rem;
 
@@ -48,47 +48,47 @@
     --purple-bright: 280 80% 80%;
     --purple-dark: 280 60% 45%;
 
-    --cyan: 199 89% 55%;
-    --cyan-bright: 199 89% 70%;
+    --silver: 0 0% 75%;
+    --silver-bright: 0 0% 85%;
 
-    --navy: 222 47% 6%;
-    --navy-light: 222 40% 12%;
+    --navy: 0 0% 8%;
+    --navy-light: 0 0% 14%;
 
     /* Admin dashboard colors - Premium theme */
-    --admin-sidebar: 222 47% 6%;
-    --admin-sidebar-hover: 222 40% 12%;
-    --admin-sidebar-active: 199 89% 55%;
-    --admin-sidebar-border: 222 30% 15%;
-    --admin-header: 222 47% 5%;
-    --admin-accent: 199 89% 55%;
-    --admin-accent-glow: 199 89% 55% / 0.2;
+    --admin-sidebar: 0 0% 6%;
+    --admin-sidebar-hover: 0 0% 12%;
+    --admin-sidebar-active: 0 0% 85%;
+    --admin-sidebar-border: 0 0% 15%;
+    --admin-header: 0 0% 5%;
+    --admin-accent: 0 0% 85%;
+    --admin-accent-glow: 0 0% 85% / 0.2;
 
     /* Status colors */
     --success: 142 76% 45%;
     --success-foreground: 0 0% 98%;
     --warning: 38 92% 55%;
     --warning-foreground: 0 0% 10%;
-    --info: 199 89% 55%;
+    --info: 210 50% 55%;
     --info-foreground: 0 0% 98%;
 
-    /* Advanced gradients - Cyan accent based */
+    /* Advanced gradients - Neutral dark based */
     --gradient-gold: linear-gradient(135deg, hsl(45 100% 60%) 0%, hsl(45 100% 75%) 50%, hsl(45 80% 55%) 100%);
     --gradient-purple: linear-gradient(135deg, hsl(280 80% 65%) 0%, hsl(320 80% 60%) 100%);
-    --gradient-primary: linear-gradient(135deg, hsl(199 89% 55%) 0%, hsl(199 89% 70%) 50%, hsl(185 80% 55%) 100%);
-    --gradient-dark: linear-gradient(180deg, hsl(222 47% 4%) 0%, hsl(222 47% 8%) 100%);
-    --gradient-radial: radial-gradient(ellipse at top, hsl(222 40% 12%) 0%, hsl(222 47% 4%) 70%);
-    --gradient-mesh: radial-gradient(at 40% 20%, hsl(199 89% 55% / 0.12) 0px, transparent 50%),
-                     radial-gradient(at 80% 0%, hsl(280 80% 65% / 0.08) 0px, transparent 50%),
-                     radial-gradient(at 0% 50%, hsl(45 100% 60% / 0.06) 0px, transparent 50%);
+    --gradient-primary: linear-gradient(135deg, hsl(0 0% 85%) 0%, hsl(0 0% 95%) 50%, hsl(0 0% 75%) 100%);
+    --gradient-dark: linear-gradient(180deg, hsl(0 0% 7%) 0%, hsl(0 0% 10%) 100%);
+    --gradient-radial: radial-gradient(ellipse at top, hsl(0 0% 12%) 0%, hsl(0 0% 7%) 70%);
+    --gradient-mesh: radial-gradient(at 40% 20%, hsl(0 0% 20% / 0.15) 0px, transparent 50%),
+                     radial-gradient(at 80% 0%, hsl(0 0% 25% / 0.1) 0px, transparent 50%),
+                     radial-gradient(at 0% 50%, hsl(0 0% 15% / 0.08) 0px, transparent 50%);
 
     /* Premium shadows & effects */
     --glow-gold: 0 0 40px hsl(45 100% 60% / 0.35);
     --glow-purple: 0 0 40px hsl(280 80% 65% / 0.3);
-    --glow-cyan: 0 0 40px hsl(199 89% 55% / 0.35);
-    --glow-primary: 0 0 40px hsl(199 89% 55% / 0.35);
+    --glow-silver: 0 0 40px hsl(0 0% 75% / 0.2);
+    --glow-primary: 0 0 40px hsl(0 0% 80% / 0.2);
     --shadow-elevated: 0 20px 60px -15px hsl(0 0% 0% / 0.7);
     --shadow-card: 0 8px 32px -8px hsl(0 0% 0% / 0.5);
-    --shadow-glow: 0 0 60px -20px hsl(199 89% 55% / 0.5);
+    --shadow-glow: 0 0 60px -20px hsl(0 0% 50% / 0.3);
   }
 }
 
