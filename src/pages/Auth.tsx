@@ -19,21 +19,27 @@ export default function Auth() {
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  useEffect(() => {
-    if (user) {
-      navigate("/");
-    }
-  }, [user, navigate]);
-
   // Check if this is a password recovery redirect
   useEffect(() => {
+    // Check hash params (older flow)
     const hashParams = new URLSearchParams(window.location.hash.substring(1));
-    const type = hashParams.get('type');
+    const hashType = hashParams.get('type');
     
-    if (type === 'recovery') {
+    // Check query params (PKCE flow)
+    const queryParams = new URLSearchParams(window.location.search);
+    const queryType = queryParams.get('type');
+    
+    if (hashType === 'recovery' || queryType === 'recovery') {
       setShowUpdatePassword(true);
     }
   }, []);
+
+  // Only redirect if user is logged in AND not in password update mode
+  useEffect(() => {
+    if (user && !showUpdatePassword) {
+      navigate("/");
+    }
+  }, [user, navigate, showUpdatePassword]);
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
