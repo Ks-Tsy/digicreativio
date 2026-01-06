@@ -222,6 +222,105 @@ const Home = () => {
         </div>
       </section>
 
+      {/* Testimonials Section */}
+      <section className="py-24 relative overflow-hidden bg-secondary/20">
+        <div className="absolute inset-0 bg-gradient-to-b from-background via-secondary/30 to-background" />
+        <div className="absolute top-1/4 left-0 w-96 h-96 bg-purple/5 rounded-full blur-3xl" />
+        <div className="absolute bottom-1/4 right-0 w-96 h-96 bg-gold/5 rounded-full blur-3xl" />
+        
+        <div className="container mx-auto px-4 lg:px-8 relative z-10">
+          <div className="text-center mb-16">
+            <span className="inline-block px-4 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-medium mb-4 border border-primary/20">
+              Client Love
+            </span>
+            <h2 className="text-4xl md:text-6xl font-heading font-bold mb-6">
+              What Our <span className="text-gradient">Clients Say</span>
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+              Don't just take our word for it — hear from the brands we've helped transform
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            {[
+              {
+                name: "Sarah Mitchell",
+                role: "CEO, TechFlow Inc.",
+                rating: 5,
+                review: "DigiCreativio transformed our entire brand identity. Their attention to detail and creative vision exceeded all expectations. Truly world-class work!",
+                avatar: "SM",
+              },
+              {
+                name: "Marcus Chen",
+                role: "Founder, GreenLeaf Co.",
+                rating: 5,
+                review: "The website they designed for us increased our conversions by 150%. Professional, responsive, and incredibly talented team.",
+                avatar: "MC",
+              },
+              {
+                name: "Emma Rodriguez",
+                role: "Marketing Director, Luxe Brand",
+                rating: 5,
+                review: "From concept to execution, every step was seamless. They truly understood our vision and brought it to life beautifully.",
+                avatar: "ER",
+              },
+              {
+                name: "David Kim",
+                role: "CTO, InnovateTech",
+                rating: 5,
+                review: "Outstanding creativity and technical expertise. They delivered a stunning digital experience that our users love.",
+                avatar: "DK",
+              },
+              {
+                name: "Olivia Thompson",
+                role: "Owner, Artisan Café",
+                rating: 5,
+                review: "Best decision we made for our business. The branding package they created perfectly captures our essence.",
+                avatar: "OT",
+              },
+              {
+                name: "James Wilson",
+                role: "Director, Media Plus",
+                rating: 5,
+                review: "Exceptional quality and professionalism. They turned our ideas into a visual masterpiece. Highly recommended!",
+                avatar: "JW",
+              },
+            ].map((testimonial, index) => (
+              <Card
+                key={index}
+                className="group glass border-border/30 hover:border-primary/30 transition-all duration-500 opacity-0 animate-fade-in-up"
+                style={{ animationDelay: `${index * 100}ms`, animationFillMode: "forwards" }}
+              >
+                <CardContent className="p-8">
+                  {/* Rating Stars */}
+                  <div className="flex gap-1 mb-4">
+                    {Array.from({ length: testimonial.rating }).map((_, i) => (
+                      <Star key={i} className="w-5 h-5 fill-gold text-gold" />
+                    ))}
+                  </div>
+                  
+                  {/* Review Text */}
+                  <p className="text-muted-foreground mb-6 leading-relaxed italic">
+                    "{testimonial.review}"
+                  </p>
+                  
+                  {/* Client Info */}
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary to-purple flex items-center justify-center text-primary-foreground font-semibold text-sm">
+                      {testimonial.avatar}
+                    </div>
+                    <div>
+                      <p className="font-semibold text-foreground">{testimonial.name}</p>
+                      <p className="text-sm text-muted-foreground">{testimonial.role}</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* CTA Section */}
       <section className="py-24 relative overflow-hidden">
         <div className="container mx-auto px-4 lg:px-8">
