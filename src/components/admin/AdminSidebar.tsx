@@ -42,37 +42,50 @@ export function AdminSidebar({ activeTab, onTabChange }: AdminSidebarProps) {
   return (
     <aside
       className={cn(
-        "fixed left-0 top-0 z-40 h-screen bg-admin-sidebar border-r border-border/50 transition-all duration-300",
+        "fixed left-0 top-0 z-40 h-screen bg-admin-sidebar border-r border-border/30 transition-all duration-300",
+        "shadow-[4px_0_24px_-8px_hsl(0_0%_0%/0.5)]",
         collapsed ? "w-16" : "w-64"
       )}
     >
       {/* Logo / Brand */}
-      <div className="flex h-16 items-center justify-between px-4 border-b border-border/50">
+      <div className="flex h-16 items-center justify-between px-4 border-b border-border/30">
         {!collapsed && (
-          <div className="flex items-center gap-2">
-            <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-info to-info/60 flex items-center justify-center">
-              <LayoutDashboard className="h-4 w-4 text-info-foreground" />
+          <div className="flex items-center gap-3">
+            <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-info to-info/70 flex items-center justify-center shadow-[0_0_20px_hsl(199_89%_55%/0.3)]">
+              <LayoutDashboard className="h-4 w-4 text-white" />
             </div>
-            <span className="font-heading font-semibold text-lg">Admin</span>
+            <div className="flex flex-col">
+              <span className="font-heading font-bold text-base tracking-tight">Admin</span>
+              <span className="text-[10px] text-muted-foreground/70 uppercase tracking-widest">Dashboard</span>
+            </div>
           </div>
         )}
+        {collapsed && (
+          <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-info to-info/70 flex items-center justify-center mx-auto shadow-[0_0_20px_hsl(199_89%_55%/0.3)]">
+            <LayoutDashboard className="h-4 w-4 text-white" />
+          </div>
+        )}
+      </div>
+
+      {/* Collapse Toggle */}
+      <div className="absolute top-[4.5rem] -right-3 z-50">
         <Button
-          variant="ghost"
+          variant="outline"
           size="icon"
-          className="h-8 w-8 hover:bg-admin-sidebar-hover"
+          className="h-6 w-6 rounded-full bg-admin-sidebar border-border/50 shadow-md hover:bg-admin-sidebar-hover"
           onClick={() => setCollapsed(!collapsed)}
         >
           {collapsed ? (
-            <ChevronRight className="h-4 w-4" />
+            <ChevronRight className="h-3 w-3" />
           ) : (
-            <ChevronLeft className="h-4 w-4" />
+            <ChevronLeft className="h-3 w-3" />
           )}
         </Button>
       </div>
 
       {/* Navigation */}
-      <ScrollArea className="h-[calc(100vh-4rem)] py-4">
-        <nav className="flex flex-col gap-1 px-2">
+      <ScrollArea className="h-[calc(100vh-4rem)] py-6">
+        <nav className="flex flex-col gap-1.5 px-3">
           {menuItems.map((item) => {
             const Icon = item.icon;
             const isActive = activeTab === item.id;
@@ -81,15 +94,21 @@ export function AdminSidebar({ activeTab, onTabChange }: AdminSidebarProps) {
                 key={item.id}
                 onClick={() => onTabChange(item.id)}
                 className={cn(
-                  "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all",
-                  "hover:bg-admin-sidebar-hover",
+                  "flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium transition-all duration-200",
+                  "hover:bg-admin-sidebar-hover group relative",
                   isActive
-                    ? "bg-info/10 text-info border-l-2 border-info"
+                    ? "bg-info/15 text-info shadow-[inset_0_0_20px_hsl(199_89%_55%/0.1)]"
                     : "text-muted-foreground hover:text-foreground"
                 )}
               >
-                <Icon className={cn("h-5 w-5 flex-shrink-0", isActive && "text-info")} />
-                {!collapsed && <span>{item.label}</span>}
+                {isActive && (
+                  <span className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-info rounded-r-full shadow-[0_0_10px_hsl(199_89%_55%/0.5)]" />
+                )}
+                <Icon className={cn(
+                  "h-5 w-5 flex-shrink-0 transition-all",
+                  isActive ? "text-info" : "group-hover:text-foreground"
+                )} />
+                {!collapsed && <span className="truncate">{item.label}</span>}
               </button>
             );
           })}

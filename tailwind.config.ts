@@ -118,12 +118,15 @@ export default {
   				DEFAULT: 'hsl(var(--info))',
   				foreground: 'hsl(var(--info-foreground))'
   			},
-  			admin: {
-  				sidebar: 'hsl(var(--admin-sidebar))',
-  				'sidebar-hover': 'hsl(var(--admin-sidebar-hover))',
-  				'sidebar-active': 'hsl(var(--admin-sidebar-active))',
-  				header: 'hsl(var(--admin-header))'
-  			}
+			admin: {
+				sidebar: 'hsl(var(--admin-sidebar))',
+				'sidebar-hover': 'hsl(var(--admin-sidebar-hover))',
+				'sidebar-active': 'hsl(var(--admin-sidebar-active))',
+				'sidebar-border': 'hsl(var(--admin-sidebar-border))',
+				header: 'hsl(var(--admin-header))',
+				accent: 'hsl(var(--admin-accent))',
+				'accent-glow': 'hsl(var(--admin-accent-glow))'
+			}
   		},
   		borderRadius: {
   			lg: 'var(--radius)',
