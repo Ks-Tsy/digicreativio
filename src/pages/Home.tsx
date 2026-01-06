@@ -94,7 +94,7 @@ const Home = () => {
           }}>
               <div className="relative inline-block">
                 <div className="absolute inset-0 bg-gold/20 blur-3xl rounded-full" />
-                <img src={logo} alt="DigiCreativio Logo" className="mx-auto w-72 md:w-96 h-auto object-contain relative z-10" />
+                <img src={logo} alt="DigiCreativio Logo" className="mx-auto w-72 md:w-96 h-auto object-contain relative z-10 border-0 shadow-none" />
               </div>
             </div>
             
