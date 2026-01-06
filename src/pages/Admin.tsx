@@ -271,7 +271,7 @@ export default function Admin() {
             <AdminContent siteContent={siteContent} onUpdateContent={handleUpdateContent} />
           )}
           {activeTab === "settings" && (
-            <AdminSettings siteSettings={siteSettings} onUpdateSetting={handleUpdateSetting} />
+            <AdminSettings siteSettings={siteSettings} onUpdateSetting={handleUpdateSetting} onRefresh={loadData} />
           )}
           {activeTab === "social" && (
             <AdminSocial
