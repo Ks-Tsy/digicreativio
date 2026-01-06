@@ -278,7 +278,7 @@ const Home = () => {
               <span className="inline-block px-4 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-medium mb-6 border border-primary/20">
                 Let's Create Together
               </span>
-              <h2 className="text-4xl md:text-5xl lg:text-6xl font-heading font-bold mb-6 text-gray-200">
+              <h2 className="text-4xl md:text-5xl lg:text-6xl font-heading font-bold mb-6 text-cyan-500">
                 {ctaData?.title || "Ready to Transform"}
                 <br />
                 <span className="text-gradient">Your Brand?</span>
