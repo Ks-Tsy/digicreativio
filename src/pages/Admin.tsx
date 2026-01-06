@@ -241,6 +241,7 @@ export default function Admin() {
         onLogout={handleLogout} 
         onRefresh={loadData}
         sidebarCollapsed={sidebarCollapsed}
+        activeTab={activeTab}
       />
       
       <main className={`pt-20 pb-8 px-6 transition-all duration-300 ${sidebarCollapsed ? "ml-16" : "ml-64"}`}>
