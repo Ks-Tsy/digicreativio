@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import AIChatbot from "@/components/AIChatbot";
 import Home from "./pages/Home";
 import About from "./pages/About";
 import Services from "./pages/Services";
@@ -42,6 +43,7 @@ const App = () => (
               </Routes>
             </main>
             <Footer />
+            <AIChatbot />
           </div>
         </AuthProvider>
       </BrowserRouter>
