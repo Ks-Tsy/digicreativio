@@ -23,16 +23,16 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { ShortId } from "@/components/ShortId";
 
-type TableName = "contact_submissions" | "portfolio_items" | "profiles" | "user_roles" | "site_content" | "site_settings" | "social_links";
+// Restrict to safe tables only - no user_roles or profiles
+type TableName = "contact_submissions" | "portfolio_items" | "site_content" | "site_settings" | "social_links";
 
 const tables: { value: TableName; label: string }[] = [
   { value: "contact_submissions", label: "Contact Submissions" },
   { value: "portfolio_items", label: "Portfolio Items" },
-  { value: "profiles", label: "Profiles" },
-  { value: "user_roles", label: "User Roles" },
   { value: "site_content", label: "Site Content" },
   { value: "site_settings", label: "Site Settings" },
   { value: "social_links", label: "Social Links" },
+
 ];
 
 export function AdminDatabase() {
@@ -61,9 +61,10 @@ export function AdminDatabase() {
         setTableData([]);
       }
     } catch (error: any) {
+      // Generic error message - don't expose internal details
       toast({
         title: "Error",
-        description: error.message,
+        description: "Failed to load table data",
         variant: "destructive",
       });
       setTableData([]);

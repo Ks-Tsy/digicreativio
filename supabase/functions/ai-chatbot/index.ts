@@ -1,8 +1,49 @@
-// AI Chatbot Edge Function for DigiCreativio
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+// Get the allowed origin from environment or default to production domain
+const ALLOWED_ORIGIN = Deno.env.get("ALLOWED_ORIGIN") || "https://digicreativio.lovable.app";
+
+const getCorsHeaders = (origin: string | null) => {
+  // Only allow specific origin in production
+  const allowedOrigin = origin && (
+    origin === ALLOWED_ORIGIN || 
+    origin.includes("localhost") || 
+    origin.includes("lovable.app")
+  ) ? origin : ALLOWED_ORIGIN;
+  
+  return {
+    "Access-Control-Allow-Origin": allowedOrigin,
+    "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+    "Access-Control-Allow-Credentials": "true",
+  };
+};
+
+// Rate limiting store
+const rateLimitStore = new Map<string, { count: number; resetAt: number }>();
+const RATE_LIMIT = 20; // Max requests per hour
+const RATE_LIMIT_WINDOW = 60 * 60 * 1000; // 1 hour
+
+const getClientIP = (req: Request): string => {
+  const forwarded = req.headers.get("x-forwarded-for");
+  if (forwarded) return forwarded.split(",")[0].trim();
+  return req.headers.get("x-real-ip") || "unknown";
+};
+
+const checkRateLimit = (ip: string): { allowed: boolean; remaining: number } => {
+  const now = Date.now();
+  const entry = rateLimitStore.get(ip);
+
+  if (!entry || now > entry.resetAt) {
+    rateLimitStore.set(ip, { count: 1, resetAt: now + RATE_LIMIT_WINDOW });
+    return { allowed: true, remaining: RATE_LIMIT - 1 };
+  }
+
+  if (entry.count >= RATE_LIMIT) {
+    return { allowed: false, remaining: 0 };
+  }
+
+  entry.count++;
+  return { allowed: true, remaining: RATE_LIMIT - entry.count };
 };
 
 const SYSTEM_PROMPT = `You are a helpful AI assistant for DigiCreativio, a premium digital creative agency. Your role is to:
@@ -26,24 +67,50 @@ const SYSTEM_PROMPT = `You are a helpful AI assistant for DigiCreativio, a premi
 Keep responses concise (2-3 paragraphs max) and helpful. If asked about pricing, explain that prices vary based on project scope and encourage them to reach out for a custom quote.`;
 
 Deno.serve(async (req) => {
+  const origin = req.headers.get("origin");
+  const corsHeaders = getCorsHeaders(origin);
+
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
+    // Rate limiting
+    const clientIP = getClientIP(req);
+    const rateLimit = checkRateLimit(clientIP);
+
+    if (!rateLimit.allowed) {
+      console.log(`Rate limit exceeded for chatbot from IP: ${clientIP}`);
+      return new Response(
+        JSON.stringify({ 
+          error: "Too many requests",
+          response: "I'm receiving too many requests right now. Please try again in a few minutes."
+        }),
+        { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
     const { message, history } = await req.json();
+
+    // Validate input
+    if (!message || typeof message !== "string" || message.length > 2000) {
+      return new Response(
+        JSON.stringify({ error: "Invalid message", response: "Please provide a valid message." }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
 
     // Build conversation history
     const messages = [
       { role: "system", content: SYSTEM_PROMPT },
-      ...history.slice(-10).map((msg: { role: string; content: string }) => ({
+      ...(Array.isArray(history) ? history.slice(-10) : []).map((msg: { role: string; content: string }) => ({
         role: msg.role,
-        content: msg.content,
+        content: String(msg.content).slice(0, 2000),
       })),
-      { role: "user", content: message },
+      { role: "user", content: message.slice(0, 2000) },
     ];
 
-    // Call Lovable AI Gateway (using gemini-2.5-flash for fast, cost-effective responses)
+    // Call Lovable AI Gateway
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) {
       throw new Error("LOVABLE_API_KEY is not configured");
@@ -74,9 +141,7 @@ Deno.serve(async (req) => {
 
     return new Response(
       JSON.stringify({ response: aiResponse }),
-      {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      }
+      { headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   } catch (error) {
     console.error("Error in ai-chatbot function:", error);
