@@ -2,69 +2,85 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+/* Advanced Design System - Bold & Distinctive Aesthetic */
 
 @layer base {
   :root {
-    --background: 0 0% 5%;
-    --foreground: 0 0% 95%;
+    --background: 220 15% 4%;
+    --foreground: 220 10% 98%;
 
-    --card: 0 0% 8%;
-    --card-foreground: 0 0% 95%;
+    --card: 220 15% 7%;
+    --card-foreground: 220 10% 98%;
 
-    --popover: 0 0% 8%;
-    --popover-foreground: 0 0% 95%;
+    --popover: 220 15% 7%;
+    --popover-foreground: 220 10% 98%;
 
-    --primary: 0 0% 75%;
-    --primary-foreground: 0 0% 10%;
+    --primary: 45 100% 60%;
+    --primary-foreground: 220 15% 4%;
 
-    --secondary: 0 0% 13%;
-    --secondary-foreground: 0 0% 90%;
+    --secondary: 220 15% 12%;
+    --secondary-foreground: 220 10% 90%;
 
-    --muted: 0 0% 15%;
-    --muted-foreground: 0 0% 60%;
+    --muted: 220 15% 18%;
+    --muted-foreground: 220 10% 55%;
 
-    --accent: 210 20% 70%;
-    --accent-foreground: 0 0% 10%;
+    --accent: 280 80% 65%;
+    --accent-foreground: 220 10% 98%;
 
-    --destructive: 0 84.2% 60.2%;
+    --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 0 0% 20%;
-    --input: 0 0% 20%;
-    --ring: 0 0% 75%;
+    --border: 220 15% 18%;
+    --input: 220 15% 18%;
+    --ring: 45 100% 60%;
 
     --radius: 0.75rem;
 
-    /* Custom design tokens */
-    --metallic: 210 15% 70%;
-    --metallic-bright: 210 20% 85%;
-    --charcoal: 0 0% 8%;
-    --charcoal-light: 0 0% 13%;
+    /* Premium design tokens */
+    --gold: 45 100% 60%;
+    --gold-bright: 45 100% 75%;
+    --gold-dark: 45 80% 45%;
+    
+    --purple: 280 80% 65%;
+    --purple-bright: 280 80% 80%;
+    --purple-dark: 280 60% 45%;
+    
+    --cyan: 185 80% 55%;
+    --cyan-bright: 185 80% 70%;
+    
+    --navy: 220 30% 8%;
+    --navy-light: 220 25% 15%;
     
     /* Admin dashboard colors */
-    --admin-sidebar: 0 0% 6%;
-    --admin-sidebar-hover: 0 0% 10%;
-    --admin-sidebar-active: 210 100% 50%;
-    --admin-header: 0 0% 7%;
-    --success: 142 76% 36%;
+    --admin-sidebar: 220 20% 5%;
+    --admin-sidebar-hover: 220 20% 10%;
+    --admin-sidebar-active: 45 100% 60%;
+    --admin-header: 220 20% 6%;
+    
+    /* Status colors */
+    --success: 142 76% 45%;
     --success-foreground: 0 0% 98%;
-    --warning: 38 92% 50%;
+    --warning: 38 92% 55%;
     --warning-foreground: 0 0% 10%;
-    --info: 199 89% 48%;
+    --info: 199 89% 55%;
     --info-foreground: 0 0% 98%;
     
-    /* Gradients */
-    --gradient-metallic: linear-gradient(135deg, hsl(210 20% 70%) 0%, hsl(210 15% 85%) 100%);
-    --gradient-dark: linear-gradient(180deg, hsl(0 0% 5%) 0%, hsl(0 0% 8%) 100%);
-    --gradient-admin: linear-gradient(135deg, hsl(210 100% 50% / 0.1) 0%, hsl(280 100% 50% / 0.1) 100%);
+    /* Advanced gradients */
+    --gradient-gold: linear-gradient(135deg, hsl(45 100% 60%) 0%, hsl(45 100% 75%) 50%, hsl(45 80% 55%) 100%);
+    --gradient-purple: linear-gradient(135deg, hsl(280 80% 65%) 0%, hsl(320 80% 60%) 100%);
+    --gradient-dark: linear-gradient(180deg, hsl(220 15% 4%) 0%, hsl(220 20% 8%) 100%);
+    --gradient-radial: radial-gradient(ellipse at top, hsl(220 20% 12%) 0%, hsl(220 15% 4%) 70%);
+    --gradient-mesh: radial-gradient(at 40% 20%, hsl(280 80% 65% / 0.15) 0px, transparent 50%),
+                     radial-gradient(at 80% 0%, hsl(45 100% 60% / 0.1) 0px, transparent 50%),
+                     radial-gradient(at 0% 50%, hsl(185 80% 55% / 0.08) 0px, transparent 50%);
     
-    /* Shadows & Effects */
-    --glow-metallic: 0 0 30px hsl(210 20% 70% / 0.3);
-    --shadow-elevated: 0 10px 40px -10px hsl(0 0% 0% / 0.5);
-    --shadow-card: 0 4px 20px -4px hsl(0 0% 0% / 0.3);
+    /* Premium shadows & effects */
+    --glow-gold: 0 0 40px hsl(45 100% 60% / 0.35);
+    --glow-purple: 0 0 40px hsl(280 80% 65% / 0.3);
+    --glow-cyan: 0 0 40px hsl(185 80% 55% / 0.25);
+    --shadow-elevated: 0 20px 60px -15px hsl(0 0% 0% / 0.7);
+    --shadow-card: 0 8px 32px -8px hsl(0 0% 0% / 0.5);
+    --shadow-glow: 0 0 60px -20px hsl(45 100% 60% / 0.5);
   }
 }
 
@@ -74,39 +90,148 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground antialiased;
     font-feature-settings: "rlig" 1, "calt" 1;
   }
   
-  /* Smooth scrolling */
   html {
     scroll-behavior: smooth;
+  }
+
+  ::selection {
+    @apply bg-primary/30 text-foreground;
   }
 }
 
 @layer utilities {
-  /* Gradient text effect */
+  /* Premium gradient text effects */
   .text-gradient {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-metallic-bright to-metallic;
+    @apply bg-clip-text text-transparent;
+    background-image: var(--gradient-gold);
   }
   
-  /* Metallic glow effect */
-  .glow-metallic {
-    box-shadow: var(--glow-metallic);
+  .text-gradient-purple {
+    @apply bg-clip-text text-transparent;
+    background-image: var(--gradient-purple);
   }
   
-  /* Glass morphism */
+  .text-gradient-white {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(180deg, hsl(220 10% 98%) 0%, hsl(220 10% 70%) 100%);
+  }
+  
+  /* Glow effects */
+  .glow-gold {
+    box-shadow: var(--glow-gold);
+  }
+  
+  .glow-purple {
+    box-shadow: var(--glow-purple);
+  }
+  
+  .glow-cyan {
+    box-shadow: var(--glow-cyan);
+  }
+  
+  /* Glass morphism - premium */
   .glass {
-    @apply bg-card/50 backdrop-blur-xl border border-border/50;
+    @apply bg-card/60 backdrop-blur-2xl border border-border/40;
+    box-shadow: inset 0 1px 0 0 hsl(220 10% 98% / 0.05);
   }
-}
-
-@layer base {
-  * {
-    @apply border-border;
+  
+  .glass-strong {
+    @apply bg-card/80 backdrop-blur-3xl border border-border/60;
+    box-shadow: inset 0 1px 0 0 hsl(220 10% 98% / 0.1);
   }
-
-  body {
-    @apply bg-background text-foreground;
+  
+  /* Mesh background */
+  .bg-mesh {
+    background-image: var(--gradient-mesh);
+    background-color: hsl(var(--background));
   }
+  
+  /* Noise texture overlay */
+  .noise::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    opacity: 0.03;
+    pointer-events: none;
+    z-index: 1;
+  }
+  
+  /* Animated gradient border */
+  .border-gradient {
+    position: relative;
+    background: hsl(var(--card));
+    border-radius: var(--radius);
+  }
+  
+  .border-gradient::before {
+    content: "";
+    position: absolute;
+    inset: -1px;
+    border-radius: calc(var(--radius) + 1px);
+    padding: 1px;
+    background: linear-gradient(135deg, hsl(45 100% 60% / 0.5), hsl(280 80% 65% / 0.3), hsl(185 80% 55% / 0.2));
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+  
+  /* Shimmer effect */
+  .shimmer {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .shimmer::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      hsl(45 100% 60% / 0.1),
+      transparent
+    );
+    transform: translateX(-100%);
+    animation: shimmer 3s infinite;
+  }
+  
+  @keyframes shimmer {
+    100% {
+      transform: translateX(100%);
+    }
+  }
+  
+  /* Float animation */
+  .float {
+    animation: float 6s ease-in-out infinite;
+  }
+  
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-20px); }
+  }
+  
+  /* Pulse glow */
+  .pulse-glow {
+    animation: pulse-glow 2s ease-in-out infinite;
+  }
+  
+  @keyframes pulse-glow {
+    0%, 100% { box-shadow: 0 0 20px hsl(45 100% 60% / 0.3); }
+    50% { box-shadow: 0 0 40px hsl(45 100% 60% / 0.6); }
+  }
+  
+  /* Stagger animations */
+  .stagger-1 { animation-delay: 0.1s; }
+  .stagger-2 { animation-delay: 0.2s; }
+  .stagger-3 { animation-delay: 0.3s; }
+  .stagger-4 { animation-delay: 0.4s; }
+  .stagger-5 { animation-delay: 0.5s; }
 }
