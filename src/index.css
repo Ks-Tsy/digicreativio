@@ -13,7 +13,7 @@
   :root {
     /* Core colors - Deep dark theme with neutral silver accent */
     --background: 220 15% 4%;
-    --foreground: 220 10% 98%;
+    --foreground: 0 0% 70%;
 
     --card: 220 15% 7%;
     --card-foreground: 220 10% 98%;
