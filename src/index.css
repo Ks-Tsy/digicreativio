@@ -318,6 +318,16 @@
     }
   }
 
+  /* Spinner shimmer rotation */
+  @keyframes shimmer-rotate {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
   /* Float animation */
   .float {
     animation: float 6s ease-in-out infinite;
