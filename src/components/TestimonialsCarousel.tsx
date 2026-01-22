@@ -70,7 +70,7 @@ export function TestimonialsCarousel() {
       {/* Carousel Container - No auto-sliding animation */}
       <div className="overflow-hidden px-2">
         <div
-          className="flex gap-6"
+          className="flex gap-6 transition-transform duration-300 ease-out"
           style={{
             transform: `translateX(-${currentIndex * (100 / itemsPerView + 2)}%)`,
           }}
