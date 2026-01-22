@@ -18,6 +18,7 @@ import { AdminDatabase } from "@/components/admin/AdminDatabase";
 import { AdminActivityLogs } from "@/components/admin/AdminActivityLogs";
 import { AdminTestimonials } from "@/components/admin/AdminTestimonials";
 import { AdminBlog } from "@/components/admin/AdminBlog";
+import { AdminSpamLogs } from "@/components/admin/AdminSpamLogs";
 
 export default function Admin() {
   const { user, isAdmin, loading, signOut } = useAuth();
@@ -284,6 +285,7 @@ export default function Admin() {
               onDelete={handleDeleteContact}
             />
           )}
+          {activeTab === "spam" && <AdminSpamLogs />}
           {activeTab === "portfolio" && (
             <AdminPortfolio portfolioItems={portfolioItems} onRefresh={loadData} />
           )}

@@ -10,6 +10,10 @@ const rateLimitStore = new Map<string, { count: number; resetAt: number }>();
 const RATE_LIMIT = 5; // Max submissions per hour
 const RATE_LIMIT_WINDOW = 60 * 60 * 1000; // 1 hour
 
+// Timing check constants
+const MIN_FORM_TIME_MS = 3000; // Minimum 3 seconds to fill form
+const MAX_FORM_TIME_MS = 30 * 60 * 1000; // Maximum 30 minutes
+
 // Validation schema
 const validateContact = (data: any): { valid: boolean; errors: string[] } => {
   const errors: string[] = [];
@@ -82,6 +86,26 @@ const checkRateLimit = (ip: string): { allowed: boolean; remaining: number } => 
   return { allowed: true, remaining: RATE_LIMIT - entry.count };
 };
 
+// Log spam attempt to database
+const logSpamAttempt = async (
+  supabase: any,
+  ip: string,
+  reason: string,
+  details: Record<string, any>
+) => {
+  try {
+    await supabase.from("spam_logs").insert([
+      {
+        ip_address: ip,
+        reason,
+        details,
+      },
+    ]);
+  } catch (error) {
+    console.error("Failed to log spam attempt:", error);
+  }
+};
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
@@ -94,13 +118,76 @@ Deno.serve(async (req) => {
     );
   }
 
+  // Initialize Supabase client with service role for bypassing RLS
+  const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+  const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+  const supabase = createClient(supabaseUrl, supabaseServiceKey);
+
   try {
-    // Rate limiting
     const clientIP = getClientIP(req);
+    const body = await req.json();
+
+    // === HONEYPOT CHECK ===
+    // If the hidden field is filled, it's a bot
+    if (body._hp_field && body._hp_field.length > 0) {
+      console.log(`Honeypot triggered for IP: ${clientIP}`);
+      await logSpamAttempt(supabase, clientIP, "honeypot", {
+        field_value: body._hp_field.slice(0, 100),
+      });
+      // Return success to not reveal detection
+      return new Response(
+        JSON.stringify({ success: true, message: "Message sent successfully" }),
+        { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    // === TIMING CHECK ===
+    const formLoadedAt = body._form_loaded_at;
+    if (formLoadedAt) {
+      const submissionTime = Date.now() - formLoadedAt;
+      
+      // Too fast - likely a bot
+      if (submissionTime < MIN_FORM_TIME_MS) {
+        console.log(`Timing check failed (too fast) for IP: ${clientIP}, time: ${submissionTime}ms`);
+        await logSpamAttempt(supabase, clientIP, "timing_too_fast", {
+          submission_time_ms: submissionTime,
+          threshold_ms: MIN_FORM_TIME_MS,
+        });
+        return new Response(
+          JSON.stringify({ 
+            error: "Please take a moment to fill out the form carefully.",
+            slowDown: true 
+          }),
+          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
+      
+      // Too slow - might be replay attack or stale form
+      if (submissionTime > MAX_FORM_TIME_MS) {
+        console.log(`Timing check failed (too slow) for IP: ${clientIP}, time: ${submissionTime}ms`);
+        await logSpamAttempt(supabase, clientIP, "timing_too_slow", {
+          submission_time_ms: submissionTime,
+          threshold_ms: MAX_FORM_TIME_MS,
+        });
+        return new Response(
+          JSON.stringify({ 
+            error: "Your session has expired. Please refresh the page and try again.",
+            expired: true 
+          }),
+          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
+    }
+
+    // === RATE LIMITING ===
     const rateLimit = checkRateLimit(clientIP);
 
     if (!rateLimit.allowed) {
       console.log(`Rate limit exceeded for IP: ${clientIP}`);
+      await logSpamAttempt(supabase, clientIP, "rate_limit", {
+        limit: RATE_LIMIT,
+        window_ms: RATE_LIMIT_WINDOW,
+      });
       return new Response(
         JSON.stringify({ error: "Too many requests. Please try again later." }),
         { 
@@ -115,7 +202,6 @@ Deno.serve(async (req) => {
     }
 
     // Parse and validate input
-    const body = await req.json();
     const validation = validateContact(body);
 
     if (!validation.valid) {
@@ -136,11 +222,6 @@ Deno.serve(async (req) => {
         body.message.trim().slice(0, 5000)
       ].filter(Boolean).join("\n"),
     };
-
-    // Initialize Supabase client with service role for bypassing RLS
-    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
-    const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-    const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
     // Insert into database
     const { error } = await supabase

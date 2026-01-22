@@ -272,6 +272,30 @@ export type Database = {
         }
         Relationships: []
       }
+      spam_logs: {
+        Row: {
+          created_at: string
+          details: Json | null
+          id: string
+          ip_address: string
+          reason: string
+        }
+        Insert: {
+          created_at?: string
+          details?: Json | null
+          id?: string
+          ip_address: string
+          reason: string
+        }
+        Update: {
+          created_at?: string
+          details?: Json | null
+          id?: string
+          ip_address?: string
+          reason?: string
+        }
+        Relationships: []
+      }
       testimonials: {
         Row: {
           avatar_url: string | null

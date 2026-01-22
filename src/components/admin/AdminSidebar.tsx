@@ -14,6 +14,7 @@ import {
   Activity,
   Star,
   PenSquare,
+  ShieldAlert,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -30,6 +31,7 @@ const menuItems = [
   { id: "portfolio", label: "Portfolio", icon: FolderOpen },
   { id: "testimonials", label: "Testimonials", icon: Star },
   { id: "contacts", label: "Contacts", icon: MessageSquare },
+  { id: "spam", label: "Spam Activity", icon: ShieldAlert },
   { id: "users", label: "Users", icon: Users },
   { id: "social", label: "Social Links", icon: Share2 },
   { id: "activity", label: "Activity Logs", icon: Activity },
