@@ -88,10 +88,7 @@ const Home = () => {
         <div className="container mx-auto px-4 lg:px-8 relative z-10 pt-24">
           <div className="max-w-5xl mx-auto text-center">
             {/* Logo with glow */}
-            <div className="mb-8 opacity-0 animate-scale-in" style={{
-            animationDelay: "100ms",
-            animationFillMode: "forwards"
-          }}>
+            <div className="mb-8">
               <div className="relative inline-block">
                 <div className="absolute inset-0 bg-gold/20 blur-3xl rounded-full" />
                 <img src={logo} alt="DigiCreativio Logo" className="mx-auto w-72 md:w-96 h-auto object-contain relative z-10 border-0 shadow-none" />
@@ -99,28 +96,19 @@ const Home = () => {
             </div>
             
             {/* Main heading with gradient */}
-            <h1 className="text-5xl md:text-7xl lg:text-8xl font-heading font-bold mb-8 leading-[1.1] opacity-0 animate-fade-in" style={{
-            animationDelay: "300ms",
-            animationFillMode: "forwards"
-          }}>
+            <h1 className="text-5xl md:text-7xl lg:text-8xl font-heading font-bold mb-8 leading-[1.1]">
               <span className="text-gradient text-justify text-gray-400 bg-gray-400">{heroData?.title || "Crafting the Future"}</span>
               <br />
               <span className="text-gradient-white"></span>
             </h1>
             
             {/* Subtitle */}
-            <p className="text-xl md:text-2xl text-muted-foreground mb-10 max-w-3xl mx-auto leading-relaxed opacity-0 animate-fade-in" style={{
-            animationDelay: "500ms",
-            animationFillMode: "forwards"
-          }}>
+            <p className="text-xl md:text-2xl text-muted-foreground mb-10 max-w-3xl mx-auto leading-relaxed">
               {heroData?.subtitle || "Transform your brand with stunning visuals, memorable identities, and exceptional web experiences tailored to your unique vision."}
             </p>
             
             {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16 opacity-0 animate-fade-in" style={{
-            animationDelay: "700ms",
-            animationFillMode: "forwards"
-          }}>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
               <Button asChild size="lg" className="group relative bg-primary hover:bg-gold-bright text-primary-foreground font-semibold text-lg px-10 py-6 rounded-xl glow-gold transition-all duration-300 hover:scale-105">
                 <Link to="/contact">
                   {heroData?.cta_primary || "Start Your Project"}
@@ -133,10 +121,7 @@ const Home = () => {
             </div>
 
             {/* Stats */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto opacity-0 animate-fade-in-up" style={{
-            animationDelay: "900ms",
-            animationFillMode: "forwards"
-          }}>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
               {stats.map((stat, index) => <div key={index} className="text-center p-4">
                   <div className="text-3xl md:text-4xl font-bold text-gradient mb-1 text-gray-100">{stat.value}</div>
                   <div className="text-sm text-muted-foreground">{stat.label}</div>
@@ -146,10 +131,7 @@ const Home = () => {
         </div>
         
         {/* Scroll indicator */}
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 opacity-0 animate-fade-in" style={{
-        animationDelay: "1200ms",
-        animationFillMode: "forwards"
-      }}>
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10">
           <div className="w-6 h-10 border-2 border-muted-foreground/30 rounded-full flex justify-center p-2">
             <div className="w-1 h-2 bg-primary rounded-full animate-bounce-soft" />
           </div>
@@ -173,10 +155,7 @@ const Home = () => {
             icon: Globe,
             title: "Global Reach",
             desc: "Serving clients worldwide with excellence"
-          }].map((feature, index) => <div key={index} className="text-center p-6 opacity-0 animate-fade-in-up" style={{
-            animationDelay: `${index * 150}ms`,
-            animationFillMode: "forwards"
-          }}>
+          }].map((feature, index) => <div key={index} className="text-center p-6">
                 <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-primary/10 border border-primary/20 mb-4">
                   <feature.icon className="w-8 h-8 text-primary" />
                 </div>
@@ -206,10 +185,7 @@ const Home = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {services.map((service, index) => <Card key={index} className="group glass border-border/30 hover:border-primary/40 transition-all duration-500 hover:shadow-2xl hover:shadow-primary/10 opacity-0 animate-fade-in-up overflow-hidden" style={{
-            animationDelay: `${index * 100}ms`,
-            animationFillMode: "forwards"
-          }}>
+            {services.map((service, index) => <Card key={index} className="group glass border-border/30 hover:border-primary/40 transition-all duration-500 hover:shadow-2xl hover:shadow-primary/10 overflow-hidden">
                 <CardContent className="p-8 text-center relative">
                   <div className="absolute inset-0 bg-gradient-to-b from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                   <div className={`inline-flex items-center justify-center w-20 h-20 rounded-2xl mb-6 transition-all duration-500 group-hover:scale-110
