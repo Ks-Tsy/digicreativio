@@ -127,8 +127,28 @@ export default function Admin() {
   };
 
   const handleRoleUpdate = async (userId: string, newRole: string) => {
-    const user = users.find(u => u.id === userId);
+    const targetUser = users.find(u => u.id === userId);
     const oldRole = userRoles.find(r => r.user_id === userId)?.role || "user";
+    
+    // Validate role value
+    if (!["user", "admin"].includes(newRole)) {
+      toast({ title: "Error", description: "Invalid role value", variant: "destructive" });
+      return;
+    }
+
+    // Enforce single admin constraint - check if trying to add a second admin
+    if (newRole === "admin") {
+      const existingAdmins = userRoles.filter(r => r.role === "admin" && r.user_id !== userId);
+      if (existingAdmins.length > 0) {
+        toast({
+          title: "Error",
+          description: "Only one admin user is allowed. Remove the existing admin role first.",
+          variant: "destructive",
+        });
+        return;
+      }
+    }
+
     await supabase.from("user_roles").delete().eq("user_id", userId);
     const { error } = await supabase.from("user_roles").insert([{ user_id: userId, role: newRole as any }]);
     if (!error) {
@@ -136,11 +156,13 @@ export default function Admin() {
         actionType: "role_change",
         entityType: "user_role",
         entityId: userId,
-        entityName: user?.email,
+        entityName: targetUser?.email,
         details: { old_role: oldRole, new_role: newRole },
       });
       toast({ title: "Success", description: "Role updated" });
       loadData();
+    } else {
+      toast({ title: "Error", description: "Failed to update role", variant: "destructive" });
     }
   };
 

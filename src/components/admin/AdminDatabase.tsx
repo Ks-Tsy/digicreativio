@@ -32,8 +32,43 @@ const tables: { value: TableName; label: string }[] = [
   { value: "site_content", label: "Site Content" },
   { value: "site_settings", label: "Site Settings" },
   { value: "social_links", label: "Social Links" },
-
 ];
+
+// Field whitelist - only these fields can be edited for each table
+const EDITABLE_FIELDS: Record<TableName, string[]> = {
+  contact_submissions: ["name", "email", "message", "status"],
+  portfolio_items: ["title", "description", "category", "project_url", "display_order"],
+  site_content: ["page_name", "section_name", "content_type", "content_data"],
+  site_settings: ["setting_key", "setting_value", "setting_type", "description"],
+  social_links: ["platform", "url", "icon_name", "display_order", "is_active"],
+};
+
+// Fields that should never be editable
+const SYSTEM_FIELDS = ["id", "created_at", "updated_at", "user_id", "author_id"];
+
+// Maximum field length to prevent abuse
+const MAX_STRING_LENGTH = 10000;
+
+// Validate and sanitize field value
+const sanitizeValue = (value: any, field: string): any => {
+  if (value === null || value === undefined) return value;
+  
+  if (typeof value === "string") {
+    // Trim and limit length
+    return value.trim().slice(0, MAX_STRING_LENGTH);
+  }
+  
+  if (typeof value === "object") {
+    // For JSON fields, ensure it's valid and limit size
+    const stringified = JSON.stringify(value);
+    if (stringified.length > MAX_STRING_LENGTH) {
+      throw new Error("Value too large");
+    }
+    return value;
+  }
+  
+  return value;
+};
 
 export function AdminDatabase() {
   const { toast } = useToast();
@@ -79,6 +114,17 @@ export function AdminDatabase() {
   }, [selectedTable]);
 
   const handleDelete = async (id: string) => {
+    // Validate ID format (UUID)
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    if (!uuidRegex.test(id)) {
+      toast({
+        title: "Error",
+        description: "Invalid record ID",
+        variant: "destructive",
+      });
+      return;
+    }
+
     const { error } = await supabase.from(selectedTable).delete().eq("id", id);
 
     if (error) {
@@ -99,7 +145,40 @@ export function AdminDatabase() {
   const handleUpdate = async () => {
     if (!editingRecord) return;
 
-    const { id, ...updates } = editingRecord;
+    const { id, ...allFields } = editingRecord;
+    
+    // Only include whitelisted fields in the update
+    const allowedFields = EDITABLE_FIELDS[selectedTable] || [];
+    const updates: Record<string, any> = {};
+    
+    for (const [field, value] of Object.entries(allFields)) {
+      // Skip system fields entirely
+      if (SYSTEM_FIELDS.includes(field)) continue;
+      
+      // Only include fields that are in the whitelist
+      if (!allowedFields.includes(field)) continue;
+      
+      try {
+        updates[field] = sanitizeValue(value, field);
+      } catch (error) {
+        toast({
+          title: "Error",
+          description: `Invalid value for field: ${field}`,
+          variant: "destructive",
+        });
+        return;
+      }
+    }
+
+    if (Object.keys(updates).length === 0) {
+      toast({
+        title: "Error",
+        description: "No editable fields to update",
+        variant: "destructive",
+      });
+      return;
+    }
+
     const { error } = await supabase.from(selectedTable).update(updates).eq("id", id);
 
     if (error) {
@@ -116,6 +195,12 @@ export function AdminDatabase() {
       setEditingRecord(null);
       loadTableData(selectedTable);
     }
+  };
+
+  const isFieldEditable = (field: string): boolean => {
+    if (SYSTEM_FIELDS.includes(field)) return false;
+    const allowedFields = EDITABLE_FIELDS[selectedTable] || [];
+    return allowedFields.includes(field);
   };
 
   const formatCellValue = (value: any) => {
@@ -186,7 +271,7 @@ export function AdminDatabase() {
                   <TableRow key={row.id} className="hover:bg-muted/20">
                     {tableColumns.slice(0, 5).map((col) => (
                       <TableCell key={col} className="max-w-[200px]">
-                        {editingRecord?.id === row.id ? (
+                        {editingRecord?.id === row.id && isFieldEditable(col) ? (
                           <Input
                             value={
                               typeof editingRecord[col] === "object"
@@ -201,6 +286,7 @@ export function AdminDatabase() {
                               setEditingRecord({ ...editingRecord, [col]: value });
                             }}
                             className="h-8 text-sm"
+                            maxLength={MAX_STRING_LENGTH}
                           />
                         ) : col === "id" ? (
                           <ShortId id={row.id} />
