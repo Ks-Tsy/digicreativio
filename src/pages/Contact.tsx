@@ -3,8 +3,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Mail, Phone, MapPin, Send, Clock, CheckCircle2, Loader2 } from "lucide-react";
-import { useState } from "react";
+import { Mail, Phone, MapPin, Send, Clock, CheckCircle2, Loader2, AlertTriangle } from "lucide-react";
+import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useSiteContent } from "@/hooks/useSiteContent";
@@ -33,10 +33,17 @@ const Contact = () => {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [slowDownMessage, setSlowDownMessage] = useState<string | null>(null);
+  
+  // Anti-spam: Track when form was loaded
+  const [formLoadedAt] = useState(() => Date.now());
+  // Honeypot field - should remain empty
+  const [honeypot, setHoneypot] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setSlowDownMessage(null);
 
     try {
       // Client-side validation
@@ -59,6 +66,9 @@ const Contact = () => {
           phone: formData.phone,
           subject: formData.subject,
           message: formData.message,
+          // Anti-spam fields
+          _hp_field: honeypot,
+          _form_loaded_at: formLoadedAt,
         },
       });
 
@@ -67,7 +77,12 @@ const Contact = () => {
       }
 
       if (data?.error) {
-        toast.error(data.error);
+        // Handle slow down message
+        if (data.slowDown || data.expired) {
+          setSlowDownMessage(data.error);
+        } else {
+          toast.error(data.error);
+        }
       } else {
         toast.success("Message sent successfully! We'll get back to you soon.");
         setFormData({ name: "", email: "", phone: "", subject: "", message: "" });
@@ -86,6 +101,10 @@ const Contact = () => {
       ...formData,
       [e.target.name]: e.target.value,
     });
+    // Clear slow down message when user starts typing
+    if (slowDownMessage) {
+      setSlowDownMessage(null);
+    }
   };
 
   const contactEmail = infoData?.email || "digicreativio@gmail.com";
@@ -210,7 +229,29 @@ const Contact = () => {
                       <h2 className="text-2xl font-heading font-bold text-foreground mb-2">Send us a Message</h2>
                       <p className="text-muted-foreground mb-8">Fill out the form below and we'll get back to you as soon as possible.</p>
                       
+                      {/* Slow down message */}
+                      {slowDownMessage && (
+                        <div className="mb-6 p-4 rounded-xl bg-warning/10 border border-warning/30 flex items-start gap-3">
+                          <AlertTriangle className="w-5 h-5 text-warning flex-shrink-0 mt-0.5" />
+                          <p className="text-sm text-warning">{slowDownMessage}</p>
+                        </div>
+                      )}
+                      
                       <form onSubmit={handleSubmit} className="space-y-6">
+                        {/* Honeypot field - hidden from humans, bots will fill it */}
+                        <div className="absolute left-[-9999px] opacity-0 pointer-events-none" aria-hidden="true">
+                          <Label htmlFor="_hp_field">Leave this field empty</Label>
+                          <Input
+                            id="_hp_field"
+                            name="_hp_field"
+                            type="text"
+                            tabIndex={-1}
+                            autoComplete="off"
+                            value={honeypot}
+                            onChange={(e) => setHoneypot(e.target.value)}
+                          />
+                        </div>
+                        
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                           <div className="space-y-2">
                             <Label htmlFor="name" className="text-foreground font-medium">Name *</Label>
