@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from "react";
+import { useState, useCallback } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Star, ChevronLeft, ChevronRight, Quote } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -8,37 +8,19 @@ import { useTestimonials, Testimonial } from "@/hooks/useTestimonials";
 export function TestimonialsCarousel() {
   const { testimonials, loading } = useTestimonials();
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
-  const [direction, setDirection] = useState<"left" | "right">("right");
 
   const itemsPerView = 3;
   const totalSlides = Math.max(0, testimonials.length - itemsPerView + 1);
 
   const goToNext = useCallback(() => {
     if (testimonials.length === 0) return;
-    setDirection("right");
     setCurrentIndex((prev) => (prev + 1) % totalSlides);
   }, [testimonials.length, totalSlides]);
 
   const goToPrev = useCallback(() => {
     if (testimonials.length === 0) return;
-    setDirection("left");
     setCurrentIndex((prev) => (prev - 1 + totalSlides) % totalSlides);
   }, [testimonials.length, totalSlides]);
-
-  // Auto-play functionality
-  useEffect(() => {
-    if (!isAutoPlaying || testimonials.length <= itemsPerView) return;
-
-    const interval = setInterval(() => {
-      goToNext();
-    }, 5000);
-
-    return () => clearInterval(interval);
-  }, [isAutoPlaying, goToNext, testimonials.length]);
-
-  const handleMouseEnter = () => setIsAutoPlaying(false);
-  const handleMouseLeave = () => setIsAutoPlaying(true);
 
   const getInitials = (name: string) => {
     return name
@@ -62,11 +44,7 @@ export function TestimonialsCarousel() {
   }
 
   return (
-    <div
-      className="relative"
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-    >
+    <div className="relative">
       {/* Navigation Buttons */}
       {testimonials.length > itemsPerView && (
         <>
@@ -89,19 +67,18 @@ export function TestimonialsCarousel() {
         </>
       )}
 
-      {/* Carousel Container */}
+      {/* Carousel Container - No auto-sliding animation */}
       <div className="overflow-hidden px-2">
         <div
-          className="flex gap-6 transition-transform duration-500 ease-out"
+          className="flex gap-6"
           style={{
             transform: `translateX(-${currentIndex * (100 / itemsPerView + 2)}%)`,
           }}
         >
-          {testimonials.map((testimonial, index) => (
+          {testimonials.map((testimonial) => (
             <TestimonialCard
               key={testimonial.id}
               testimonial={testimonial}
-              index={index}
               getInitials={getInitials}
             />
           ))}
@@ -120,10 +97,7 @@ export function TestimonialsCarousel() {
                   ? "w-6 bg-primary"
                   : "bg-muted-foreground/30 hover:bg-muted-foreground/50"
               )}
-              onClick={() => {
-                setDirection(index > currentIndex ? "right" : "left");
-                setCurrentIndex(index);
-              }}
+              onClick={() => setCurrentIndex(index)}
             />
           ))}
         </div>
@@ -134,11 +108,10 @@ export function TestimonialsCarousel() {
 
 interface TestimonialCardProps {
   testimonial: Testimonial;
-  index: number;
   getInitials: (name: string) => string;
 }
 
-function TestimonialCard({ testimonial, index, getInitials }: TestimonialCardProps) {
+function TestimonialCard({ testimonial, getInitials }: TestimonialCardProps) {
   return (
     <Card
       className={cn(
