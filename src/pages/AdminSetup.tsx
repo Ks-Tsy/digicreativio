@@ -5,15 +5,26 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2 } from "lucide-react";
+import { Loader2, AlertTriangle } from "lucide-react";
+
+const validatePassword = (pwd: string): { valid: boolean; message?: string } => {
+  if (pwd.length < 12) return { valid: false, message: "Password must be at least 12 characters" };
+  if (!/[A-Z]/.test(pwd)) return { valid: false, message: "Password must include uppercase letters" };
+  if (!/[a-z]/.test(pwd)) return { valid: false, message: "Password must include lowercase letters" };
+  if (!/[0-9]/.test(pwd)) return { valid: false, message: "Password must include numbers" };
+  if (!/[!@#$%^&*]/.test(pwd)) return { valid: false, message: "Password must include special characters (!@#$%^&*)" };
+  return { valid: true };
+};
 
 export default function AdminSetup() {
   const [isLoading, setIsLoading] = useState(false);
   const [isChecking, setIsChecking] = useState(true);
-  const [email, setEmail] = useState("digicreativio@gmail.com");
-  const [password, setPassword] = useState("admin@DigiCreativio");
-  const [fullName, setFullName] = useState("Admin");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [fullName, setFullName] = useState("");
+  const [passwordError, setPasswordError] = useState("");
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -47,6 +58,14 @@ export default function AdminSetup() {
 
   const handleSetup = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Validate password strength
+    const passwordValidation = validatePassword(password);
+    if (!passwordValidation.valid) {
+      setPasswordError(passwordValidation.message || "Invalid password");
+      return;
+    }
+    setPasswordError("");
     setIsLoading(true);
 
     try {
@@ -110,6 +129,14 @@ export default function AdminSetup() {
           <CardDescription>Create the first admin account for this system</CardDescription>
         </CardHeader>
         <CardContent>
+          <Alert className="mb-4 border-yellow-500/50 bg-yellow-500/10">
+            <AlertTriangle className="h-4 w-4 text-yellow-500" />
+            <AlertTitle className="text-yellow-500">Important: Choose a Strong Password</AlertTitle>
+            <AlertDescription className="text-muted-foreground">
+              This will be your only admin account. Use a strong, unique password with 
+              at least 12 characters including uppercase, lowercase, numbers, and symbols (!@#$%^&*).
+            </AlertDescription>
+          </Alert>
           <form onSubmit={handleSetup} className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="fullName">Full Name</Label>
@@ -137,10 +164,17 @@ export default function AdminSetup() {
                 id="password"
                 type="password"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                  if (passwordError) setPasswordError("");
+                }}
+                placeholder="Min 12 chars with A-Z, a-z, 0-9, !@#$%^&*"
                 required
-                minLength={6}
+                minLength={12}
               />
+              {passwordError && (
+                <p className="text-sm text-destructive">{passwordError}</p>
+              )}
             </div>
             <Button type="submit" className="w-full" disabled={isLoading}>
               {isLoading ? "Creating Admin Account..." : "Create Admin Account"}
