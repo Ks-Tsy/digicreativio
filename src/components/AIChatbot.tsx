@@ -1,8 +1,10 @@
 import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { MessageCircle, X, Send, Loader2, Sparkles, Bot, User } from "lucide-react";
+import { MessageCircle, X, Send, Loader2, Sparkles, Bot, User, Maximize2, Minimize2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 interface Message {
   role: "user" | "assistant";
@@ -11,10 +13,11 @@ interface Message {
 
 const AIChatbot = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "assistant",
-      content: "Hi! I'm DigiCreativio's AI assistant. I can help you learn about our services, answer questions about design, or assist with project inquiries. How can I help you today?",
+      content: "👋 **Hello! I'm DigiCreativio's AI Assistant.**\n\nI'm here to help you with:\n- **Our Services** - Graphic design, branding, web design & more\n- **Project Inquiries** - Start your creative journey\n- **Design Advice** - Tips and best practices\n\nHow can I assist you today?",
     },
   ]);
   const [input, setInput] = useState("");
@@ -54,7 +57,7 @@ const AIChatbot = () => {
         ...prev,
         {
           role: "assistant",
-          content: "I apologize, but I'm having trouble responding right now. Please try again or contact us directly at digicreativio@gmail.com.",
+          content: "I apologize, but I'm having trouble responding right now. Please try again or contact us directly at **digicreativio@gmail.com**.",
         },
       ]);
     } finally {
@@ -67,6 +70,17 @@ const AIChatbot = () => {
       e.preventDefault();
       handleSend();
     }
+  };
+
+  const suggestedQuestions = [
+    "What services do you offer?",
+    "How much does a logo cost?",
+    "Tell me about web design",
+    "How do I start a project?",
+  ];
+
+  const handleSuggestedQuestion = (question: string) => {
+    setInput(question);
   };
 
   return (
@@ -90,7 +104,11 @@ const AIChatbot = () => {
 
       {/* Chat Window */}
       <div
-        className={`fixed bottom-28 right-6 z-50 w-[380px] max-w-[calc(100vw-3rem)] transition-all duration-500 ${
+        className={`fixed z-50 transition-all duration-500 ${
+          isExpanded 
+            ? "bottom-6 right-6 w-[600px] max-w-[calc(100vw-3rem)]" 
+            : "bottom-28 right-6 w-[400px] max-w-[calc(100vw-3rem)]"
+        } ${
           isOpen
             ? "opacity-100 translate-y-0 pointer-events-auto"
             : "opacity-0 translate-y-4 pointer-events-none"
@@ -99,19 +117,35 @@ const AIChatbot = () => {
         <div className="glass-strong rounded-3xl overflow-hidden shadow-2xl shadow-background/50 border border-border/30">
           {/* Header */}
           <div className="p-5 border-b border-border/30 bg-gradient-to-r from-primary/10 via-purple/5 to-cyan/5">
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center">
-                <Sparkles className="w-6 h-6 text-primary" />
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center">
+                  <Sparkles className="w-6 h-6 text-primary" />
+                </div>
+                <div>
+                  <h3 className="font-heading font-semibold text-foreground">DigiCreativio AI</h3>
+                  <p className="text-xs text-muted-foreground flex items-center gap-1">
+                    <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+                    Always ready to help
+                  </p>
+                </div>
               </div>
-              <div>
-                <h3 className="font-heading font-semibold text-foreground">AI Assistant</h3>
-                <p className="text-xs text-muted-foreground">Powered by DigiCreativio</p>
-              </div>
+              <button
+                onClick={() => setIsExpanded(!isExpanded)}
+                className="p-2 rounded-lg hover:bg-secondary/50 transition-colors"
+                aria-label={isExpanded ? "Minimize" : "Expand"}
+              >
+                {isExpanded ? (
+                  <Minimize2 className="w-4 h-4 text-muted-foreground" />
+                ) : (
+                  <Maximize2 className="w-4 h-4 text-muted-foreground" />
+                )}
+              </button>
             </div>
           </div>
 
           {/* Messages */}
-          <div className="h-[400px] overflow-y-auto p-5 space-y-4 scrollbar-thin">
+          <div className={`overflow-y-auto p-5 space-y-4 scrollbar-thin ${isExpanded ? "h-[500px]" : "h-[400px]"}`}>
             {messages.map((message, index) => (
               <div
                 key={index}
@@ -133,15 +167,23 @@ const AIChatbot = () => {
                   )}
                 </div>
                 <div
-                  className={`max-w-[80%] rounded-2xl px-4 py-3 ${
+                  className={`max-w-[85%] rounded-2xl px-4 py-3 ${
                     message.role === "user"
                       ? "bg-primary text-primary-foreground rounded-br-md"
                       : "bg-secondary/50 text-foreground border border-border/30 rounded-bl-md"
                   }`}
                 >
-                  <p className="text-sm leading-relaxed whitespace-pre-wrap">
-                    {message.content}
-                  </p>
+                  {message.role === "assistant" ? (
+                    <div className="prose prose-sm dark:prose-invert max-w-none text-sm leading-relaxed [&>p]:my-1 [&>ul]:my-2 [&>ul]:ml-4 [&>ol]:my-2 [&>ol]:ml-4 [&>h1]:text-lg [&>h2]:text-base [&>h3]:text-sm [&>h3]:font-semibold [&>h3]:mt-3 [&>h3]:mb-1 [&>*:first-child]:mt-0 [&>*:last-child]:mb-0">
+                      <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                        {message.content}
+                      </ReactMarkdown>
+                    </div>
+                  ) : (
+                    <p className="text-sm leading-relaxed whitespace-pre-wrap">
+                      {message.content}
+                    </p>
+                  )}
                 </div>
               </div>
             ))}
@@ -161,6 +203,24 @@ const AIChatbot = () => {
             <div ref={messagesEndRef} />
           </div>
 
+          {/* Suggested Questions (show only when few messages) */}
+          {messages.length <= 2 && !isLoading && (
+            <div className="px-4 pb-2">
+              <p className="text-xs text-muted-foreground mb-2">Quick questions:</p>
+              <div className="flex flex-wrap gap-2">
+                {suggestedQuestions.map((question, index) => (
+                  <button
+                    key={index}
+                    onClick={() => handleSuggestedQuestion(question)}
+                    className="text-xs px-3 py-1.5 rounded-full bg-secondary/50 border border-border/30 text-muted-foreground hover:text-foreground hover:border-primary/30 transition-all"
+                  >
+                    {question}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
           {/* Input */}
           <div className="p-4 border-t border-border/30 bg-secondary/20">
             <div className="flex gap-2">
@@ -168,7 +228,7 @@ const AIChatbot = () => {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyPress={handleKeyPress}
-                placeholder="Ask me anything..."
+                placeholder="Ask me anything about DigiCreativio..."
                 className="flex-1 bg-background/50 border-border/50 focus:border-primary rounded-xl h-12"
                 disabled={isLoading}
               />
