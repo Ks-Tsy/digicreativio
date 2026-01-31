@@ -3,7 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Link } from "react-router-dom";
 import { Mail, ArrowUpRight, Heart } from "lucide-react";
 import * as LucideIcons from "lucide-react";
-import logo from "@/assets/logo-enhanced.png";
+import logo from "@/assets/logo.png";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
