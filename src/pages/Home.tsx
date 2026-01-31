@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Palette, Sparkles, Code, Layers, ArrowRight, Star, Zap, Globe } from "lucide-react";
 import heroImage from "@/assets/hero-image.jpg";
-import logo from "@/assets/logo-enhanced.png";
+import logo from "@/assets/logo.png";
 import { useSiteContent } from "@/hooks/useSiteContent";
 import { TestimonialsCarousel } from "@/components/TestimonialsCarousel";
 const Home = () => {

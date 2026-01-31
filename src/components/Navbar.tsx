@@ -3,7 +3,7 @@ import { Menu, X, LogOut, Shield, Sparkles } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
-import logo from "@/assets/logo-enhanced.png";
+import logo from "@/assets/logo.png";
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
