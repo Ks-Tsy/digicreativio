@@ -19,9 +19,13 @@ const getCorsHeaders = (origin: string | null) => {
   };
 };
 
-// Rate limiting store
-const rateLimitStore = new Map<string, { count: number; resetAt: number }>();
-const RATE_LIMIT = 30; // Max requests per hour
+// Rate limiting stores - separate for authenticated and anonymous users
+const anonymousRateLimitStore = new Map<string, { count: number; resetAt: number }>();
+const authenticatedRateLimitStore = new Map<string, { count: number; resetAt: number }>();
+
+// Stricter limits for anonymous users, more generous for authenticated
+const ANONYMOUS_RATE_LIMIT = 15; // Max requests per hour for anonymous
+const AUTHENTICATED_RATE_LIMIT = 60; // Max requests per hour for authenticated users
 const RATE_LIMIT_WINDOW = 60 * 60 * 1000; // 1 hour
 
 const getClientIP = (req: Request): string => {
@@ -30,21 +34,65 @@ const getClientIP = (req: Request): string => {
   return req.headers.get("x-real-ip") || "unknown";
 };
 
-const checkRateLimit = (ip: string): { allowed: boolean; remaining: number } => {
+const checkRateLimit = (
+  identifier: string, 
+  isAuthenticated: boolean
+): { allowed: boolean; remaining: number } => {
   const now = Date.now();
-  const entry = rateLimitStore.get(ip);
+  const store = isAuthenticated ? authenticatedRateLimitStore : anonymousRateLimitStore;
+  const limit = isAuthenticated ? AUTHENTICATED_RATE_LIMIT : ANONYMOUS_RATE_LIMIT;
+  const entry = store.get(identifier);
 
   if (!entry || now > entry.resetAt) {
-    rateLimitStore.set(ip, { count: 1, resetAt: now + RATE_LIMIT_WINDOW });
-    return { allowed: true, remaining: RATE_LIMIT - 1 };
+    store.set(identifier, { count: 1, resetAt: now + RATE_LIMIT_WINDOW });
+    return { allowed: true, remaining: limit - 1 };
   }
 
-  if (entry.count >= RATE_LIMIT) {
+  if (entry.count >= limit) {
     return { allowed: false, remaining: 0 };
   }
 
   entry.count++;
-  return { allowed: true, remaining: RATE_LIMIT - entry.count };
+  return { allowed: true, remaining: limit - entry.count };
+};
+
+// Validate JWT and get user ID (optional auth - returns null if not authenticated)
+const validateOptionalAuth = async (req: Request): Promise<{ userId: string | null; email: string | null }> => {
+  const authHeader = req.headers.get("Authorization");
+  
+  if (!authHeader?.startsWith("Bearer ")) {
+    return { userId: null, email: null };
+  }
+
+  try {
+    const supabaseUrl = Deno.env.get("SUPABASE_URL");
+    const supabaseAnonKey = Deno.env.get("SUPABASE_ANON_KEY");
+    
+    if (!supabaseUrl || !supabaseAnonKey) {
+      console.warn("Supabase credentials not configured for auth validation");
+      return { userId: null, email: null };
+    }
+
+    const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+      global: { headers: { Authorization: authHeader } }
+    });
+
+    const token = authHeader.replace("Bearer ", "");
+    const { data, error } = await supabase.auth.getClaims(token);
+    
+    if (error || !data?.claims) {
+      console.log("Invalid or expired JWT token");
+      return { userId: null, email: null };
+    }
+
+    return { 
+      userId: data.claims.sub as string, 
+      email: data.claims.email as string || null 
+    };
+  } catch (error) {
+    console.error("Error validating auth:", error);
+    return { userId: null, email: null };
+  }
 };
 
 const SYSTEM_PROMPT = `You are DigiCreativio's advanced AI assistant - a highly knowledgeable, professional, and friendly virtual expert for this premium digital creative agency. You have complete knowledge of everything about DigiCreativio and can help visitors with any questions.
@@ -182,18 +230,39 @@ Deno.serve(async (req) => {
   }
 
   try {
-    // Rate limiting
+    // Validate optional authentication
+    const { userId, email } = await validateOptionalAuth(req);
+    const isAuthenticated = !!userId;
+    
+    // Use userId for authenticated users, IP for anonymous
     const clientIP = getClientIP(req);
-    const rateLimit = checkRateLimit(clientIP);
+    const rateLimitIdentifier = isAuthenticated ? userId : clientIP;
+    
+    // Check rate limit with appropriate limits based on auth status
+    const rateLimit = checkRateLimit(rateLimitIdentifier, isAuthenticated);
 
     if (!rateLimit.allowed) {
-      console.log(`Rate limit exceeded for chatbot from IP: ${clientIP}`);
+      const limitType = isAuthenticated ? "authenticated" : "anonymous";
+      console.log(`Rate limit exceeded for ${limitType} chatbot request: ${rateLimitIdentifier}`);
+      
+      const suggestion = isAuthenticated 
+        ? "Please try again in a few minutes."
+        : "Please try again in a few minutes, or sign in for higher rate limits.";
+      
       return new Response(
         JSON.stringify({ 
           error: "Too many requests",
-          response: "I'm receiving too many requests right now. Please try again in a few minutes."
+          response: `I'm receiving too many requests right now. ${suggestion}`
         }),
-        { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        { 
+          status: 429, 
+          headers: { 
+            ...corsHeaders, 
+            "Content-Type": "application/json",
+            "X-RateLimit-Remaining": String(rateLimit.remaining),
+            "X-RateLimit-Authenticated": String(isAuthenticated)
+          } 
+        }
       );
     }
 
@@ -206,6 +275,9 @@ Deno.serve(async (req) => {
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
+
+    // Log request with user context (no sensitive data)
+    console.log(`Chatbot request: authenticated=${isAuthenticated}, IP=${clientIP}, messageLength=${message.length}`);
 
     // Build conversation history
     const messages = [
@@ -266,7 +338,14 @@ Deno.serve(async (req) => {
 
     return new Response(
       JSON.stringify({ response: aiResponse }),
-      { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      { 
+        headers: { 
+          ...corsHeaders, 
+          "Content-Type": "application/json",
+          "X-RateLimit-Remaining": String(rateLimit.remaining),
+          "X-RateLimit-Authenticated": String(isAuthenticated)
+        } 
+      }
     );
   } catch (error) {
     console.error("Error in ai-chatbot function:", error);

@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { MessageCircle, X, Send, Loader2, Sparkles, Bot, User, Maximize2, Minimize2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
@@ -12,6 +13,7 @@ interface Message {
 }
 
 const AIChatbot = () => {
+  const { session } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
@@ -41,6 +43,8 @@ const AIChatbot = () => {
     setIsLoading(true);
 
     try {
+      // The supabase.functions.invoke automatically includes the auth token
+      // when a user is logged in, enabling authenticated rate limiting
       const { data, error } = await supabase.functions.invoke("ai-chatbot", {
         body: { message: userMessage, history: messages },
       });
