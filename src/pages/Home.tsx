@@ -67,21 +67,42 @@ const Home = () => {
 
   return (
     <div className="min-h-screen">
-      {/* Hero Section - Clean & Minimal */}
-      <section className="relative min-h-screen flex items-center pt-20">
-        <div className="container mx-auto px-4 lg:px-8">
+      {/* Hero Section - Enhanced with Gradient Pattern */}
+      <section className="relative min-h-screen flex items-center pt-20 overflow-hidden">
+        {/* Gradient Background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-background via-background to-secondary/50" />
+        
+        {/* Animated Grid Pattern */}
+        <div className="absolute inset-0 opacity-[0.03]" style={{
+          backgroundImage: `linear-gradient(hsl(var(--primary)) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--primary)) 1px, transparent 1px)`,
+          backgroundSize: '60px 60px'
+        }} />
+        
+        {/* Radial Glow Effect */}
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-primary/5 rounded-full blur-[120px]" />
+        <div className="absolute bottom-0 right-0 w-[600px] h-[600px] bg-primary/3 rounded-full blur-[100px]" />
+        
+        {/* Floating Geometric Shapes */}
+        <div className="absolute top-20 left-10 w-20 h-20 border border-primary/10 rounded-full animate-pulse" />
+        <div className="absolute top-40 right-20 w-32 h-32 border border-primary/5 rotate-45" />
+        <div className="absolute bottom-40 left-20 w-16 h-16 bg-primary/5 rounded-lg rotate-12" />
+        <div className="absolute bottom-20 right-40 w-24 h-24 border border-primary/10 rounded-full" />
+        
+        {/* Content */}
+        <div className="container mx-auto px-4 lg:px-8 relative z-10">
           <div className="max-w-5xl mx-auto text-center">
-            {/* Logo */}
-            <div className="mb-10">
+            {/* Logo with Glow */}
+            <div className="mb-10 relative">
+              <div className="absolute inset-0 bg-primary/20 blur-3xl rounded-full scale-150 opacity-50" />
               <img 
                 src={logo} 
                 alt="DigiCreativio Logo" 
-                className="mx-auto w-32 h-32 object-contain"
+                className="mx-auto w-32 h-32 object-contain relative z-10 drop-shadow-2xl"
               />
             </div>
             
-            {/* Main heading */}
-            <h1 className="text-5xl md:text-7xl lg:text-8xl font-heading font-bold mb-8 leading-tight">
+            {/* Main heading with shimmer effect */}
+            <h1 className="text-5xl md:text-7xl lg:text-8xl font-heading font-bold mb-8 leading-tight bg-gradient-to-r from-foreground via-primary to-foreground bg-[length:200%_100%] bg-clip-text text-transparent animate-[shimmer_3s_ease-in-out_infinite]">
               {heroData?.title || "Crafting the Future"}
             </h1>
             
@@ -95,7 +116,7 @@ const Home = () => {
               <Button 
                 asChild 
                 size="lg" 
-                className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold text-lg px-10 py-6 rounded-full transition-all duration-300 hover:scale-105"
+                className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold text-lg px-10 py-6 rounded-full transition-all duration-300 hover:scale-105 shadow-lg shadow-primary/25"
               >
                 <Link to="/contact">
                   {heroData?.cta_primary || "Start Your Project"}
@@ -106,7 +127,7 @@ const Home = () => {
                 asChild 
                 size="lg" 
                 variant="outline" 
-                className="text-lg px-10 py-6 rounded-full border-border hover:border-primary/50 hover:bg-primary/5"
+                className="text-lg px-10 py-6 rounded-full border-border hover:border-primary/50 hover:bg-primary/5 backdrop-blur-sm"
               >
                 <Link to="/portfolio">
                   {heroData?.cta_secondary || "View Our Work"}
@@ -114,10 +135,13 @@ const Home = () => {
               </Button>
             </div>
 
-            {/* Stats */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto pt-12 border-t border-border/30">
+            {/* Stats with Glass Effect */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto pt-12">
               {stats.map((stat, index) => (
-                <div key={index} className="text-center">
+                <div 
+                  key={index} 
+                  className="text-center p-6 rounded-2xl bg-card/50 backdrop-blur-sm border border-border/30 hover:border-primary/30 transition-all duration-300"
+                >
                   <div className="text-4xl md:text-5xl font-bold text-primary mb-2">{stat.value}</div>
                   <div className="text-sm text-muted-foreground">{stat.label}</div>
                 </div>
@@ -125,6 +149,9 @@ const Home = () => {
             </div>
           </div>
         </div>
+        
+        {/* Bottom Gradient Fade */}
+        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background to-transparent" />
       </section>
 
       {/* Features Section - Clean Cards */}
