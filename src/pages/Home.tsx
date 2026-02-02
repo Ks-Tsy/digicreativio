@@ -97,14 +97,18 @@ const Home = () => {
         {/* Content */}
         <div className="container mx-auto px-4 lg:px-8 relative z-10">
           <div className="max-w-5xl mx-auto text-center">
-            {/* Logo with Glow */}
-            <div className="mb-10 relative">
-              <div className="absolute inset-0 bg-primary/20 blur-3xl rounded-full scale-150 opacity-50" />
-              <img 
-                src={logo} 
-                alt="DigiCreativio Logo" 
-                className="mx-auto w-32 h-32 object-contain relative z-10 drop-shadow-2xl"
-              />
+            {/* Logo in Circle */}
+            <div className="mb-12 flex justify-center">
+              <div className="relative">
+                <div className="absolute inset-0 bg-primary/20 blur-3xl rounded-full scale-150 opacity-50" />
+                <div className="relative z-10 w-40 h-40 rounded-full bg-card/80 backdrop-blur-sm border border-border/50 flex items-center justify-center shadow-2xl">
+                  <img 
+                    src={logo} 
+                    alt="DigiCreativio Logo" 
+                    className="w-24 h-24 object-contain drop-shadow-lg"
+                  />
+                </div>
+              </div>
             </div>
             
             {/* Main heading with shimmer effect */}
