@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Mail, Phone, MapPin, Send, Clock, CheckCircle2, Loader2, AlertTriangle } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useSiteContent } from "@/hooks/useSiteContent";
@@ -35,9 +35,7 @@ const Contact = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [slowDownMessage, setSlowDownMessage] = useState<string | null>(null);
   
-  // Anti-spam: Track when form was loaded
   const [formLoadedAt] = useState(() => Date.now());
-  // Honeypot field - should remain empty
   const [honeypot, setHoneypot] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -46,7 +44,6 @@ const Contact = () => {
     setSlowDownMessage(null);
 
     try {
-      // Client-side validation
       if (formData.name.trim().length < 2) {
         toast.error("Name must be at least 2 characters");
         setIsSubmitting(false);
@@ -58,7 +55,6 @@ const Contact = () => {
         return;
       }
 
-      // Submit via Edge Function for server-side validation
       const { data, error } = await supabase.functions.invoke("submit-contact", {
         body: {
           name: formData.name,
@@ -66,7 +62,6 @@ const Contact = () => {
           phone: formData.phone,
           subject: formData.subject,
           message: formData.message,
-          // Anti-spam fields
           _hp_field: honeypot,
           _form_loaded_at: formLoadedAt,
         },
@@ -77,7 +72,6 @@ const Contact = () => {
       }
 
       if (data?.error) {
-        // Handle slow down message
         if (data.slowDown || data.expired) {
           setSlowDownMessage(data.error);
         } else {
@@ -101,7 +95,6 @@ const Contact = () => {
       ...formData,
       [e.target.name]: e.target.value,
     });
-    // Clear slow down message when user starts typing
     if (slowDownMessage) {
       setSlowDownMessage(null);
     }
@@ -112,54 +105,25 @@ const Contact = () => {
   const contactAddress = infoData?.address || "123 Creative Street, Design City, DC 12345";
 
   const contactCards = [
-    {
-      icon: Mail,
-      title: "Email Us",
-      content: contactEmail,
-      href: `mailto:${contactEmail}`,
-      accent: "gold",
-    },
-    {
-      icon: Phone,
-      title: "Call Us",
-      content: contactPhone,
-      href: `tel:${contactPhone.replace(/\D/g, '')}`,
-      accent: "purple",
-    },
-    {
-      icon: MapPin,
-      title: "Visit Us",
-      content: contactAddress,
-      href: null,
-      accent: "cyan",
-    },
-    {
-      icon: Clock,
-      title: "Business Hours",
-      content: "Mon - Fri: 9AM - 6PM",
-      href: null,
-      accent: "gold",
-    },
+    { icon: Mail, title: "Email Us", content: contactEmail, href: `mailto:${contactEmail}` },
+    { icon: Phone, title: "Call Us", content: contactPhone, href: `tel:${contactPhone.replace(/\D/g, '')}` },
+    { icon: MapPin, title: "Visit Us", content: contactAddress, href: null },
+    { icon: Clock, title: "Business Hours", content: "Mon - Fri: 9AM - 6PM", href: null },
   ];
 
   return (
-    <div className="min-h-screen pt-20 overflow-hidden">
+    <div className="min-h-screen pt-20">
       {/* Hero Section */}
-      <section className="relative py-32 overflow-hidden bg-mesh noise">
-        <div className="absolute inset-0">
-          <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-gold/5 rounded-full blur-3xl" />
-          <div className="absolute bottom-1/4 left-1/4 w-96 h-96 bg-cyan/5 rounded-full blur-3xl" />
-        </div>
-        
-        <div className="container mx-auto px-4 lg:px-8 relative z-10">
+      <section className="py-24">
+        <div className="container mx-auto px-4 lg:px-8">
           <div className="max-w-4xl mx-auto text-center">
-            <span className="inline-block px-4 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-medium mb-6 border border-primary/20 opacity-0 animate-fade-in" style={{ animationFillMode: "forwards" }}>
+            <span className="inline-block px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium mb-6">
               Let's Connect
             </span>
-            <h1 className="text-5xl md:text-7xl font-heading font-bold mb-8 opacity-0 animate-fade-in" style={{ animationDelay: "150ms", animationFillMode: "forwards" }}>
-              <span className="text-gradient">{heroData?.title || "Get in Touch"}</span>
+            <h1 className="text-5xl md:text-6xl font-heading font-bold mb-6">
+              {heroData?.title || "Get in Touch"}
             </h1>
-            <p className="text-xl md:text-2xl text-muted-foreground leading-relaxed opacity-0 animate-fade-in" style={{ animationDelay: "300ms", animationFillMode: "forwards" }}>
+            <p className="text-xl text-muted-foreground leading-relaxed">
               {heroData?.subtitle || "Have a project in mind? Let's discuss how we can help bring your vision to life"}
             </p>
           </div>
@@ -167,41 +131,26 @@ const Contact = () => {
       </section>
 
       {/* Contact Section */}
-      <section className="py-24 relative">
-        <div className="absolute top-0 right-0 w-80 h-80 bg-purple/5 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 left-0 w-80 h-80 bg-gold/5 rounded-full blur-3xl" />
-        
-        <div className="container mx-auto px-4 lg:px-8 relative z-10">
+      <section className="py-12 pb-24">
+        <div className="container mx-auto px-4 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
             {/* Contact Info */}
             <div className="space-y-4">
               {contactCards.map((card, index) => (
-                <Card 
-                  key={index} 
-                  className="group glass border-border/30 hover:border-primary/40 transition-all duration-500 opacity-0 animate-fade-in-left"
-                  style={{ animationDelay: `${index * 100}ms`, animationFillMode: "forwards" }}
-                >
+                <Card key={index} className="bg-card border-border/50 hover:border-primary/30 transition-all duration-300">
                   <CardContent className="p-6">
                     <div className="flex items-start space-x-4">
-                      <div className={`flex-shrink-0 w-14 h-14 rounded-2xl flex items-center justify-center transition-all duration-500 group-hover:scale-110
-                        ${card.accent === 'gold' ? 'bg-gold/10 border border-gold/20' : ''}
-                        ${card.accent === 'purple' ? 'bg-purple/10 border border-purple/20' : ''}
-                        ${card.accent === 'cyan' ? 'bg-cyan/10 border border-cyan/20' : ''}
-                      `}>
-                        <card.icon className={`w-6 h-6
-                          ${card.accent === 'gold' ? 'text-gold' : ''}
-                          ${card.accent === 'purple' ? 'text-purple' : ''}
-                          ${card.accent === 'cyan' ? 'text-cyan' : ''}
-                        `} />
+                      <div className="flex-shrink-0 w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center">
+                        <card.icon className="w-5 h-5 text-primary" />
                       </div>
                       <div>
                         <h3 className="font-semibold text-foreground mb-1">{card.title}</h3>
                         {card.href ? (
-                          <a href={card.href} className="text-muted-foreground hover:text-primary transition-colors">
+                          <a href={card.href} className="text-sm text-muted-foreground hover:text-primary transition-colors">
                             {card.content}
                           </a>
                         ) : (
-                          <p className="text-muted-foreground">{card.content}</p>
+                          <p className="text-sm text-muted-foreground">{card.content}</p>
                         )}
                       </div>
                     </div>
@@ -212,14 +161,12 @@ const Contact = () => {
 
             {/* Contact Form */}
             <div className="lg:col-span-2">
-              <Card className="glass border-border/30 overflow-hidden opacity-0 animate-fade-in-right" style={{ animationDelay: "200ms", animationFillMode: "forwards" }}>
-                <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-purple/5" />
-                
-                <CardContent className="p-8 md:p-10 relative z-10">
+              <Card className="bg-card border-border/50">
+                <CardContent className="p-8 md:p-10">
                   {isSubmitted ? (
                     <div className="text-center py-12">
-                      <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-success/10 border border-success/20 mb-6">
-                        <CheckCircle2 className="w-10 h-10 text-success" />
+                      <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-primary/10 mb-6">
+                        <CheckCircle2 className="w-10 h-10 text-primary" />
                       </div>
                       <h3 className="text-2xl font-heading font-bold mb-3">Message Sent!</h3>
                       <p className="text-muted-foreground">Thank you for reaching out. We'll get back to you within 24 hours.</p>
@@ -229,7 +176,6 @@ const Contact = () => {
                       <h2 className="text-2xl font-heading font-bold text-foreground mb-2">Send us a Message</h2>
                       <p className="text-muted-foreground mb-8">Fill out the form below and we'll get back to you as soon as possible.</p>
                       
-                      {/* Slow down message */}
                       {slowDownMessage && (
                         <div className="mb-6 p-4 rounded-xl bg-warning/10 border border-warning/30 flex items-start gap-3">
                           <AlertTriangle className="w-5 h-5 text-warning flex-shrink-0 mt-0.5" />
@@ -238,7 +184,6 @@ const Contact = () => {
                       )}
                       
                       <form onSubmit={handleSubmit} className="space-y-6">
-                        {/* Honeypot field - hidden from humans, bots will fill it */}
                         <div className="absolute left-[-9999px] opacity-0 pointer-events-none" aria-hidden="true">
                           <Label htmlFor="_hp_field">Leave this field empty</Label>
                           <Input
@@ -260,7 +205,7 @@ const Contact = () => {
                               name="name"
                               type="text"
                               placeholder="Your full name"
-                              className="bg-secondary/30 border-border/50 focus:border-primary rounded-xl h-12"
+                              className="bg-secondary/30 border-border focus:border-primary rounded-xl h-12"
                               value={formData.name}
                               onChange={handleChange}
                               required
@@ -273,7 +218,7 @@ const Contact = () => {
                               name="email"
                               type="email"
                               placeholder="your@email.com"
-                              className="bg-secondary/30 border-border/50 focus:border-primary rounded-xl h-12"
+                              className="bg-secondary/30 border-border focus:border-primary rounded-xl h-12"
                               value={formData.email}
                               onChange={handleChange}
                               required
@@ -289,7 +234,7 @@ const Contact = () => {
                               name="phone"
                               type="tel"
                               placeholder="+1 (234) 567-890"
-                              className="bg-secondary/30 border-border/50 focus:border-primary rounded-xl h-12"
+                              className="bg-secondary/30 border-border focus:border-primary rounded-xl h-12"
                               value={formData.phone}
                               onChange={handleChange}
                             />
@@ -301,7 +246,7 @@ const Contact = () => {
                               name="subject"
                               type="text"
                               placeholder="Project inquiry"
-                              className="bg-secondary/30 border-border/50 focus:border-primary rounded-xl h-12"
+                              className="bg-secondary/30 border-border focus:border-primary rounded-xl h-12"
                               value={formData.subject}
                               onChange={handleChange}
                             />
@@ -314,7 +259,7 @@ const Contact = () => {
                             id="message"
                             name="message"
                             placeholder="Tell us about your project..."
-                            className="min-h-[160px] bg-secondary/30 border-border/50 focus:border-primary resize-none rounded-xl"
+                            className="min-h-[160px] bg-secondary/30 border-border focus:border-primary resize-none rounded-xl"
                             value={formData.message}
                             onChange={handleChange}
                             required
@@ -323,7 +268,7 @@ const Contact = () => {
 
                         <Button
                           type="submit"
-                          className="w-full bg-primary hover:bg-gold-bright text-primary-foreground font-semibold glow-gold h-14 rounded-xl text-lg transition-all duration-300 hover:scale-[1.02]"
+                          className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold h-14 rounded-full text-lg"
                           disabled={isSubmitting}
                         >
                           {isSubmitting ? (

@@ -79,7 +79,7 @@ export default function BlogPost() {
           <p className="text-muted-foreground mb-6">
             The blog post you're looking for doesn't exist or has been unpublished.
           </p>
-          <Button asChild>
+          <Button asChild className="rounded-full">
             <Link to="/blog">
               <ArrowLeft className="h-4 w-4 mr-2" />
               Back to Blog
@@ -96,7 +96,7 @@ export default function BlogPost() {
     <div className="min-h-screen pt-24 pb-16">
       <article className="container mx-auto px-4 max-w-4xl">
         {/* Back Button */}
-        <Button variant="ghost" asChild className="mb-8">
+        <Button variant="ghost" asChild className="mb-8 rounded-full">
           <Link to="/blog">
             <ArrowLeft className="h-4 w-4 mr-2" />
             Back to Blog
@@ -153,7 +153,7 @@ export default function BlogPost() {
 
         {/* Footer */}
         <div className="mt-12 pt-8 border-t border-border">
-          <Button asChild>
+          <Button asChild className="rounded-full">
             <Link to="/blog">
               <ArrowLeft className="h-4 w-4 mr-2" />
               Back to All Posts

@@ -51,7 +51,7 @@ export function TestimonialsCarousel() {
           <Button
             variant="outline"
             size="icon"
-            className="absolute -left-4 lg:-left-6 top-1/2 -translate-y-1/2 z-10 rounded-full bg-background/80 backdrop-blur-sm border-border/50 hover:bg-primary/10 hover:border-primary/50 shadow-lg"
+            className="absolute -left-4 lg:-left-6 top-1/2 -translate-y-1/2 z-10 rounded-full bg-background border-border hover:bg-secondary"
             onClick={goToPrev}
           >
             <ChevronLeft className="h-5 w-5" />
@@ -59,7 +59,7 @@ export function TestimonialsCarousel() {
           <Button
             variant="outline"
             size="icon"
-            className="absolute -right-4 lg:-right-6 top-1/2 -translate-y-1/2 z-10 rounded-full bg-background/80 backdrop-blur-sm border-border/50 hover:bg-primary/10 hover:border-primary/50 shadow-lg"
+            className="absolute -right-4 lg:-right-6 top-1/2 -translate-y-1/2 z-10 rounded-full bg-background border-border hover:bg-secondary"
             onClick={goToNext}
           >
             <ChevronRight className="h-5 w-5" />
@@ -67,7 +67,7 @@ export function TestimonialsCarousel() {
         </>
       )}
 
-      {/* Carousel Container - No auto-sliding animation */}
+      {/* Carousel Container */}
       <div className="overflow-hidden px-2">
         <div
           className="flex gap-6 transition-transform duration-300 ease-out"
@@ -114,32 +114,26 @@ interface TestimonialCardProps {
 function TestimonialCard({ testimonial, getInitials }: TestimonialCardProps) {
   return (
     <Card
-      className={cn(
-        "flex-shrink-0 w-full md:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] group glass border-border/30 hover:border-primary/30 transition-all duration-500"
-      )}
+      className="flex-shrink-0 w-full md:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] bg-card border-border/50 hover:border-primary/30 transition-all duration-300"
     >
       <CardContent className="p-8 relative">
         {/* Quote Icon */}
-        <div className="absolute top-4 right-4 opacity-10 group-hover:opacity-20 transition-opacity">
-          <Quote className="w-12 h-12 text-primary" />
+        <div className="absolute top-4 right-4 opacity-10">
+          <Quote className="w-10 h-10 text-primary" />
         </div>
 
         {/* Rating Stars */}
         <div className="flex gap-1 mb-4">
           {Array.from({ length: testimonial.rating }).map((_, i) => (
-            <Star
-              key={i}
-              className="w-5 h-5 fill-gold text-gold transition-transform group-hover:scale-110"
-              style={{ transitionDelay: `${i * 50}ms` }}
-            />
+            <Star key={i} className="w-4 h-4 fill-primary text-primary" />
           ))}
           {Array.from({ length: 5 - testimonial.rating }).map((_, i) => (
-            <Star key={`empty-${i}`} className="w-5 h-5 text-muted-foreground/30" />
+            <Star key={`empty-${i}`} className="w-4 h-4 text-muted-foreground/30" />
           ))}
         </div>
 
         {/* Review Text */}
-        <p className="text-muted-foreground mb-6 leading-relaxed italic line-clamp-4">
+        <p className="text-muted-foreground mb-6 leading-relaxed line-clamp-4">
           "{testimonial.content}"
         </p>
 
@@ -149,10 +143,10 @@ function TestimonialCard({ testimonial, getInitials }: TestimonialCardProps) {
             <img
               src={testimonial.avatar_url}
               alt={testimonial.name}
-              className="w-12 h-12 rounded-full object-cover border-2 border-primary/20"
+              className="w-12 h-12 rounded-full object-cover"
             />
           ) : (
-            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary to-purple flex items-center justify-center text-primary-foreground font-semibold text-sm">
+            <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary font-semibold text-sm">
               {getInitials(testimonial.name)}
             </div>
           )}
