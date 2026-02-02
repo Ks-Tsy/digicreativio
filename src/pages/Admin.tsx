@@ -267,7 +267,7 @@ export default function Admin() {
         activeTab={activeTab}
       />
       
-      <main className={`pt-20 pb-8 px-6 transition-all duration-300 ${sidebarCollapsed ? "ml-16" : "ml-64"}`}>
+      <main className={`pt-20 pb-8 px-6 transition-all duration-300 ${sidebarCollapsed ? "ml-[72px]" : "ml-64"}`}>
         <div className="max-w-7xl mx-auto">
           {activeTab === "overview" && (
             <AdminOverview

@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { NavLink, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import {
   LayoutDashboard,
@@ -18,6 +17,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface AdminSidebarProps {
   activeTab: string;
@@ -44,75 +44,85 @@ export function AdminSidebar({ activeTab, onTabChange }: AdminSidebarProps) {
   return (
     <aside
       className={cn(
-        "fixed left-0 top-0 z-40 h-screen bg-admin-sidebar border-r border-border/30 transition-all duration-300",
-        "shadow-[4px_0_24px_-8px_hsl(0_0%_0%/0.5)]",
-        collapsed ? "w-16" : "w-64"
+        "fixed left-0 top-0 z-40 h-screen bg-card/95 backdrop-blur-xl border-r border-border/40 transition-all duration-300",
+        collapsed ? "w-[72px]" : "w-64"
       )}
     >
       {/* Logo / Brand */}
-      <div className="flex h-16 items-center justify-between px-4 border-b border-border/30">
+      <div className="flex h-16 items-center justify-between px-4 border-b border-border/40">
         {!collapsed && (
           <div className="flex items-center gap-3">
-            <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-info to-info/70 flex items-center justify-center shadow-[0_0_20px_hsl(199_89%_55%/0.3)]">
-              <LayoutDashboard className="h-4 w-4 text-white" />
+            <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center">
+              <LayoutDashboard className="h-5 w-5 text-primary" />
             </div>
             <div className="flex flex-col">
-              <span className="font-heading font-bold text-base tracking-tight">Admin</span>
-              <span className="text-[10px] text-muted-foreground/70 uppercase tracking-widest">Dashboard</span>
+              <span className="font-heading font-bold text-sm">Admin Panel</span>
+              <span className="text-[10px] text-muted-foreground">DigiCreativio</span>
             </div>
           </div>
         )}
         {collapsed && (
-          <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-info to-info/70 flex items-center justify-center mx-auto shadow-[0_0_20px_hsl(199_89%_55%/0.3)]">
-            <LayoutDashboard className="h-4 w-4 text-white" />
+          <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center mx-auto">
+            <LayoutDashboard className="h-5 w-5 text-primary" />
           </div>
         )}
       </div>
 
       {/* Collapse Toggle */}
-      <div className="absolute top-[4.5rem] -right-3 z-50">
-        <Button
-          variant="outline"
-          size="icon"
-          className="h-6 w-6 rounded-full bg-admin-sidebar border-border/50 shadow-md hover:bg-admin-sidebar-hover"
-          onClick={() => setCollapsed(!collapsed)}
-        >
-          {collapsed ? (
-            <ChevronRight className="h-3 w-3" />
-          ) : (
-            <ChevronLeft className="h-3 w-3" />
-          )}
-        </Button>
-      </div>
+      <Button
+        variant="ghost"
+        size="icon"
+        className="absolute top-[4.5rem] -right-3 z-50 h-6 w-6 rounded-full bg-card border border-border/50 shadow-md hover:bg-muted"
+        onClick={() => setCollapsed(!collapsed)}
+      >
+        {collapsed ? (
+          <ChevronRight className="h-3 w-3" />
+        ) : (
+          <ChevronLeft className="h-3 w-3" />
+        )}
+      </Button>
 
       {/* Navigation */}
-      <ScrollArea className="h-[calc(100vh-4rem)] py-6">
-        <nav className="flex flex-col gap-1.5 px-3">
+      <ScrollArea className="h-[calc(100vh-4rem)] py-4">
+        <nav className="flex flex-col gap-1 px-3">
           {menuItems.map((item) => {
             const Icon = item.icon;
             const isActive = activeTab === item.id;
-            return (
+            
+            const buttonContent = (
               <button
                 key={item.id}
                 onClick={() => onTabChange(item.id)}
                 className={cn(
-                  "flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium transition-all duration-200",
-                  "hover:bg-admin-sidebar-hover group relative",
+                  "w-full flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200",
+                  "hover:bg-muted/50",
                   isActive
-                    ? "bg-info/15 text-info shadow-[inset_0_0_20px_hsl(199_89%_55%/0.1)]"
+                    ? "bg-primary/10 text-primary"
                     : "text-muted-foreground hover:text-foreground"
                 )}
               >
-                {isActive && (
-                  <span className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-info rounded-r-full shadow-[0_0_10px_hsl(199_89%_55%/0.5)]" />
-                )}
                 <Icon className={cn(
-                  "h-5 w-5 flex-shrink-0 transition-all",
-                  isActive ? "text-info" : "group-hover:text-foreground"
+                  "h-[18px] w-[18px] flex-shrink-0",
+                  isActive ? "text-primary" : ""
                 )} />
                 {!collapsed && <span className="truncate">{item.label}</span>}
               </button>
             );
+
+            if (collapsed) {
+              return (
+                <Tooltip key={item.id} delayDuration={0}>
+                  <TooltipTrigger asChild>
+                    {buttonContent}
+                  </TooltipTrigger>
+                  <TooltipContent side="right" className="font-medium">
+                    {item.label}
+                  </TooltipContent>
+                </Tooltip>
+              );
+            }
+
+            return buttonContent;
           })}
         </nav>
       </ScrollArea>
