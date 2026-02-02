@@ -97,11 +97,17 @@ const Home = () => {
         {/* Content */}
         <div className="container mx-auto px-4 lg:px-8 relative z-10">
           <div className="max-w-5xl mx-auto text-center">
-            {/* Logo in Circle */}
+            {/* Logo in Circle with Glow Ring */}
             <div className="mb-12 flex justify-center">
               <div className="relative">
-                <div className="absolute inset-0 bg-primary/20 blur-3xl rounded-full scale-150 opacity-50" />
-                <div className="relative z-10 w-40 h-40 rounded-full bg-card/80 backdrop-blur-sm border border-border/50 flex items-center justify-center shadow-2xl">
+                {/* Outer glow */}
+                <div className="absolute inset-0 bg-primary/30 blur-3xl rounded-full scale-150 opacity-60" />
+                {/* Animated glow ring */}
+                <div className="absolute inset-[-4px] rounded-full bg-gradient-to-r from-primary/50 via-primary/20 to-primary/50 animate-[spin_8s_linear_infinite] opacity-60" />
+                {/* Inner ring glow */}
+                <div className="absolute inset-[-2px] rounded-full bg-primary/10 blur-sm" />
+                {/* Logo container */}
+                <div className="relative z-10 w-40 h-40 rounded-full bg-card/90 backdrop-blur-md border border-primary/20 flex items-center justify-center shadow-2xl ring-1 ring-primary/10">
                   <img 
                     src={logo} 
                     alt="DigiCreativio Logo" 
