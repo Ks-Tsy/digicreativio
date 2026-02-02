@@ -97,7 +97,7 @@ const Home = () => {
         {/* Content */}
         <div className="container mx-auto px-4 lg:px-8 relative z-10">
           <div className="max-w-5xl mx-auto text-center">
-            {/* Logo with Glow and Tagline */}
+            {/* Logo with Glow */}
             <div className="mb-10 relative">
               <div className="absolute inset-0 bg-primary/20 blur-3xl rounded-full scale-150 opacity-50" />
               <img 
@@ -105,9 +105,6 @@ const Home = () => {
                 alt="DigiCreativio Logo" 
                 className="mx-auto w-32 h-32 object-contain relative z-10 drop-shadow-2xl"
               />
-              <p className="text-sm uppercase tracking-[0.3em] text-muted-foreground mt-4 relative z-10">
-                Crafting the Future of Digital
-              </p>
             </div>
             
             {/* Main heading with shimmer effect */}
