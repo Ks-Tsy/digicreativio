@@ -106,12 +106,12 @@ const Home = () => {
                 <div className="absolute inset-[-4px] rounded-full bg-gradient-to-r from-primary/50 via-primary/20 to-primary/50 animate-[spin_8s_linear_infinite] opacity-60" />
                 {/* Inner ring glow */}
                 <div className="absolute inset-[-2px] rounded-full bg-primary/10 blur-sm" />
-                {/* Logo container */}
-                <div className="relative z-10 w-40 h-40 rounded-full bg-card/90 backdrop-blur-md border border-primary/20 flex items-center justify-center shadow-2xl ring-1 ring-primary/10">
+                {/* Logo container - image fills circle */}
+                <div className="relative z-10 w-36 h-36 rounded-full overflow-hidden border-2 border-primary/20 shadow-2xl ring-1 ring-primary/10">
                   <img 
                     src={logo} 
                     alt="DigiCreativio Logo" 
-                    className="w-24 h-24 object-contain drop-shadow-lg"
+                    className="w-full h-full object-cover"
                   />
                 </div>
               </div>
