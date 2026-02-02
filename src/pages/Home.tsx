@@ -103,7 +103,7 @@ const Home = () => {
             
             {/* Main heading with shimmer effect */}
             <h1 className="text-5xl md:text-7xl lg:text-8xl font-heading font-bold mb-8 leading-tight bg-gradient-to-r from-foreground via-primary to-foreground bg-[length:200%_100%] bg-clip-text text-transparent animate-[shimmer_3s_ease-in-out_infinite]">
-              {heroData?.title || "Crafting the Future"}
+              {heroData?.title || "Crafting the Future of Digital"}
             </h1>
             
             {/* Subtitle */}
