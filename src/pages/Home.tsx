@@ -35,21 +35,29 @@ const Home = () => {
       icon: Palette,
       title: "Graphic Design",
       description: "Stunning visuals that capture attention and communicate your message effectively.",
+      iconBg: "bg-amber-500/20",
+      iconColor: "text-amber-400",
     },
     {
       icon: Sparkles,
       title: "Branding",
       description: "Build a memorable brand identity that resonates with your target audience.",
+      iconBg: "bg-pink-500/20",
+      iconColor: "text-pink-400",
     },
     {
       icon: Code,
       title: "Web Design",
       description: "Beautiful, responsive websites that deliver exceptional user experiences.",
+      iconBg: "bg-cyan-500/20",
+      iconColor: "text-cyan-400",
     },
     {
       icon: Layers,
       title: "Digital Art",
       description: "Custom digital artwork that brings your creative vision to life.",
+      iconBg: "bg-yellow-500/20",
+      iconColor: "text-yellow-400",
     },
   ];
 
@@ -188,31 +196,31 @@ const Home = () => {
       </section>
 
       {/* Services Section */}
-      <section className="py-24">
+      <section className="py-24 bg-background">
         <div className="container mx-auto px-4 lg:px-8">
           <div className="text-center mb-16">
-            <span className="inline-block px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium mb-6">
+            <span className="inline-block px-5 py-2.5 rounded-full border border-border/50 bg-card/50 text-muted-foreground text-sm font-medium mb-8">
               Our Expertise
             </span>
             <h2 className="text-4xl md:text-5xl font-heading font-bold mb-6">
-              Creative Services
+              Creative <span className="text-primary">Services</span>
             </h2>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              {servicesData?.subtitle || "Comprehensive creative solutions tailored to your unique needs and vision"}
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              {servicesData?.subtitle || "Comprehensive creative solutions tailored to your unique needs"}
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 max-w-6xl mx-auto">
             {services.map((service, index) => (
               <Card 
                 key={index} 
-                className="group bg-card border-border/50 hover:border-primary/30 transition-all duration-300"
+                className="group bg-card/80 border-border/40 hover:border-border/80 transition-all duration-300"
               >
-                <CardContent className="p-8 text-center">
-                  <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-primary/10 mb-6 group-hover:scale-110 transition-transform duration-300">
-                    <service.icon className="w-8 h-8 text-primary" />
+                <CardContent className="p-6 text-center">
+                  <div className={`inline-flex items-center justify-center w-14 h-14 rounded-xl ${service.iconBg} mb-5 group-hover:scale-105 transition-transform duration-300`}>
+                    <service.icon className={`w-7 h-7 ${service.iconColor}`} />
                   </div>
-                  <h3 className="text-xl font-semibold mb-3 group-hover:text-primary transition-colors">
+                  <h3 className="text-lg font-semibold mb-2.5">
                     {service.title}
                   </h3>
                   <p className="text-muted-foreground text-sm leading-relaxed">
@@ -223,12 +231,12 @@ const Home = () => {
             ))}
           </div>
 
-          <div className="text-center mt-12">
+          <div className="text-center mt-14">
             <Button 
               asChild 
               variant="outline" 
               size="lg" 
-              className="rounded-full px-8"
+              className="rounded-full px-8 border-border/50 hover:border-border"
             >
               <Link to="/services" className="group">
                 Explore All Services
