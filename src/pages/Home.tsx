@@ -214,10 +214,10 @@ const Home = () => {
             {services.map((service, index) => (
               <Card 
                 key={index} 
-                className="group bg-card/80 border-border/40 hover:border-border/80 transition-all duration-300"
+                className="group bg-card/80 border-border/40 hover:border-border/80 hover:-translate-y-2 hover:shadow-xl hover:shadow-black/20 transition-all duration-300"
               >
                 <CardContent className="p-6 text-center">
-                  <div className={`inline-flex items-center justify-center w-14 h-14 rounded-xl ${service.iconBg} mb-5 group-hover:scale-105 transition-transform duration-300`}>
+                  <div className={`inline-flex items-center justify-center w-14 h-14 rounded-xl ${service.iconBg} mb-5 group-hover:scale-110 transition-transform duration-300`}>
                     <service.icon className={`w-7 h-7 ${service.iconColor}`} />
                   </div>
                   <h3 className="text-lg font-semibold mb-2.5">
