@@ -283,11 +283,8 @@ const Home = () => {
               <span className="inline-block px-5 py-2.5 rounded-full border border-border/50 bg-card/50 text-muted-foreground text-sm font-medium mb-8">
                 Let's Create Together
               </span>
-              <h2 className="text-4xl md:text-5xl lg:text-6xl font-heading font-bold mb-2">
-                Ready to Transform Your Brand?
-              </h2>
-              <h2 className="text-4xl md:text-5xl lg:text-6xl font-heading font-bold text-primary mb-8">
-                Your Brand?
+              <h2 className="text-4xl md:text-5xl lg:text-6xl font-heading font-bold mb-8">
+                Ready to Transform <span className="text-primary">Your Brand?</span>
               </h2>
               <p className="text-lg text-muted-foreground mb-10 max-w-2xl mx-auto leading-relaxed">
                 {ctaData?.subtitle || "Let's collaborate to create something extraordinary. Get in touch today and let's bring your vision to life."}
