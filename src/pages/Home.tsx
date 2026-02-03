@@ -183,8 +183,8 @@ const Home = () => {
         <div className="container mx-auto px-4 lg:px-8">
           <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
             {features.map((feature, index) => (
-              <div key={index} className="text-center p-8">
-                <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-primary/10 mb-6">
+              <div key={index} className="group text-center p-8 rounded-2xl bg-card/50 border border-border/30 hover:border-border/60 hover:-translate-y-2 hover:shadow-xl hover:shadow-black/20 transition-all duration-300">
+                <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-primary/10 mb-6 group-hover:scale-110 transition-transform duration-300">
                   <feature.icon className="w-8 h-8 text-primary" />
                 </div>
                 <h3 className="text-xl font-semibold mb-3">{feature.title}</h3>
