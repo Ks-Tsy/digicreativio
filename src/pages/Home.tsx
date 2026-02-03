@@ -271,26 +271,39 @@ const Home = () => {
       {/* CTA Section */}
       <section className="py-24">
         <div className="container mx-auto px-4 lg:px-8">
-          <div className="max-w-4xl mx-auto text-center bg-card rounded-3xl p-12 md:p-20 border border-border/50">
-            <span className="inline-block px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium mb-6">
-              Let's Create Together
-            </span>
-            <h2 className="text-4xl md:text-5xl font-heading font-bold mb-6">
-              {ctaData?.title || "Ready to Transform Your Brand?"}
-            </h2>
-            <p className="text-xl text-muted-foreground mb-10 max-w-2xl mx-auto leading-relaxed">
-              {ctaData?.subtitle || "Let's collaborate to create something extraordinary. Get in touch today and let's bring your vision to life."}
-            </p>
-            <Button 
-              asChild 
-              size="lg" 
-              className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold text-lg px-10 py-6 rounded-full transition-all duration-300 hover:scale-105"
-            >
-              <Link to="/contact">
-                {ctaData?.cta_text || "Get Started Today"}
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </Link>
-            </Button>
+          <div className="relative max-w-5xl mx-auto text-center rounded-3xl p-12 md:p-20 overflow-hidden">
+            {/* Gradient Background */}
+            <div className="absolute inset-0 bg-gradient-to-br from-card via-card to-card" />
+            <div className="absolute inset-0 bg-gradient-to-r from-purple-900/20 via-transparent to-transparent" />
+            <div className="absolute top-0 left-0 w-96 h-96 bg-purple-600/10 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
+            <div className="absolute bottom-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-2xl translate-x-1/4 translate-y-1/4" />
+            
+            {/* Content */}
+            <div className="relative z-10">
+              <span className="inline-block px-5 py-2.5 rounded-full border border-border/50 bg-card/50 text-muted-foreground text-sm font-medium mb-8">
+                Let's Create Together
+              </span>
+              <h2 className="text-4xl md:text-5xl lg:text-6xl font-heading font-bold mb-2">
+                Ready to Transform Your Brand?
+              </h2>
+              <h2 className="text-4xl md:text-5xl lg:text-6xl font-heading font-bold text-primary mb-8">
+                Your Brand?
+              </h2>
+              <p className="text-lg text-muted-foreground mb-10 max-w-2xl mx-auto leading-relaxed">
+                {ctaData?.subtitle || "Let's collaborate to create something extraordinary. Get in touch today and let's bring your vision to life."}
+              </p>
+              <Button 
+                asChild 
+                size="lg" 
+                variant="outline"
+                className="font-semibold text-lg px-10 py-6 rounded-full border-border/50 hover:bg-card hover:border-border transition-all duration-300"
+              >
+                <Link to="/contact">
+                  {ctaData?.cta_text || "Get Started Today"}
+                  <ArrowRight className="ml-2 h-5 w-5" />
+                </Link>
+              </Button>
+            </div>
           </div>
         </div>
       </section>
