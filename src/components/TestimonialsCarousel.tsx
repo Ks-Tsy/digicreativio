@@ -114,39 +114,39 @@ interface TestimonialCardProps {
 function TestimonialCard({ testimonial, getInitials }: TestimonialCardProps) {
   return (
     <Card
-      className="flex-shrink-0 w-full md:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] bg-card border-border/50 hover:border-primary/30 transition-all duration-300"
+      className="flex-shrink-0 w-full md:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] bg-gradient-to-br from-card via-card to-card/80 border-border/30 hover:border-primary/30 transition-all duration-300"
     >
-      <CardContent className="p-8 relative">
-        {/* Quote Icon */}
-        <div className="absolute top-4 right-4 opacity-10">
-          <Quote className="w-10 h-10 text-primary" />
+      <CardContent className="p-8 relative min-h-[280px] flex flex-col">
+        {/* Large Quote Mark */}
+        <div className="absolute top-6 right-6">
+          <span className="text-6xl font-serif text-primary/20 leading-none">"</span>
         </div>
 
         {/* Rating Stars */}
-        <div className="flex gap-1 mb-4">
+        <div className="flex gap-1 mb-5">
           {Array.from({ length: testimonial.rating }).map((_, i) => (
-            <Star key={i} className="w-4 h-4 fill-primary text-primary" />
+            <Star key={i} className="w-5 h-5 fill-amber-400 text-amber-400" />
           ))}
           {Array.from({ length: 5 - testimonial.rating }).map((_, i) => (
-            <Star key={`empty-${i}`} className="w-4 h-4 text-muted-foreground/30" />
+            <Star key={`empty-${i}`} className="w-5 h-5 text-muted-foreground/30" />
           ))}
         </div>
 
         {/* Review Text */}
-        <p className="text-muted-foreground mb-6 leading-relaxed line-clamp-4">
+        <p className="text-muted-foreground mb-6 leading-relaxed line-clamp-4 italic flex-grow">
           "{testimonial.content}"
         </p>
 
         {/* Client Info */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4 mt-auto">
           {testimonial.avatar_url ? (
             <img
               src={testimonial.avatar_url}
               alt={testimonial.name}
-              className="w-12 h-12 rounded-full object-cover"
+              className="w-12 h-12 rounded-full object-cover border-2 border-border/50"
             />
           ) : (
-            <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary font-semibold text-sm">
+            <div className="w-12 h-12 rounded-full bg-muted/50 flex items-center justify-center text-muted-foreground font-semibold text-sm border-2 border-border/50">
               {getInitials(testimonial.name)}
             </div>
           )}

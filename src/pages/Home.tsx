@@ -248,16 +248,16 @@ const Home = () => {
       </section>
 
       {/* Testimonials Section */}
-      <section className="py-24 bg-secondary/30">
+      <section className="py-24 bg-gradient-to-b from-background via-secondary/20 to-background">
         <div className="container mx-auto px-4 lg:px-8">
           <div className="text-center mb-16">
-            <span className="inline-block px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium mb-6">
+            <span className="inline-block px-5 py-2.5 rounded-full border border-border/50 bg-card/50 text-muted-foreground text-sm font-medium mb-8">
               Client Love
             </span>
             <h2 className="text-4xl md:text-5xl font-heading font-bold mb-6">
-              What Our Clients Say
+              What Our <span className="text-primary">Clients</span> Say
             </h2>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
               Don't just take our word for it — hear from the brands we've helped transform
             </p>
           </div>
