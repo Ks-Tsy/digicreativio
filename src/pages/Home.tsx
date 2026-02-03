@@ -269,37 +269,65 @@ const Home = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-24">
+      <section className="py-24 relative">
         <div className="container mx-auto px-4 lg:px-8">
-          <div className="relative max-w-5xl mx-auto text-center rounded-3xl p-12 md:p-20 overflow-hidden">
-            {/* Gradient Background */}
-            <div className="absolute inset-0 bg-gradient-to-br from-card via-card to-card" />
-            <div className="absolute inset-0 bg-gradient-to-r from-purple-900/20 via-transparent to-transparent" />
-            <div className="absolute top-0 left-0 w-96 h-96 bg-purple-600/10 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
-            <div className="absolute bottom-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-2xl translate-x-1/4 translate-y-1/4" />
+          <div className="relative max-w-5xl mx-auto text-center rounded-[2.5rem] p-12 md:p-20 overflow-hidden border border-border/20">
+            {/* Multi-layer Gradient Background */}
+            <div className="absolute inset-0 bg-gradient-to-br from-card via-background to-card" />
+            <div className="absolute inset-0 bg-gradient-to-tr from-primary/5 via-transparent to-purple-500/10" />
+            
+            {/* Animated Blur Orbs */}
+            <div className="absolute top-0 left-1/4 w-80 h-80 bg-primary/15 rounded-full blur-[100px] animate-pulse" />
+            <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-600/10 rounded-full blur-[120px] animate-pulse" style={{ animationDelay: '1s' }} />
+            <div className="absolute top-1/2 left-0 w-64 h-64 bg-cyan-500/5 rounded-full blur-[80px] animate-pulse" style={{ animationDelay: '2s' }} />
+            <div className="absolute bottom-1/4 right-0 w-72 h-72 bg-amber-500/5 rounded-full blur-[90px] animate-pulse" style={{ animationDelay: '0.5s' }} />
+            
+            {/* Subtle Grid Pattern */}
+            <div className="absolute inset-0 opacity-[0.02]" style={{
+              backgroundImage: `linear-gradient(hsl(var(--primary)) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--primary)) 1px, transparent 1px)`,
+              backgroundSize: '40px 40px'
+            }} />
             
             {/* Content */}
             <div className="relative z-10">
-              <span className="inline-block px-5 py-2.5 rounded-full border border-border/50 bg-card/50 text-muted-foreground text-sm font-medium mb-8">
+              {/* Pill Badge */}
+              <span className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-primary/30 bg-primary/10 text-primary text-sm font-medium mb-8 backdrop-blur-sm">
+                <Sparkles className="w-4 h-4" />
                 Let's Create Together
               </span>
-              <h2 className="text-4xl md:text-5xl lg:text-6xl font-heading font-bold mb-8">
-                Ready to Transform <span className="text-primary">Your Brand?</span>
+              
+              {/* Gradient Heading */}
+              <h2 className="text-4xl md:text-5xl lg:text-6xl font-heading font-bold mb-6 bg-gradient-to-r from-foreground via-primary to-foreground bg-[length:200%_100%] bg-clip-text text-transparent animate-[shimmer_3s_ease-in-out_infinite]">
+                Ready to Transform Your Brand?
               </h2>
-              <p className="text-lg text-muted-foreground mb-10 max-w-2xl mx-auto leading-relaxed">
+              
+              <p className="text-lg text-muted-foreground mb-12 max-w-2xl mx-auto leading-relaxed">
                 {ctaData?.subtitle || "Let's collaborate to create something extraordinary. Get in touch today and let's bring your vision to life."}
               </p>
-              <Button 
-                asChild 
-                size="lg" 
-                variant="outline"
-                className="font-semibold text-lg px-10 py-6 rounded-full border-border/50 hover:bg-card hover:border-border transition-all duration-300"
-              >
-                <Link to="/contact">
-                  {ctaData?.cta_text || "Get Started Today"}
-                  <ArrowRight className="ml-2 h-5 w-5" />
-                </Link>
-              </Button>
+              
+              {/* Animated Buttons */}
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Button 
+                  asChild 
+                  size="lg" 
+                  className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold text-lg px-10 py-6 rounded-full transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-primary/25 group"
+                >
+                  <Link to="/contact">
+                    {ctaData?.cta_text || "Get Started Today"}
+                    <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                  </Link>
+                </Button>
+                <Button 
+                  asChild 
+                  size="lg" 
+                  variant="outline"
+                  className="font-semibold text-lg px-10 py-6 rounded-full border-border/50 hover:border-primary/50 hover:bg-primary/5 backdrop-blur-sm transition-all duration-300 hover:scale-105"
+                >
+                  <Link to="/portfolio">
+                    View Our Work
+                  </Link>
+                </Button>
+              </div>
             </div>
           </div>
         </div>
