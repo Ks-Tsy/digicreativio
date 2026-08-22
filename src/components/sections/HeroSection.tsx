@@ -74,19 +74,12 @@ export const HeroSection: React.FC = () => {
               {word.split("").map((letter: string, letterIndex: number) => (
                 <motion.span
                   key={`${wordIndex}-${letterIndex}`}
-                  initial={{ 
-                    opacity: 0, 
-                    x: ((wordIndex + letterIndex) % 2 === 0 ? 1 : -1) * (150 + letterIndex * 30), 
-                    y: ((wordIndex * 2 + letterIndex) % 3 === 0 ? 1 : -1) * (150 + wordIndex * 30), 
-                    filter: "blur(20px)", 
-                    rotateZ: ((wordIndex + letterIndex) % 2 === 0 ? 45 : -45),
-                    scale: 0.1
-                  }}
-                  animate={{ opacity: 1, x: 0, y: 0, filter: "blur(0px)", rotateZ: 0, scale: 1 }}
+                  initial={{ opacity: 0, y: 40, filter: "blur(10px)", rotateX: -45 }}
+                  animate={{ opacity: 1, y: 0, filter: "blur(0px)", rotateX: 0 }}
                   transition={{
-                    duration: 1.4,
+                    duration: 0.8,
                     ease: [0.16, 1, 0.3, 1],
-                    delay: 0.3 + (wordIndex * 0.05) + (letterIndex * 0.03),
+                    delay: 0.2 + (wordIndex * 0.1) + (letterIndex * 0.03),
                   }}
                   className="text-gradient-metallic inline-block drop-shadow-[0_0_15px_rgba(255,255,255,0.1)] pb-[0.15em] -mb-[0.15em]"
                 >
@@ -99,9 +92,9 @@ export const HeroSection: React.FC = () => {
 
         {/* Subheading */}
         <motion.p
-          initial={{ opacity: 0, y: 50, x: -50, scale: 0.9, filter: "blur(10px)" }}
-          animate={{ opacity: 1, y: 0, x: 0, scale: 1, filter: "blur(0px)" }}
-          transition={{ duration: 1.2, delay: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1.2, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
           className="max-w-3xl text-lg md:text-xl text-foreground/60 mb-12 font-light leading-relaxed"
         >
           {data.subtitle || "Transform your brand with stunning visuals, memorable identities, and exceptional web experiences tailored to your unique vision."}
@@ -109,9 +102,9 @@ export const HeroSection: React.FC = () => {
 
         {/* Buttons */}
         <motion.div
-          initial={{ opacity: 0, y: 50, x: 50, scale: 0.9, filter: "blur(10px)" }}
-          animate={{ opacity: 1, y: 0, x: 0, scale: 1, filter: "blur(0px)" }}
-          transition={{ duration: 1.2, delay: 1, ease: [0.16, 1, 0.3, 1] }}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
           className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6"
         >
           <MagneticButton strength={30}>

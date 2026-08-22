@@ -24,9 +24,9 @@ export const Preloader: React.FC<PreloaderProps> = ({ onComplete }) => {
     <AnimatePresence>
       {isVisible && (
         <motion.div
-          initial={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
-          exit={{ opacity: 0, scale: 1.5, filter: "blur(20px)" }}
-          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          initial={{ opacity: 1 }}
+          exit={{ opacity: 0, y: -50 }}
+          transition={{ duration: 0.8, ease: "easeInOut" }}
           className="fixed inset-0 z-[100] flex items-center justify-center bg-[#0a0c11] overflow-hidden"
         >
           {/* Abstract ambient background from the main page */}
