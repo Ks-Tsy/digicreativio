@@ -34,13 +34,24 @@ const AppLayout = () => {
       <Preloader onComplete={() => setIsPreloaded(true)} />
       {isPreloaded && (
         <motion.div 
-          initial={{ opacity: 0 }} 
-          animate={{ opacity: 1 }} 
-          transition={{ duration: 0.8 }}
-          className="flex flex-col min-h-screen w-full"
+          initial={{ opacity: 1 }} 
+          className="flex flex-col min-h-screen w-full overflow-hidden"
         >
-          {!isAdminRoute && <Navbar />}
-          <main className="flex-1">
+          {!isAdminRoute && (
+            <motion.div
+              initial={{ y: -100, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
+            >
+              <Navbar />
+            </motion.div>
+          )}
+          <motion.main 
+            initial={{ scale: 0.9, opacity: 0, filter: "blur(10px)", y: 50 }}
+            animate={{ scale: 1, opacity: 1, filter: "blur(0px)", y: 0 }}
+            transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
+            className="flex-1"
+          >
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/about" element={<About />} />
@@ -54,9 +65,25 @@ const AppLayout = () => {
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
-          </main>
-          {!isAdminRoute && <Footer />}
-          {!isAdminRoute && <AIChatbot />}
+          </motion.main>
+          {!isAdminRoute && (
+            <motion.div
+              initial={{ y: 100, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.4 }}
+            >
+              <Footer />
+            </motion.div>
+          )}
+          {!isAdminRoute && (
+            <motion.div
+              initial={{ scale: 0, opacity: 0, x: 100 }}
+              animate={{ scale: 1, opacity: 1, x: 0 }}
+              transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 1 }}
+            >
+              <AIChatbot />
+            </motion.div>
+          )}
         </motion.div>
       )}
     </div>
