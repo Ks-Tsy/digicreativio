@@ -2,8 +2,12 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { MagneticButton } from '../ui/MagneticButton';
 import { FloatingElement } from '../ui/FloatingElement';
+import { useSiteContent } from '@/hooks/useSiteContent';
 
 export const ContactSection: React.FC = () => {
+  const { content } = useSiteContent('home', 'cta_section');
+  const data = (content?.content_data as any) || {};
+
   return (
     <section id="contact" className="relative py-32 overflow-hidden bg-background">
       {/* Background Orbs */}
@@ -22,10 +26,10 @@ export const ContactSection: React.FC = () => {
             transition={{ duration: 1 }}
             className="text-5xl md:text-7xl font-heading font-bold mb-6"
           >
-            Initiate Contact
+            {data.title || "Initiate Contact"}
           </motion.h2>
           <p className="text-foreground/60 text-lg">
-            Ready to break the laws of physics? Drop us a signal.
+            {data.subtitle || "Ready to break the laws of physics? Drop us a signal."}
           </p>
         </div>
 
@@ -94,7 +98,7 @@ export const ContactSection: React.FC = () => {
           <div className="flex justify-center pt-8">
             <MagneticButton>
               <button type="submit" className="relative group overflow-hidden rounded-full bg-foreground text-background px-12 py-5 text-lg font-medium transition-colors">
-                <span className="relative z-10 group-hover:text-background mix-blend-difference">Transmit Message</span>
+                <span className="relative z-10 group-hover:text-background mix-blend-difference">{data.cta_text || "Transmit Message"}</span>
                 {/* Liquid hover effect */}
                 <div className="absolute inset-0 bg-primary translate-y-[100%] rounded-full group-hover:translate-y-0 transition-transform duration-500 ease-[cubic-bezier(0.19,1,0.22,1)]" />
               </button>

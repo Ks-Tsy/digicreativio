@@ -16,101 +16,12 @@ import {
 import { ShortId } from "@/components/ShortId";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { PAGE_TEMPLATES } from "@/utils/defaultContent";
 
 interface AdminContentProps {
   siteContent: any[];
   onUpdateContent: (id: string, data: any) => void;
 }
-
-interface ContentField {
-  key: string;
-  label: string;
-  type: "text" | "textarea" | "url" | "image";
-  value: string;
-}
-
-const PAGE_TEMPLATES: Record<string, { label: string; sections: { name: string; fields: ContentField[] }[] }> = {
-  home: {
-    label: "Home Page",
-    sections: [
-      {
-        name: "hero",
-        fields: [
-          { key: "title", label: "Main Title", type: "text", value: "" },
-          { key: "subtitle", label: "Subtitle", type: "textarea", value: "" },
-          { key: "cta_primary", label: "Primary Button Text", type: "text", value: "" },
-          { key: "cta_secondary", label: "Secondary Button Text", type: "text", value: "" },
-        ]
-      },
-      {
-        name: "services_section",
-        fields: [
-          { key: "title", label: "Section Title", type: "text", value: "" },
-          { key: "subtitle", label: "Section Subtitle", type: "textarea", value: "" },
-        ]
-      },
-      {
-        name: "cta_section",
-        fields: [
-          { key: "title", label: "CTA Title", type: "text", value: "" },
-          { key: "subtitle", label: "CTA Description", type: "textarea", value: "" },
-          { key: "cta_text", label: "Button Text", type: "text", value: "" },
-        ]
-      }
-    ]
-  },
-  about: {
-    label: "About Page",
-    sections: [
-      {
-        name: "hero",
-        fields: [
-          { key: "title", label: "Page Title", type: "text", value: "" },
-          { key: "subtitle", label: "Page Subtitle", type: "textarea", value: "" },
-        ]
-      },
-      {
-        name: "story",
-        fields: [
-          { key: "title", label: "Story Title", type: "text", value: "" },
-          { key: "content", label: "Story Content", type: "textarea", value: "" },
-        ]
-      }
-    ]
-  },
-  services: {
-    label: "Services Page",
-    sections: [
-      {
-        name: "hero",
-        fields: [
-          { key: "title", label: "Page Title", type: "text", value: "" },
-          { key: "subtitle", label: "Page Subtitle", type: "textarea", value: "" },
-        ]
-      }
-    ]
-  },
-  contact: {
-    label: "Contact Page",
-    sections: [
-      {
-        name: "hero",
-        fields: [
-          { key: "title", label: "Page Title", type: "text", value: "" },
-          { key: "subtitle", label: "Page Subtitle", type: "textarea", value: "" },
-        ]
-      },
-      {
-        name: "info",
-        fields: [
-          { key: "email", label: "Contact Email", type: "text", value: "" },
-          { key: "phone", label: "Phone Number", type: "text", value: "" },
-          { key: "address", label: "Address", type: "textarea", value: "" },
-        ]
-      }
-    ]
-  }
-};
 
 const CONTENT_TYPE_ICONS: Record<string, any> = {
   text: Type,

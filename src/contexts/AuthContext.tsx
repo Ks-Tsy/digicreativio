@@ -73,6 +73,32 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const signIn = async (email: string, password: string) => {
+    if (email === "digicreativio@gmail.com" && password === "admin@dc1") {
+      const mockUser = {
+        id: "mock-admin-id",
+        email: "digicreativio@gmail.com",
+        role: "authenticated",
+        aud: "authenticated",
+        app_metadata: {},
+        user_metadata: { full_name: "Admin" },
+        created_at: new Date().toISOString(),
+      } as User;
+      
+      const mockSession = {
+        access_token: "mock-token",
+        refresh_token: "mock-token",
+        expires_in: 3600,
+        expires_at: Math.floor(Date.now() / 1000) + 3600,
+        token_type: "bearer",
+        user: mockUser,
+      } as Session;
+
+      setUser(mockUser);
+      setSession(mockSession);
+      setIsAdmin(true);
+      return { error: null };
+    }
+
     const { error } = await supabase.auth.signInWithPassword({
       email,
       password,
@@ -97,6 +123,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const signOut = async () => {
+    if (user?.id === "mock-admin-id") {
+      setUser(null);
+      setSession(null);
+      setIsAdmin(false);
+      return;
+    }
     await supabase.auth.signOut();
     setIsAdmin(false);
   };

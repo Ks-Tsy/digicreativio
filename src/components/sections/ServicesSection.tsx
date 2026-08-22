@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { FloatingElement } from '../ui/FloatingElement';
 import { TiltCard } from '../ui/TiltCard';
+import { useSiteContent } from '@/hooks/useSiteContent';
 
 const services = [
   {
@@ -31,6 +32,9 @@ const services = [
 ];
 
 export const ServicesSection: React.FC = () => {
+  const { content } = useSiteContent('home', 'services_section');
+  const data = (content?.content_data as any) || {};
+
   return (
     <section id="services" className="relative py-32 overflow-hidden">
       <div className="container relative z-10">
@@ -42,7 +46,7 @@ export const ServicesSection: React.FC = () => {
             transition={{ duration: 1 }}
             className="text-4xl md:text-6xl font-heading font-bold mb-6"
           >
-            Capabilities
+            {data.title || "Capabilities"}
           </motion.h2>
           <motion.p 
             initial={{ opacity: 0, y: 20 }}
@@ -51,7 +55,7 @@ export const ServicesSection: React.FC = () => {
             transition={{ duration: 1, delay: 0.2 }}
             className="text-foreground/60 max-w-2xl mx-auto text-lg"
           >
-            We blend art and engineering to create digital products that stand out in the void.
+            {data.subtitle || "We blend art and engineering to create digital products that stand out in the void."}
           </motion.p>
         </div>
 

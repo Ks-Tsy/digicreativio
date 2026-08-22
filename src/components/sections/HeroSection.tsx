@@ -4,8 +4,12 @@ import { FloatingElement } from '../ui/FloatingElement';
 import { MagneticButton } from '../ui/MagneticButton';
 import logoEnhanced from '../../assets/logo-enhanced.png';
 import { ArrowRight } from 'lucide-react';
+import { useSiteContent } from '@/hooks/useSiteContent';
 
 export const HeroSection: React.FC = () => {
+  const { content } = useSiteContent('home', 'hero');
+  const data = (content?.content_data as any) || {};
+
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-28 pb-20">
       {/* Abstract Background Elements */}
@@ -67,8 +71,14 @@ export const HeroSection: React.FC = () => {
           transition={{ duration: 1.2, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
           className="text-5xl md:text-7xl lg:text-8xl font-heading font-bold tracking-tight mb-8 leading-[1.1]"
         >
-          <span className="text-gradient-metallic block">Crafting the Future</span>
-          <span className="text-gradient-metallic block">of Digital</span>
+          {data.title ? (
+            <span className="text-gradient-metallic block">{data.title}</span>
+          ) : (
+            <>
+              <span className="text-gradient-metallic block">Crafting the Future</span>
+              <span className="text-gradient-metallic block">of Digital</span>
+            </>
+          )}
         </motion.h1>
 
         {/* Subheading */}
@@ -78,7 +88,7 @@ export const HeroSection: React.FC = () => {
           transition={{ duration: 1.2, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
           className="max-w-3xl text-lg md:text-xl text-foreground/60 mb-12 font-light leading-relaxed"
         >
-          Transform your brand with stunning visuals, memorable identities, and exceptional web experiences tailored to your unique vision.
+          {data.subtitle || "Transform your brand with stunning visuals, memorable identities, and exceptional web experiences tailored to your unique vision."}
         </motion.p>
 
         {/* Buttons */}
@@ -93,7 +103,7 @@ export const HeroSection: React.FC = () => {
               href="#contact"
               className="group inline-flex items-center justify-center h-14 px-8 rounded-full bg-foreground text-background font-medium text-lg transition-all shadow-[0_0_30px_rgba(255,255,255,0.2)] hover:shadow-[0_0_40px_rgba(255,255,255,0.4)] hover:scale-105"
             >
-              Start Your Project
+              {data.cta_primary || "Start Your Project"}
               <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </a>
           </MagneticButton>
@@ -103,7 +113,7 @@ export const HeroSection: React.FC = () => {
               href="#work"
               className="inline-flex items-center justify-center h-14 px-8 rounded-full bg-transparent border border-white/20 text-foreground font-medium text-lg hover:bg-white/5 transition-colors"
             >
-              View Our Work
+              {data.cta_secondary || "View Our Work"}
             </a>
           </MagneticButton>
         </motion.div>

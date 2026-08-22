@@ -4,10 +4,15 @@ import { Link } from "react-router-dom";
 import { Mail, ArrowUpRight } from "lucide-react";
 import * as LucideIcons from "lucide-react";
 import logo from "@/assets/logo-enhanced.png";
+import { useSiteContent } from "@/hooks/useSiteContent";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
   const [socialLinks, setSocialLinks] = useState<any[]>([]);
+  
+  const { content: infoContent } = useSiteContent("contact", "info");
+  const infoData = infoContent?.content_data as { email?: string } | null;
+  const contactEmail = infoData?.email || "hello@digicreativio.com";
 
   useEffect(() => {
     loadSocialLinks();
@@ -108,7 +113,7 @@ const Footer = () => {
           <div>
             <h4 className="text-sm font-semibold text-foreground mb-6 uppercase tracking-wider">Get in Touch</h4>
             <a 
-              href="mailto:hello@digicreativio.com" 
+              href={`mailto:${contactEmail}`}
               className="group flex items-center p-4 rounded-xl bg-secondary/30 hover:bg-primary/10 transition-all duration-300"
             >
               <div className="flex items-center justify-center w-10 h-10 rounded-full bg-primary/10 mr-3">
@@ -116,7 +121,7 @@ const Footer = () => {
               </div>
               <div>
                 <div className="text-xs text-muted-foreground mb-0.5">Email us</div>
-                <div className="text-sm text-foreground group-hover:text-primary transition-colors">hello@digicreativio.com</div>
+                <div className="text-sm text-foreground group-hover:text-primary transition-colors">{contactEmail}</div>
               </div>
             </a>
           </div>
