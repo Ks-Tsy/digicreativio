@@ -10,6 +10,9 @@ export const HeroSection: React.FC = () => {
   const { content } = useSiteContent('home', 'hero');
   const data = (content?.content_data as any) || {};
 
+  const headingText = data.title || "Crafting the Future of Digital";
+  const words = headingText.split(" ");
+
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-28 pb-20">
       {/* Abstract Background Elements */}
@@ -64,22 +67,28 @@ export const HeroSection: React.FC = () => {
           />
         </motion.div>
 
-        {/* Main Heading */}
-        <motion.h1
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1.2, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-          className="text-5xl md:text-7xl lg:text-8xl font-heading font-bold tracking-tight mb-8 leading-[1.1]"
-        >
-          {data.title ? (
-            <span className="text-gradient-metallic block">{data.title}</span>
-          ) : (
-            <>
-              <span className="text-gradient-metallic block">Crafting the Future</span>
-              <span className="text-gradient-metallic block">of Digital</span>
-            </>
-          )}
-        </motion.h1>
+        {/* Main Heading (Letter by Letter Reveal) */}
+        <h1 className="text-5xl md:text-7xl lg:text-8xl font-heading font-bold tracking-tight mb-8 leading-[1.2]">
+          {words.map((word: string, wordIndex: number) => (
+            <span key={wordIndex} className="inline-block whitespace-nowrap mr-[0.3em] last:mr-0">
+              {word.split("").map((letter: string, letterIndex: number) => (
+                <motion.span
+                  key={`${wordIndex}-${letterIndex}`}
+                  initial={{ opacity: 0, y: 40, filter: "blur(10px)", rotateX: -45 }}
+                  animate={{ opacity: 1, y: 0, filter: "blur(0px)", rotateX: 0 }}
+                  transition={{
+                    duration: 0.8,
+                    ease: [0.16, 1, 0.3, 1],
+                    delay: 0.2 + (wordIndex * 0.1) + (letterIndex * 0.03),
+                  }}
+                  className="text-gradient-metallic inline-block drop-shadow-[0_0_15px_rgba(255,255,255,0.1)] pb-[0.15em] -mb-[0.15em]"
+                >
+                  {letter}
+                </motion.span>
+              ))}
+            </span>
+          ))}
+        </h1>
 
         {/* Subheading */}
         <motion.p
