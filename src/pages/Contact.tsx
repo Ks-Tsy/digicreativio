@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Mail, Phone, MapPin, Send, Clock, CheckCircle2, Loader2, AlertTriangle } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/lib/supabase";
 import { useSiteContent } from "@/hooks/useSiteContent";
 
 const Contact = () => {

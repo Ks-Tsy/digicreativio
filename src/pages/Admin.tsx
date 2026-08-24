@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
 import { useActivityLog } from "@/hooks/useActivityLog";
 import { Loader2 } from "lucide-react";
@@ -26,7 +26,7 @@ export default function Admin() {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { logActivity } = useActivityLog();
-  
+
   const [activeTab, setActiveTab] = useState("overview");
   const [contacts, setContacts] = useState<any[]>([]);
   const [portfolioItems, setPortfolioItems] = useState<any[]>([]);
@@ -40,7 +40,7 @@ export default function Admin() {
   const [blogPosts, setBlogPosts] = useState<any[]>([]);
   const [loadingData, setLoadingData] = useState(true);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-  
+
   const [stats, setStats] = useState({
     totalContacts: 0,
     newContacts: 0,
@@ -62,7 +62,7 @@ export default function Admin() {
 
   const loadData = async () => {
     setLoadingData(true);
-    
+
     const [contactData, portfolioData, profilesData, rolesData, contentData, settingsData, socialData, logsData, testimonialsData, blogData] = await Promise.all([
       supabase.from("contact_submissions").select("*").order("created_at", { ascending: false }),
       supabase.from("portfolio_items").select("*").order("display_order", { ascending: true }),
@@ -75,36 +75,41 @@ export default function Admin() {
       supabase.from("testimonials").select("*").order("display_order", { ascending: true }),
       supabase.from("blog_posts").select("*").order("created_at", { ascending: false }),
     ]);
-    
-    
+
+    console.log("=== ADMIN DATABASE DEBUG ===");
+    console.log("Contacts:", contactData.data);
+    console.log("Contacts Error:", contactData.error);
+    console.log("Portfolio:", portfolioData.data);
+    console.log("Portfolio Error:", portfolioData.error);
+    console.log("Profiles:", profilesData.data);
+    console.log("Profiles Error:", profilesData.error);
+    console.log("User Roles:", rolesData.data);
+    console.log("User Roles Error:", rolesData.error);
+    console.log("Current User:", user);
+    console.log("Is Admin:", isAdmin);
+    console.log("=== END DEBUG ===");
+
     const dbSiteContent = contentData.data || [];
     const mergedSiteContent = [...dbSiteContent];
-    
+
     Object.entries(PAGE_TEMPLATES).forEach(([pageName, pageTemplate]) => {
       pageTemplate.sections.forEach(sectionTemplate => {
         const exists = mergedSiteContent.some(c => c.page_name === pageName && c.section_name === sectionTemplate.name);
         if (!exists) {
-            const defaultData: Record<string, string> = {};
-            sectionTemplate.fields.forEach(f => {
-                defaultData[f.key] = f.value;
-            });
-            
-            // Check localStorage
-            let finalData = defaultData;
-            try {
-                const localData = localStorage.getItem(`site_content_${pageName}_${sectionTemplate.name}`);
-                if (localData) {
-                    finalData = JSON.parse(localData);
-                }
-            } catch(e) {}
-            
-            mergedSiteContent.push({
-                id: `default-${pageName}-${sectionTemplate.name}`,
-                page_name: pageName,
-                section_name: sectionTemplate.name,
-                content_type: "text",
-                content_data: finalData
-            });
+          const defaultData: Record<string, string> = {};
+          sectionTemplate.fields.forEach(f => {
+            defaultData[f.key] = f.value;
+          });
+
+          const finalData = defaultData;
+
+          mergedSiteContent.push({
+            id: `default-${pageName}-${sectionTemplate.name}`,
+            page_name: pageName,
+            section_name: sectionTemplate.name,
+            content_type: "text",
+            content_data: finalData
+          });
         }
       });
     });
@@ -126,7 +131,7 @@ export default function Admin() {
       totalPortfolio: portfolioData.data?.length || 0,
       totalUsers: profilesData.data?.length || 0
     });
-    
+
     setLoadingData(false);
   };
 
@@ -164,7 +169,7 @@ export default function Admin() {
   const handleRoleUpdate = async (userId: string, newRole: string) => {
     const targetUser = users.find(u => u.id === userId);
     const oldRole = userRoles.find(r => r.user_id === userId)?.role || "user";
-    
+
     // Validate role value
     if (!["user", "admin"].includes(newRole)) {
       toast({ title: "Error", description: "Invalid role value", variant: "destructive" });
@@ -204,26 +209,21 @@ export default function Admin() {
   const handleUpdateContent = async (id: string, newData: any) => {
     const content = siteContent.find(c => c.id === id);
     if (!content) return;
-    
-    // Save to localStorage as fallback
-    try {
-        localStorage.setItem(`site_content_${content.page_name}_${content.section_name}`, JSON.stringify(newData));
-    } catch(e) {
-        console.error("Failed to save to localStorage", e);
+    const { error } = await supabase.from("site_content").update({ content_data: newData, updated_at: new Date().toISOString() }).eq("id", id);
+
+    if (error) {
+      toast({ title: "Error", description: "Failed to update content", variant: "destructive" });
+      return;
     }
 
-    // Still try to save to Supabase, but don't fail if RLS blocks it (since we have local fallback)
-    const { error } = await supabase.from("site_content").update({ content_data: newData, updated_at: new Date().toISOString() }).eq("id", id);
-    
-    // Always succeed locally
     await logActivity({
       actionType: "update",
       entityType: "site_content",
       entityId: id,
       entityName: `${content?.page_name} - ${content?.section_name}`,
     });
-    toast({ title: "Success", description: "Content updated locally" });
-    
+    toast({ title: "Success", description: "Content updated" });
+
     // Update local state immediately
     setSiteContent(prev => prev.map(c => c.id === id ? { ...c, content_data: newData } : c));
   };
@@ -305,14 +305,14 @@ export default function Admin() {
   return (
     <div className="min-h-screen bg-background">
       <AdminSidebar activeTab={activeTab} onTabChange={setActiveTab} />
-      <AdminHeader 
-        user={user} 
-        onLogout={handleLogout} 
+      <AdminHeader
+        user={user}
+        onLogout={handleLogout}
         onRefresh={loadData}
         sidebarCollapsed={sidebarCollapsed}
         activeTab={activeTab}
       />
-      
+
       <main className={`pt-20 pb-8 px-6 transition-all duration-300 ${sidebarCollapsed ? "ml-[72px]" : "ml-64"}`}>
         <div className="max-w-7xl mx-auto">
           {activeTab === "overview" && (

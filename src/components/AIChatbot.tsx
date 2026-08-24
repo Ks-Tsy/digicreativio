@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { MessageCircle, X, Send, Loader2, Sparkles, Bot, User, Maximize2, Minimize2 } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/contexts/AuthContext";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -92,11 +92,10 @@ const AIChatbot = () => {
       {/* Chat Toggle Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className={`fixed bottom-6 right-6 z-50 w-16 h-16 rounded-2xl flex items-center justify-center transition-all duration-500 shadow-2xl ${
-          isOpen
-            ? "bg-secondary border border-border/50 rotate-0"
-            : "bg-primary text-primary-foreground glow-gold hover:scale-110"
-        }`}
+        className={`fixed bottom-6 right-6 z-50 w-16 h-16 rounded-2xl flex items-center justify-center transition-all duration-500 shadow-2xl ${isOpen
+          ? "bg-secondary border border-border/50 rotate-0"
+          : "bg-primary text-primary-foreground glow-gold hover:scale-110"
+          }`}
         aria-label={isOpen ? "Close chat" : "Open chat"}
       >
         {isOpen ? (
@@ -108,15 +107,13 @@ const AIChatbot = () => {
 
       {/* Chat Window */}
       <div
-        className={`fixed z-50 transition-all duration-500 ${
-          isExpanded 
-            ? "bottom-6 right-6 w-[600px] max-w-[calc(100vw-3rem)]" 
-            : "bottom-28 right-6 w-[400px] max-w-[calc(100vw-3rem)]"
-        } ${
-          isOpen
+        className={`fixed z-50 transition-all duration-500 ${isExpanded
+          ? "bottom-6 right-6 w-[600px] max-w-[calc(100vw-3rem)]"
+          : "bottom-28 right-6 w-[400px] max-w-[calc(100vw-3rem)]"
+          } ${isOpen
             ? "opacity-100 translate-y-0 pointer-events-auto"
             : "opacity-0 translate-y-4 pointer-events-none"
-        }`}
+          }`}
       >
         <div className="glass-strong rounded-3xl overflow-hidden shadow-2xl shadow-background/50 border border-border/30">
           {/* Header */}
@@ -153,16 +150,14 @@ const AIChatbot = () => {
             {messages.map((message, index) => (
               <div
                 key={index}
-                className={`flex gap-3 ${
-                  message.role === "user" ? "flex-row-reverse" : ""
-                }`}
+                className={`flex gap-3 ${message.role === "user" ? "flex-row-reverse" : ""
+                  }`}
               >
                 <div
-                  className={`flex-shrink-0 w-8 h-8 rounded-xl flex items-center justify-center ${
-                    message.role === "user"
-                      ? "bg-primary/10 border border-primary/20"
-                      : "bg-purple/10 border border-purple/20"
-                  }`}
+                  className={`flex-shrink-0 w-8 h-8 rounded-xl flex items-center justify-center ${message.role === "user"
+                    ? "bg-primary/10 border border-primary/20"
+                    : "bg-purple/10 border border-purple/20"
+                    }`}
                 >
                   {message.role === "user" ? (
                     <User className="w-4 h-4 text-primary" />
@@ -171,11 +166,10 @@ const AIChatbot = () => {
                   )}
                 </div>
                 <div
-                  className={`max-w-[85%] rounded-2xl px-4 py-3 ${
-                    message.role === "user"
-                      ? "bg-primary text-primary-foreground rounded-br-md"
-                      : "bg-secondary/50 text-foreground border border-border/30 rounded-bl-md"
-                  }`}
+                  className={`max-w-[85%] rounded-2xl px-4 py-3 ${message.role === "user"
+                    ? "bg-primary text-primary-foreground rounded-br-md"
+                    : "bg-secondary/50 text-foreground border border-border/30 rounded-bl-md"
+                    }`}
                 >
                   {message.role === "assistant" ? (
                     <div className="prose prose-sm dark:prose-invert max-w-none text-sm leading-relaxed [&>p]:my-1 [&>ul]:my-2 [&>ul]:ml-4 [&>ol]:my-2 [&>ol]:ml-4 [&>h1]:text-lg [&>h2]:text-base [&>h3]:text-sm [&>h3]:font-semibold [&>h3]:mt-3 [&>h3]:mb-1 [&>*:first-child]:mt-0 [&>*:last-child]:mb-0">

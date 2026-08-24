@@ -14,7 +14,7 @@ import {
   Trash2, GripVertical, Settings2
 } from "lucide-react";
 import { ShortId } from "@/components/ShortId";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
 import { PAGE_TEMPLATES } from "@/utils/defaultContent";
 

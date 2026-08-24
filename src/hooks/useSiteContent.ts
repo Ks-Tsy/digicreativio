@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/lib/supabase";
 import type { Json } from "@/integrations/supabase/types";
 
 interface SiteContent {
@@ -38,16 +38,7 @@ export const useSiteContent = (pageName: string, sectionName: string) => {
                     defaultData[f.key] = f.value;
                 });
                 
-                // Check if there are local overrides (since Supabase might be blocked by RLS)
-                let finalData = defaultData;
-                try {
-                    const localData = localStorage.getItem(`site_content_${pageName}_${sectionName}`);
-                    if (localData) {
-                        finalData = JSON.parse(localData);
-                    }
-                } catch (e) {
-                    console.error("Failed to parse local site content", e);
-                }
+                const finalData = defaultData;
 
                 setContent({
                     id: `default-${pageName}-${sectionName}`,

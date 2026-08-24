@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/select";
 import { AlertTriangle, Clock, Shield, Trash2, RefreshCw } from "lucide-react";
 import { format, formatDistanceToNow } from "date-fns";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/lib/supabase";
 import { toast } from "sonner";
 
 interface SpamLog {
