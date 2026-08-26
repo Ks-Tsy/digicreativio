@@ -62,6 +62,17 @@ export default function Admin() {
 
   const loadData = async () => {
     setLoadingData(true);
+    const { data: { session } } = await supabase.auth.getSession();
+
+    const { data: adminCheck, error: adminCheckError } =
+      await supabase.rpc("is_admin");
+
+    console.log("DATABASE is_admin():", adminCheck);
+    console.log("DATABASE is_admin ERROR:", adminCheckError);
+    console.log("SESSION USER ID:", session?.user?.id);
+    console.log("LOGIN USER ID:", user?.id);
+    console.log("SESSION EMAIL:", session?.user?.email);
+    console.log("LOGIN EMAIL:", user?.email);
 
     const [contactData, portfolioData, profilesData, rolesData, contentData, settingsData, socialData, logsData, testimonialsData, blogData] = await Promise.all([
       supabase.from("contact_submissions").select("*").order("created_at", { ascending: false }),
