@@ -218,25 +218,69 @@ export default function Admin() {
   };
 
   const handleUpdateContent = async (id: string, newData: any) => {
-    const content = siteContent.find(c => c.id === id);
-    if (!content) return;
-    const { error } = await supabase.from("site_content").update({ content_data: newData, updated_at: new Date().toISOString() }).eq("id", id);
+    const content = siteContent.find((c) => c.id === id);
 
-    if (error) {
-      toast({ title: "Error", description: "Failed to update content", variant: "destructive" });
+    if (!content) {
+      toast({
+        title: "Error",
+        description: "Content section not found",
+        variant: "destructive",
+      });
       return;
     }
+
+    const { data, error } = await supabase
+      .from("site_content")
+      .upsert(
+        {
+          page_name: content.page_name,
+          section_name: content.section_name,
+          content_type: content.content_type || "text",
+          content_data: newData,
+          updated_at: new Date().toISOString(),
+        },
+        {
+          onConflict: "page_name,section_name",
+        }
+      )
+      .select()
+      .single();
+
+    if (error) {
+      console.error("CONTENT UPDATE ERROR:", error);
+
+      toast({
+        title: "Error",
+        description: error.message || "Failed to update content",
+        variant: "destructive",
+      });
+
+      return;
+    }
+
+    console.log("CONTENT UPDATED:", data);
 
     await logActivity({
       actionType: "update",
       entityType: "site_content",
-      entityId: id,
-      entityName: `${content?.page_name} - ${content?.section_name}`,
+      entityId: data.id,
+      entityName: `${data.page_name} - ${data.section_name}`,
     });
-    toast({ title: "Success", description: "Content updated" });
 
-    // Update local state immediately
-    setSiteContent(prev => prev.map(c => c.id === id ? { ...c, content_data: newData } : c));
+    toast({
+      title: "Success",
+      description: "Content updated successfully",
+    });
+
+    // Replace temporary/default row with real database row
+    setSiteContent((prev) =>
+      prev.map((item) =>
+        item.id === id ? data : item
+      )
+    );
+
+    // Sync with database
+    await loadData();
   };
 
   const handleUpdateSetting = async (id: string, newValue: any) => {

@@ -55,34 +55,48 @@ const Contact = () => {
         return;
       }
 
-      const { data, error } = await supabase.functions.invoke("submit-contact", {
-        body: {
-          name: formData.name,
-          email: formData.email,
-          phone: formData.phone,
-          subject: formData.subject,
-          message: formData.message,
-          _hp_field: honeypot,
-          _form_loaded_at: formLoadedAt,
-        },
-      });
+      // Honeypot check: trick bots into thinking they succeeded
+      if (honeypot && honeypot.length > 0) {
+        setTimeout(() => {
+          setIsSubmitting(false);
+          setIsSubmitted(true);
+          toast.success("Message sent successfully! We'll get back to you soon.");
+          setFormData({ name: "", email: "", phone: "", subject: "", message: "" });
+          setTimeout(() => setIsSubmitted(false), 5000);
+        }, 1000);
+        return;
+      }
+
+      // Timing check: prevent extremely fast script submissions
+      const submissionTime = Date.now() - formLoadedAt;
+      if (submissionTime < 3000) {
+        setSlowDownMessage("Please take a moment to fill out the form carefully.");
+        setIsSubmitting(false);
+        return;
+      }
+
+      // Combine optional fields into message and format
+      const sanitizedData = {
+        name: formData.name.trim().slice(0, 100),
+        email: formData.email.trim().toLowerCase().slice(0, 255),
+        message: [
+          formData.subject ? `Subject: ${formData.subject.trim().slice(0, 200)}` : null,
+          formData.phone ? `Phone: ${formData.phone.trim().slice(0, 50)}` : null,
+          "",
+          formData.message.trim().slice(0, 5000)
+        ].filter(Boolean).join("\n"),
+      };
+
+      const { error } = await supabase.from("contact_submissions").insert([sanitizedData]);
 
       if (error) {
         throw error;
       }
 
-      if (data?.error) {
-        if (data.slowDown || data.expired) {
-          setSlowDownMessage(data.error);
-        } else {
-          toast.error(data.error);
-        }
-      } else {
-        toast.success("Message sent successfully! We'll get back to you soon.");
-        setFormData({ name: "", email: "", phone: "", subject: "", message: "" });
-        setIsSubmitted(true);
-        setTimeout(() => setIsSubmitted(false), 5000);
-      }
+      toast.success("Message sent successfully! We'll get back to you soon.");
+      setFormData({ name: "", email: "", phone: "", subject: "", message: "" });
+      setIsSubmitted(true);
+      setTimeout(() => setIsSubmitted(false), 5000);
     } catch (error: any) {
       toast.error("Failed to send message. Please try again.");
     }
