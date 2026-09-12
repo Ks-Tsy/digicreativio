@@ -85,6 +85,7 @@ const Contact = () => {
           "",
           formData.message.trim().slice(0, 5000)
         ].filter(Boolean).join("\n"),
+        status: 'new',
       };
 
       const { error } = await supabase.from("contact_submissions").insert([sanitizedData]);
@@ -98,7 +99,8 @@ const Contact = () => {
       setIsSubmitted(true);
       setTimeout(() => setIsSubmitted(false), 5000);
     } catch (error: any) {
-      toast.error("Failed to send message. Please try again.");
+      console.error("Supabase error:", error);
+      toast.error(`Failed to send message: ${error.message || "Please try again."}`);
     }
 
     setIsSubmitting(false);
