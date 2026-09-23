@@ -1,6 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { supabase } from "@/lib/supabase";
 import type { Json } from "@/integrations/supabase/types";
+import { PAGE_TEMPLATES } from "@/utils/defaultContent";
+import { BuilderContext } from "@/components/admin/content-builder/BuilderContext";
 
 interface SiteContent {
   id: string;
@@ -10,13 +12,24 @@ interface SiteContent {
   content_data: Json;
 }
 
-import { PAGE_TEMPLATES } from "@/utils/defaultContent";
-
 export const useSiteContent = (pageName: string, sectionName: string) => {
+  const builderContent = useContext(BuilderContext);
   const [content, setContent] = useState<SiteContent | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // If we're inside the builder, use the live local content directly
+    if (builderContent) {
+      const item = builderContent.find(
+        (c) => c.page_name === pageName && c.section_name === sectionName
+      );
+      if (item) {
+        setContent(item as SiteContent);
+      }
+      setLoading(false);
+      return;
+    }
+
     const fetchContent = async () => {
       const { data, error } = await supabase
         .from("site_content")
@@ -54,7 +67,8 @@ export const useSiteContent = (pageName: string, sectionName: string) => {
     };
 
     fetchContent();
-  }, [pageName, sectionName]);
+  }, [pageName, sectionName, builderContent]);
 
   return { content, loading };
 };
+

@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
+import { useSiteContent } from '@/hooks/useSiteContent';
 
 const projects = [
   {
@@ -40,8 +41,11 @@ export const PortfolioSection: React.FC = () => {
     offset: ["start end", "end start"]
   });
 
+  const { content } = useSiteContent("home", "portfolio_section");
+  const data = (content?.content_data as any) || {};
+
   return (
-    <section id="work" className="relative py-32 bg-background overflow-hidden" ref={containerRef}>
+    <section data-section-id="portfolio_section" id="work" className="relative py-32 bg-background overflow-hidden" ref={containerRef}>
       <div className="container relative z-10 mb-20">
         <motion.h2 
           initial={{ opacity: 0, x: -50 }}
@@ -50,7 +54,7 @@ export const PortfolioSection: React.FC = () => {
           transition={{ duration: 1 }}
           className="text-5xl md:text-7xl font-heading font-bold"
         >
-          Selected <span className="text-foreground/40 italic">Work</span>
+          {data.title_normal || "Selected"} <span className="text-foreground/40 italic">{data.title_italic || "Work"}</span>
         </motion.h2>
       </div>
 

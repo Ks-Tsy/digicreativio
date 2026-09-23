@@ -14,7 +14,7 @@ export const HeroSection: React.FC = () => {
   const words = headingText.split(" ");
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-28 pb-20">
+    <section data-section-id="hero" className="relative min-h-screen flex items-center justify-center overflow-hidden pt-28 pb-20">
       {/* Abstract Background Elements */}
       <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
 

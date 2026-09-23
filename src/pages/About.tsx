@@ -1,21 +1,9 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Target, Eye, Award, Users, Sparkles, Rocket, Heart, Shield } from "lucide-react";
-import { useSiteContent } from "@/hooks/useSiteContent";
+import { AboutHeroSection } from "@/components/sections/AboutHeroSection";
+import { AboutStorySection } from "@/components/sections/AboutStorySection";
 
 const About = () => {
-  const { content: heroContent } = useSiteContent("about", "hero");
-  const { content: storyContent } = useSiteContent("about", "story");
-
-  const heroData = heroContent?.content_data as {
-    title?: string;
-    subtitle?: string;
-  } | null;
-
-  const storyData = storyContent?.content_data as {
-    title?: string;
-    content?: string;
-  } | null;
-
   const values = [
     {
       icon: Target,
@@ -49,21 +37,7 @@ const About = () => {
   return (
     <div className="min-h-screen pt-20">
       {/* Hero Section */}
-      <section className="py-24">
-        <div className="container mx-auto px-4 lg:px-8">
-          <div className="max-w-4xl mx-auto text-center">
-            <span className="inline-block px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium mb-6">
-              Who We Are
-            </span>
-            <h1 className="text-5xl md:text-6xl font-heading font-bold mb-6">
-              {heroData?.title || "About DigiCreativio"}
-            </h1>
-            <p className="text-xl text-muted-foreground leading-relaxed">
-              {heroData?.subtitle || "We are a passionate team of designers, artists, and strategists dedicated to crafting digital experiences that make a lasting impact."}
-            </p>
-          </div>
-        </div>
-      </section>
+      <AboutHeroSection />
 
       {/* Capabilities Bar */}
       <section className="py-8 border-y border-border/30 bg-secondary/30">
@@ -80,34 +54,7 @@ const About = () => {
       </section>
 
       {/* Story Section */}
-      <section className="py-24">
-        <div className="container mx-auto px-4 lg:px-8">
-          <div className="max-w-4xl mx-auto">
-            <Card className="bg-card border-border/50">
-              <CardContent className="p-10 md:p-14">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-medium mb-6">
-                  <Sparkles className="w-3 h-3" />
-                  Our Journey
-                </div>
-                <h2 className="text-4xl font-heading font-bold mb-8">
-                  {storyData?.title || "Our Story"}
-                </h2>
-                <div className="space-y-6 text-muted-foreground leading-relaxed text-lg">
-                  <p>
-                    {storyData?.content || "DigiCreativio was born from a simple belief: that great design has the power to transform businesses and connect with people on a deeper level. Since our founding, we've been committed to pushing the boundaries of creativity while delivering practical, results-driven solutions."}
-                  </p>
-                  <p>
-                    Our journey began with a small team of passionate designers who shared a vision of creating a different kind of creative agency—one that combines artistic excellence with strategic thinking, technical expertise with human-centered design.
-                  </p>
-                  <p>
-                    Today, we've grown into a full-service digital creative agency, but our core values remain unchanged. We still approach every project with the same enthusiasm and dedication, treating each client's vision as our own.
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </section>
+      <AboutStorySection />
 
       {/* Values Section */}
       <section className="py-24 bg-secondary/30">

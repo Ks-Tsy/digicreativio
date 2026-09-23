@@ -36,7 +36,7 @@ export const ServicesSection: React.FC = () => {
   const data = (content?.content_data as any) || {};
 
   return (
-    <section id="services" className="relative py-32 overflow-hidden">
+    <section data-section-id="services_section" id="services" className="relative py-32 overflow-hidden">
       <div className="container relative z-10">
         <div className="text-center mb-24">
           <motion.h2 

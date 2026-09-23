@@ -14,16 +14,25 @@ export const PAGE_TEMPLATES: Record<string, { label: string; sections: { name: s
       {
         name: "services_section",
         fields: [
-          { key: "title", label: "Section Title", type: "text", value: "Our Capabilities" },
-          { key: "subtitle", label: "Section Subtitle", type: "textarea", value: "We offer a comprehensive suite of digital services to help your business grow and succeed in the modern landscape." },
+          { key: "title", label: "Section Title", type: "text", value: "Capabilities" },
+          { key: "subtitle", label: "Section Subtitle", type: "textarea", value: "We blend art and engineering to create digital products that stand out in the void." },
         ]
       },
       {
-        name: "cta_section",
+        name: "portfolio_section",
         fields: [
-          { key: "title", label: "CTA Title", type: "text", value: "Ready to Start Your Project?" },
-          { key: "subtitle", label: "CTA Description", type: "textarea", value: "Let's work together to create something amazing. Our team of experts is ready to bring your vision to life." },
-          { key: "cta_text", label: "Button Text", type: "text", value: "Get in Touch" },
+          { key: "title_normal", label: "Title Part 1", type: "text", value: "Selected" },
+          { key: "title_italic", label: "Title Part 2 (Italic)", type: "text", value: "Work" },
+        ]
+      },
+      {
+        name: "contact_section",
+        fields: [
+          { key: "title", label: "Section Title", type: "text", value: "Let's Talk" },
+          { key: "subtitle", label: "Section Subtitle", type: "textarea", value: "Ready to start your next project? Drop us a line and let's create something extraordinary together." },
+          { key: "email", label: "Email Address", type: "text", value: "hello@digicreativio.com" },
+          { key: "phone", label: "Phone Number", type: "text", value: "+1 (555) 123-4567" },
+          { key: "button_text", label: "Button Text", type: "text", value: "Send Message" },
         ]
       }
     ]
@@ -55,6 +64,20 @@ export const PAGE_TEMPLATES: Record<string, { label: string; sections: { name: s
         fields: [
           { key: "title", label: "Page Title", type: "text", value: "Our Services" },
           { key: "subtitle", label: "Page Subtitle", type: "textarea", value: "Comprehensive digital solutions tailored to your unique business needs and goals." },
+        ]
+      },
+      {
+        name: "services_grid",
+        fields: [
+          { key: "title", label: "Grid Title", type: "text", value: "What We Do" },
+        ]
+      },
+      {
+        name: "cta",
+        fields: [
+          { key: "title", label: "CTA Title", type: "text", value: "Ready to Get Started?" },
+          { key: "subtitle", label: "CTA Subtitle", type: "textarea", value: "Let's discuss your project and create something amazing together" },
+          { key: "cta_text", label: "Button Text", type: "text", value: "Contact Us Today" },
         ]
       }
     ]
