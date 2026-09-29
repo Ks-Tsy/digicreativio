@@ -20,6 +20,8 @@ export const ContactSection: React.FC = () => {
       <div className="container relative z-10 max-w-4xl mx-auto">
         <div className="text-center mb-16">
           <motion.h2 
+            data-editable-field="title"
+            data-field-label="Section Title"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -28,7 +30,12 @@ export const ContactSection: React.FC = () => {
           >
             {data.title || "Let's Talk"}
           </motion.h2>
-          <p className="text-foreground/60 text-lg">
+          <p 
+            data-editable-field="subtitle"
+            data-field-label="Section Subtitle"
+            data-field-type="textarea"
+            className="text-foreground/60 text-lg"
+          >
             {data.subtitle || "Ready to start your next project? Drop us a signal."}
           </p>
         </div>
@@ -98,7 +105,13 @@ export const ContactSection: React.FC = () => {
           <div className="flex justify-center pt-8">
             <MagneticButton>
               <button type="submit" className="relative group overflow-hidden rounded-full bg-foreground text-background px-12 py-5 text-lg font-medium transition-colors">
-                <span className="relative z-10 group-hover:text-background mix-blend-difference">{data.button_text || "Send Message"}</span>
+                <span 
+                  data-editable-field="button_text" 
+                  data-field-label="Button Text" 
+                  className="relative z-10 group-hover:text-background mix-blend-difference"
+                >
+                  {data.button_text || "Send Message"}
+                </span>
                 {/* Liquid hover effect */}
                 <div className="absolute inset-0 bg-primary translate-y-[100%] rounded-full group-hover:translate-y-0 transition-transform duration-500 ease-[cubic-bezier(0.19,1,0.22,1)]" />
               </button>

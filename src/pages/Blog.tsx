@@ -4,6 +4,7 @@ import { supabase } from "@/lib/supabase";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Calendar, Clock, ArrowRight } from "lucide-react";
+import { useSiteContent } from "@/hooks/useSiteContent";
 
 interface BlogPost {
   id: string;
@@ -18,6 +19,12 @@ interface BlogPost {
 export default function Blog() {
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
+
+  const { content: heroContent } = useSiteContent("blog", "hero");
+  const heroData = (heroContent?.content_data as any) || {};
+
+  const { content: newsletterContent } = useSiteContent("blog", "newsletter");
+  const newsletterData = (newsletterContent?.content_data as any) || {};
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -45,17 +52,30 @@ export default function Blog() {
   return (
     <div className="min-h-screen pt-20">
       {/* Header */}
-      <section className="py-24">
+      <section data-section-id="hero" className="py-24">
         <div className="container mx-auto px-4 lg:px-8">
           <div className="max-w-4xl mx-auto text-center">
-            <span className="inline-block px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium mb-6">
-              Our Blog
+            <span 
+              data-editable-field="badge"
+              data-field-label="Hero Badge"
+              className="inline-block px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium mb-6"
+            >
+              {heroData.badge || "Our Blog"}
             </span>
-            <h1 className="text-5xl md:text-6xl font-heading font-bold mb-6">
-              Insights & Updates
+            <h1 
+              data-editable-field="title"
+              data-field-label="Page Title"
+              className="text-5xl md:text-6xl font-heading font-bold mb-6"
+            >
+              {heroData.title || "Insights & Updates"}
             </h1>
-            <p className="text-xl text-muted-foreground">
-              Insights, tutorials, and updates from our team
+            <p 
+              data-editable-field="subtitle"
+              data-field-label="Page Subtitle"
+              data-field-type="textarea"
+              className="text-xl text-muted-foreground"
+            >
+              {heroData.subtitle || "Insights, tutorials, and updates from our team"}
             </p>
           </div>
         </div>
@@ -132,6 +152,51 @@ export default function Blog() {
               ))}
             </div>
           )}
+        </div>
+      </section>
+
+      {/* Newsletter Section */}
+      <section data-section-id="newsletter" className="py-24 bg-secondary/30 border-t border-border/30">
+        <div className="container mx-auto px-4 lg:px-8">
+          <div className="max-w-3xl mx-auto text-center bg-card rounded-3xl p-10 md:p-14 border border-border/50">
+            <span 
+              data-editable-field="badge"
+              data-field-label="Badge"
+              className="inline-block px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium mb-6"
+            >
+              {newsletterData.badge || "Newsletter"}
+            </span>
+            <h2 
+              data-editable-field="title"
+              data-field-label="Section Title"
+              className="text-3xl md:text-4xl font-heading font-bold mb-4"
+            >
+              {newsletterData.title || "Stay in the Loop"}
+            </h2>
+            <p 
+              data-editable-field="subtitle"
+              data-field-label="Section Subtitle"
+              data-field-type="textarea"
+              className="text-lg text-muted-foreground mb-8 max-w-xl mx-auto leading-relaxed"
+            >
+              {newsletterData.subtitle || "Subscribe to our newsletter to receive the latest updates, design tips, and industry trends directly to your inbox."}
+            </p>
+            <div className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+              <input
+                type="email"
+                placeholder="Enter your email"
+                className="bg-secondary/40 border border-border/60 focus:border-primary rounded-full px-5 py-3 text-sm text-foreground focus:outline-none flex-1"
+              />
+              <button 
+                type="button"
+                className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-6 py-3 rounded-full text-sm transition-colors"
+              >
+                <span data-editable-field="button_text" data-field-label="Button Text">
+                  {newsletterData.button_text || "Subscribe"}
+                </span>
+              </button>
+            </div>
+          </div>
         </div>
       </section>
     </div>

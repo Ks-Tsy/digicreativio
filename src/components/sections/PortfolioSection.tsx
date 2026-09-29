@@ -54,13 +54,19 @@ export const PortfolioSection: React.FC = () => {
           transition={{ duration: 1 }}
           className="text-5xl md:text-7xl font-heading font-bold"
         >
-          {data.title_normal || "Selected"} <span className="text-foreground/40 italic">{data.title_italic || "Work"}</span>
+          <span data-editable-field="title_normal" data-field-label="Title Part 1">{data.title_normal || "Selected"}</span>{" "}
+          <span data-editable-field="title_italic" data-field-label="Title Part 2 (Italic)" className="text-foreground/40 italic">{data.title_italic || "Work"}</span>
         </motion.h2>
       </div>
 
       <div className="container relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-32">
           {projects.map((project, i) => {
+            const projNum = i + 1;
+            const projTitle = data[`proj_${projNum}_title`] || project.title;
+            const projCat = data[`proj_${projNum}_cat`] || project.category;
+            const projImg = data[`proj_${projNum}_img`] || project.image;
+
             // Parallax effect based on scroll
             const y = useTransform(
               scrollYProgress,
@@ -76,16 +82,31 @@ export const PortfolioSection: React.FC = () => {
               >
                 <div className="overflow-hidden rounded-2xl glass-strong aspect-[4/5] relative">
                   <motion.div 
+                    data-editable-field={`proj_${projNum}_img`}
+                    data-field-label={`Project ${projNum} Image`}
+                    data-field-type="image"
                     className="absolute inset-0 bg-cover bg-center transition-transform duration-1000 group-hover:scale-110"
-                    style={{ backgroundImage: `url(${project.image})` }}
+                    style={{ backgroundImage: `url(${projImg})` }}
                   />
                   <div className="absolute inset-0 bg-black/40 transition-opacity duration-500 group-hover:opacity-10" />
                   
                   {/* Floating Content overlay */}
                   <div className="absolute bottom-0 left-0 right-0 p-8 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500">
                     <div className="glass p-6 rounded-xl">
-                      <p className="text-primary text-sm font-mono mb-2 uppercase tracking-wider">{project.category}</p>
-                      <h3 className="text-3xl font-heading text-white">{project.title}</h3>
+                      <p 
+                        data-editable-field={`proj_${projNum}_cat`}
+                        data-field-label={`Project ${projNum} Category`}
+                        className="text-primary text-sm font-mono mb-2 uppercase tracking-wider"
+                      >
+                        {projCat}
+                      </p>
+                      <h3 
+                        data-editable-field={`proj_${projNum}_title`}
+                        data-field-label={`Project ${projNum} Title`}
+                        className="text-3xl font-heading text-white"
+                      >
+                        {projTitle}
+                      </h3>
                     </div>
                   </div>
                 </div>

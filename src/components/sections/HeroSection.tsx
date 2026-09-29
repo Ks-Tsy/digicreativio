@@ -61,14 +61,21 @@ export const HeroSection: React.FC = () => {
           {/* Inner glow */}
           <div className="absolute inset-0 rounded-full shadow-[inset_0_0_30px_rgba(255,255,255,0.05)] pointer-events-none z-0" />
           <img
-            src={logoEnhanced}
+            src={data.logo_url || logoEnhanced}
             alt="DigiCreativio Logo"
+            data-editable-field="logo_url"
+            data-field-label="Hero Logo Image"
+            data-field-type="image"
             className="w-full h-full object-cover relative z-10 scale-105"
           />
         </motion.div>
 
         {/* Main Heading (Letter by Letter Reveal) */}
-        <h1 className="text-5xl md:text-7xl lg:text-8xl font-heading font-bold tracking-tight mb-8 leading-[1.2]">
+        <h1 
+          data-editable-field="title" 
+          data-field-label="Main Title" 
+          className="text-5xl md:text-7xl lg:text-8xl font-heading font-bold tracking-tight mb-8 leading-[1.2]"
+        >
           {words.map((word: string, wordIndex: number) => (
             <span key={wordIndex} className="inline-block whitespace-nowrap mr-[0.3em] last:mr-0">
               {word.split("").map((letter: string, letterIndex: number) => (
@@ -92,6 +99,9 @@ export const HeroSection: React.FC = () => {
 
         {/* Subheading */}
         <motion.p
+          data-editable-field="subtitle"
+          data-field-label="Subtitle"
+          data-field-type="textarea"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1.2, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
@@ -109,6 +119,8 @@ export const HeroSection: React.FC = () => {
         >
           <MagneticButton strength={30}>
             <a
+              data-editable-field="cta_primary"
+              data-field-label="Primary Button Text"
               href="#contact"
               className="group inline-flex items-center justify-center h-14 px-8 rounded-full bg-foreground text-background font-medium text-lg transition-all shadow-[0_0_30px_rgba(255,255,255,0.2)] hover:shadow-[0_0_40px_rgba(255,255,255,0.4)] hover:scale-105"
             >
@@ -119,6 +131,8 @@ export const HeroSection: React.FC = () => {
 
           <MagneticButton strength={30}>
             <a
+              data-editable-field="cta_secondary"
+              data-field-label="Secondary Button Text"
               href="#work"
               className="inline-flex items-center justify-center h-14 px-8 rounded-full bg-transparent border border-white/20 text-foreground font-medium text-lg hover:bg-white/5 transition-colors"
             >

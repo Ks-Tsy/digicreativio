@@ -10,14 +10,13 @@ const Services = () => {
   const { content: gridContent } = useSiteContent("services", "services_grid");
 
   const ctaData = ctaContent?.content_data as {
+    badge?: string;
     title?: string;
     subtitle?: string;
     cta_text?: string;
   } | null;
 
-  const gridData = gridContent?.content_data as {
-    title?: string;
-  } | null;
+  const gridData = (gridContent?.content_data as any) || {};
 
   const services = [
     {
@@ -73,55 +72,74 @@ const Services = () => {
       <section data-section-id="services_grid" className="py-12 pb-24">
         <div className="container mx-auto px-4 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-heading font-bold">
-              {gridData?.title || "What We Do"}
+            <h2 
+              data-editable-field="title"
+              data-field-label="Grid Title"
+              className="text-4xl md:text-5xl font-heading font-bold"
+            >
+              {gridData.title || "What We Do"}
             </h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
-            {services.map((service, index) => (
-              <Card
-                key={index}
-                className="group bg-card border-border/50 hover:border-primary/30 transition-all duration-300 relative"
-              >
-                {service.popular && (
-                  <div className="absolute top-4 right-4 z-10">
-                    <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-medium">
-                      <Star className="w-3 h-3 fill-primary" />
-                      Popular
-                    </span>
-                  </div>
-                )}
-                
-                <CardContent className="p-8">
-                  <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-primary/10 mb-6 group-hover:scale-110 transition-transform duration-300">
-                    <service.icon className="w-7 h-7 text-primary" />
-                  </div>
-                  
-                  <h3 className="text-2xl font-heading font-bold mb-4 group-hover:text-primary transition-colors">
-                    {service.title}
-                  </h3>
-                  <p className="text-muted-foreground mb-6 leading-relaxed">
-                    {service.description}
-                  </p>
-                  
-                  <div className="space-y-2 mb-8">
-                    {service.features.map((feature, idx) => (
-                      <div key={idx} className="flex items-center text-sm">
-                        <CheckCircle2 className="w-4 h-4 text-primary mr-3 flex-shrink-0" />
-                        <span className="text-muted-foreground">{feature}</span>
-                      </div>
-                    ))}
-                  </div>
+            {services.map((service, index) => {
+              const serviceNum = index + 1;
+              const currentTitle = gridData[`service_${serviceNum}_title`] || service.title;
+              const currentDesc = gridData[`service_${serviceNum}_desc`] || service.description;
 
-                  <Button asChild variant="outline" className="w-full rounded-full">
-                    <Link to="/contact">
-                      Learn More
-                      <ArrowRight className="ml-2 h-4 w-4" />
-                    </Link>
-                  </Button>
-                </CardContent>
-              </Card>
-            ))}
+              return (
+                <Card
+                  key={index}
+                  className="group bg-card border-border/50 hover:border-primary/30 transition-all duration-300 relative"
+                >
+                  {service.popular && (
+                    <div className="absolute top-4 right-4 z-10">
+                      <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-medium">
+                        <Star className="w-3 h-3 fill-primary" />
+                        Popular
+                      </span>
+                    </div>
+                  )}
+                  
+                  <CardContent className="p-8">
+                    <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-primary/10 mb-6 group-hover:scale-110 transition-transform duration-300">
+                      <service.icon className="w-7 h-7 text-primary" />
+                    </div>
+                    
+                    <h3 
+                      data-editable-field={`service_${serviceNum}_title`}
+                      data-field-label={`Service ${serviceNum} Title`}
+                      className="text-2xl font-heading font-bold mb-4 group-hover:text-primary transition-colors"
+                    >
+                      {currentTitle}
+                    </h3>
+                    <p 
+                      data-editable-field={`service_${serviceNum}_desc`}
+                      data-field-label={`Service ${serviceNum} Description`}
+                      data-field-type="textarea"
+                      className="text-muted-foreground mb-6 leading-relaxed"
+                    >
+                      {currentDesc}
+                    </p>
+                    
+                    <div className="space-y-2 mb-8">
+                      {service.features.map((feature, idx) => (
+                        <div key={idx} className="flex items-center text-sm">
+                          <CheckCircle2 className="w-4 h-4 text-primary mr-3 flex-shrink-0" />
+                          <span className="text-muted-foreground">{feature}</span>
+                        </div>
+                      ))}
+                    </div>
+
+                    <Button asChild variant="outline" className="w-full rounded-full">
+                      <Link to="/contact">
+                        Learn More
+                        <ArrowRight className="ml-2 h-4 w-4" />
+                      </Link>
+                    </Button>
+                  </CardContent>
+                </Card>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -130,18 +148,33 @@ const Services = () => {
       <section data-section-id="cta" className="py-24 bg-secondary/30">
         <div className="container mx-auto px-4 lg:px-8">
           <div className="max-w-4xl mx-auto text-center bg-card rounded-3xl p-12 md:p-16 border border-border/50">
-            <span className="inline-block px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium mb-6">
-              Start Your Project
+            <span 
+              data-editable-field="badge"
+              data-field-label="CTA Badge"
+              className="inline-block px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium mb-6"
+            >
+              {ctaData?.badge || "Start Your Project"}
             </span>
-            <h2 className="text-4xl md:text-5xl font-heading font-bold mb-6">
+            <h2 
+              data-editable-field="title"
+              data-field-label="CTA Title"
+              className="text-4xl md:text-5xl font-heading font-bold mb-6"
+            >
               {ctaData?.title || "Ready to Get Started?"}
             </h2>
-            <p className="text-xl text-muted-foreground mb-10 max-w-2xl mx-auto leading-relaxed">
+            <p 
+              data-editable-field="subtitle"
+              data-field-label="CTA Subtitle"
+              data-field-type="textarea"
+              className="text-xl text-muted-foreground mb-10 max-w-2xl mx-auto leading-relaxed"
+            >
               {ctaData?.subtitle || "Let's discuss your project and create something amazing together"}
             </p>
             <Button asChild size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold rounded-full px-10">
               <Link to="/contact">
-                {ctaData?.cta_text || "Contact Us Today"}
+                <span data-editable-field="cta_text" data-field-label="Button Text">
+                  {ctaData?.cta_text || "Contact Us Today"}
+                </span>
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
             </Button>

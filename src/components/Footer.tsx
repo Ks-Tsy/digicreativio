@@ -10,9 +10,23 @@ const Footer = () => {
   const currentYear = new Date().getFullYear();
   const [socialLinks, setSocialLinks] = useState<any[]>([]);
   
+  // Connect to Footer site content
+  const { content: brandContent } = useSiteContent("footer", "brand");
+  const { content: footerContactContent } = useSiteContent("footer", "contact");
+  const { content: copyrightContent } = useSiteContent("footer", "copyright");
   const { content: infoContent } = useSiteContent("contact", "info");
-  const infoData = infoContent?.content_data as { email?: string } | null;
-  const contactEmail = infoData?.email || "hello@digicreativio.com";
+
+  const brandData = (brandContent?.content_data as any) || {};
+  const footerContactData = (footerContactContent?.content_data as any) || {};
+  const infoData = (infoContent?.content_data as any) || {};
+  const copyrightData = (copyrightContent?.content_data as any) || {};
+
+  const brandName = brandData.brand_name || "DigiCreativio";
+  const brandDescription = brandData.description || "Crafting digital experiences that inspire and engage. Your creative partner for stunning design solutions.";
+  const brandLogo = brandData.logo_url || logo;
+  const contactEmail = footerContactData.email || infoData.email || "hello@digicreativio.com";
+  const rawCopyright = copyrightData.text || "DigiCreativio. All rights reserved.";
+  const copyrightText = rawCopyright.startsWith("©") ? rawCopyright : `© ${currentYear} ${rawCopyright}`;
 
   useEffect(() => {
     loadSocialLinks();
@@ -51,17 +65,35 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="border-t border-border/30 bg-card/50">
+    <footer data-section-id="brand" className="border-t border-border/30 bg-card/50">
       <div className="container mx-auto px-4 lg:px-8 py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
           {/* Brand */}
-          <div className="lg:col-span-1 space-y-6">
+          <div data-section-id="brand" className="lg:col-span-1 space-y-6">
             <Link to="/" className="flex items-center space-x-3">
-              <img src={logo} alt="DigiCreativio Logo" className="h-10 w-10 object-contain" />
-              <h3 className="text-xl font-heading font-bold">DigiCreativio</h3>
+              <img 
+                src={brandLogo} 
+                alt="DigiCreativio Logo" 
+                data-editable-field="logo_url"
+                data-field-label="Footer Logo Image"
+                data-field-type="image"
+                className="h-10 w-10 object-contain" 
+              />
+              <h3 
+                data-editable-field="brand_name"
+                data-field-label="Brand Name"
+                className="text-xl font-heading font-bold"
+              >
+                {brandName}
+              </h3>
             </Link>
-            <p className="text-muted-foreground leading-relaxed text-sm">
-              Crafting digital experiences that inspire and engage. Your creative partner for stunning design solutions.
+            <p 
+              data-editable-field="description"
+              data-field-label="Brand Description"
+              data-field-type="textarea"
+              className="text-muted-foreground leading-relaxed text-sm"
+            >
+              {brandDescription}
             </p>
             <div className="flex space-x-2">
               {socialLinks.map((link) => (
@@ -110,7 +142,7 @@ const Footer = () => {
           </div>
 
           {/* Contact */}
-          <div>
+          <div data-section-id="contact">
             <h4 className="text-sm font-semibold text-foreground mb-6 uppercase tracking-wider">Get in Touch</h4>
             <a 
               href={`mailto:${contactEmail}`}
@@ -121,17 +153,27 @@ const Footer = () => {
               </div>
               <div>
                 <div className="text-xs text-muted-foreground mb-0.5">Email us</div>
-                <div className="text-sm text-foreground group-hover:text-primary transition-colors">{contactEmail}</div>
+                <div 
+                  data-editable-field="email"
+                  data-field-label="Contact Email"
+                  className="text-sm text-foreground group-hover:text-primary transition-colors"
+                >
+                  {contactEmail}
+                </div>
               </div>
             </a>
           </div>
         </div>
 
         {/* Bottom Bar */}
-        <div className="pt-8 border-t border-border/30">
+        <div data-section-id="copyright" className="pt-8 border-t border-border/30">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-            <p className="text-sm text-muted-foreground">
-              © {currentYear} DigiCreativio. All rights reserved.
+            <p 
+              data-editable-field="text"
+              data-field-label="Copyright Text"
+              className="text-sm text-muted-foreground"
+            >
+              {copyrightText}
             </p>
             <div className="flex space-x-8">
               <Link to="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">

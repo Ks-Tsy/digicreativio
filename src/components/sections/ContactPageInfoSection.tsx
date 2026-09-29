@@ -16,6 +16,9 @@ export const ContactPageInfoSection = () => {
     email?: string;
     phone?: string;
     address?: string;
+    form_title?: string;
+    form_subtitle?: string;
+    form_button?: string;
   } | null;
 
   const [formData, setFormData] = useState({
@@ -115,9 +118,9 @@ export const ContactPageInfoSection = () => {
   const contactAddress = infoData?.address || "123 Creative Street, Design City, DC 12345";
 
   const contactCards = [
-    { icon: Mail, title: "Email Us", content: contactEmail, href: `mailto:${contactEmail}` },
-    { icon: Phone, title: "Call Us", content: contactPhone, href: `tel:${contactPhone.replace(/\D/g, '')}` },
-    { icon: MapPin, title: "Visit Us", content: contactAddress, href: null },
+    { icon: Mail, title: "Email Us", content: contactEmail, href: `mailto:${contactEmail}`, fieldKey: "email", fieldLabel: "Contact Email", fieldType: "text" },
+    { icon: Phone, title: "Call Us", content: contactPhone, href: `tel:${contactPhone.replace(/\D/g, '')}`, fieldKey: "phone", fieldLabel: "Phone Number", fieldType: "text" },
+    { icon: MapPin, title: "Visit Us", content: contactAddress, href: null, fieldKey: "address", fieldLabel: "Address", fieldType: "textarea" },
     { icon: Clock, title: "Business Hours", content: "Mon - Fri: 9AM - 6PM", href: null },
   ];
 
@@ -134,14 +137,27 @@ export const ContactPageInfoSection = () => {
                     <div className="flex-shrink-0 w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center">
                       <card.icon className="w-5 h-5 text-primary" />
                     </div>
-                    <div>
+                    <div className="flex-1">
                       <h3 className="font-semibold text-foreground mb-1">{card.title}</h3>
                       {card.href ? (
-                        <a href={card.href} className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                        <a 
+                          href={card.href} 
+                          data-editable-field={card.fieldKey}
+                          data-field-label={card.fieldLabel}
+                          data-field-type={card.fieldType}
+                          className="text-sm text-muted-foreground hover:text-primary transition-colors block"
+                        >
                           {card.content}
                         </a>
                       ) : (
-                        <p className="text-sm text-muted-foreground">{card.content}</p>
+                        <p 
+                          data-editable-field={card.fieldKey}
+                          data-field-label={card.fieldLabel}
+                          data-field-type={card.fieldType}
+                          className="text-sm text-muted-foreground block"
+                        >
+                          {card.content}
+                        </p>
                       )}
                     </div>
                   </div>
@@ -164,8 +180,21 @@ export const ContactPageInfoSection = () => {
                   </div>
                 ) : (
                   <>
-                    <h2 className="text-2xl font-heading font-bold text-foreground mb-2">Send us a Message</h2>
-                    <p className="text-muted-foreground mb-8">Fill out the form below and we'll get back to you as soon as possible.</p>
+                    <h2 
+                      data-editable-field="form_title"
+                      data-field-label="Form Title"
+                      className="text-2xl font-heading font-bold text-foreground mb-2"
+                    >
+                      {infoData?.form_title || "Send us a Message"}
+                    </h2>
+                    <p 
+                      data-editable-field="form_subtitle"
+                      data-field-label="Form Subtitle"
+                      data-field-type="textarea"
+                      className="text-muted-foreground mb-8"
+                    >
+                      {infoData?.form_subtitle || "Fill out the form below and we'll get back to you as soon as possible."}
+                    </p>
                     
                     {slowDownMessage && (
                       <div className="mb-6 p-4 rounded-xl bg-warning/10 border border-warning/30 flex items-start gap-3">
@@ -270,7 +299,9 @@ export const ContactPageInfoSection = () => {
                         ) : (
                           <>
                             <Send className="w-5 h-5 mr-2" />
-                            Send Message
+                            <span data-editable-field="form_button" data-field-label="Submit Button Text">
+                              {infoData?.form_button || "Send Message"}
+                            </span>
                           </>
                         )}
                       </Button>

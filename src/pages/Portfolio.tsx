@@ -4,11 +4,18 @@ import { Badge } from "@/components/ui/badge";
 import { supabase } from "@/lib/supabase";
 import { Loader2, ExternalLink, Filter } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useSiteContent } from "@/hooks/useSiteContent";
 
 const Portfolio = () => {
   const [projects, setProjects] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeFilter, setActiveFilter] = useState("all");
+
+  const { content: heroContent } = useSiteContent("portfolio", "hero");
+  const heroData = (heroContent?.content_data as any) || {};
+
+  const { content: ctaContent } = useSiteContent("portfolio", "cta");
+  const ctaData = (ctaContent?.content_data as any) || {};
 
   useEffect(() => {
     loadPortfolio();
@@ -43,17 +50,30 @@ const Portfolio = () => {
   return (
     <div className="min-h-screen pt-20">
       {/* Hero Section */}
-      <section className="py-24">
+      <section data-section-id="hero" className="py-24">
         <div className="container mx-auto px-4 lg:px-8">
           <div className="max-w-4xl mx-auto text-center">
-            <span className="inline-block px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium mb-6">
-              Our Work
+            <span 
+              data-editable-field="badge"
+              data-field-label="Hero Badge"
+              className="inline-block px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium mb-6"
+            >
+              {heroData.badge || "Our Work"}
             </span>
-            <h1 className="text-5xl md:text-6xl font-heading font-bold mb-6">
-              Our Portfolio
+            <h1 
+              data-editable-field="title"
+              data-field-label="Page Title"
+              className="text-5xl md:text-6xl font-heading font-bold mb-6"
+            >
+              {heroData.title || "Our Portfolio"}
             </h1>
-            <p className="text-xl text-muted-foreground leading-relaxed">
-              Explore our collection of creative projects that showcase our expertise and passion for exceptional design
+            <p 
+              data-editable-field="subtitle"
+              data-field-label="Page Subtitle"
+              data-field-type="textarea"
+              className="text-xl text-muted-foreground leading-relaxed"
+            >
+              {heroData.subtitle || "Explore our collection of creative projects that showcase our expertise and passion for exceptional design"}
             </p>
           </div>
         </div>
@@ -159,6 +179,44 @@ const Portfolio = () => {
               ))}
             </div>
           )}
+        </div>
+      </section>
+
+      {/* Portfolio CTA Section */}
+      <section data-section-id="cta" className="py-24 bg-secondary/30 border-t border-border/30">
+        <div className="container mx-auto px-4 lg:px-8">
+          <div className="max-w-4xl mx-auto text-center bg-card rounded-3xl p-12 md:p-16 border border-border/50">
+            <span 
+              data-editable-field="badge"
+              data-field-label="CTA Badge"
+              className="inline-block px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium mb-6"
+            >
+              {ctaData.badge || "Start a Project"}
+            </span>
+            <h2 
+              data-editable-field="title"
+              data-field-label="CTA Title"
+              className="text-4xl md:text-5xl font-heading font-bold mb-6"
+            >
+              {ctaData.title || "Have a Project in Mind?"}
+            </h2>
+            <p 
+              data-editable-field="subtitle"
+              data-field-label="CTA Subtitle"
+              data-field-type="textarea"
+              className="text-xl text-muted-foreground mb-10 max-w-2xl mx-auto leading-relaxed"
+            >
+              {ctaData.subtitle || "Let's collaborate to create something truly exceptional. Reach out to discuss your ideas."}
+            </p>
+            <Button asChild size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold rounded-full px-10">
+              <a href="/contact">
+                <span data-editable-field="button_text" data-field-label="Button Text">
+                  {ctaData.button_text || "Get in Touch"}
+                </span>
+                <ExternalLink className="ml-2 h-5 w-5" />
+              </a>
+            </Button>
+          </div>
         </div>
       </section>
     </div>

@@ -4,12 +4,21 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import logo from "@/assets/logo-enhanced.png";
+import { useSiteContent } from "@/hooks/useSiteContent";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
   const { user, isAdmin, signOut } = useAuth();
+
+  const { content } = useSiteContent("navbar", "main");
+  const data = (content?.content_data as any) || {};
+
+  const brandName = data.brand_name || "DigiCreativio";
+  const brandLogo = data.logo_url || logo;
+  const ctaText = data.cta_text || "Get Started";
+  const ctaLink = data.cta_link || "/contact";
 
   useEffect(() => {
     const handleScroll = () => {
@@ -32,27 +41,41 @@ const Navbar = () => {
 
   return (
     <nav
+      data-section-id="main"
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         scrolled 
           ? "bg-background/95 backdrop-blur-md border-b border-border/50" 
           : "bg-transparent"
       }`}
     >
-      <div className="container mx-auto px-4 lg:px-8">
-        <div className="flex items-center justify-between h-20">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between gap-4 h-20">
           {/* Logo */}
-          <Link to="/" className="flex items-center space-x-3">
-            <img src={logo} alt="DigiCreativio Logo" className="h-10 w-10 object-contain" />
-            <span className="text-xl font-heading font-bold">DigiCreativio</span>
+          <Link to="/" className="flex items-center space-x-2.5 sm:space-x-3 shrink-0">
+            <img 
+              src={brandLogo} 
+              alt="DigiCreativio Logo" 
+              data-editable-field="logo_url"
+              data-field-label="Navbar Logo Image"
+              data-field-type="image"
+              className="h-9 w-9 sm:h-10 sm:w-10 object-contain shrink-0" 
+            />
+            <span 
+              data-editable-field="brand_name"
+              data-field-label="Brand Name"
+              className="text-lg sm:text-xl font-heading font-bold whitespace-nowrap"
+            >
+              {brandName}
+            </span>
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-1">
+          <div className="hidden lg:flex items-center space-x-1 xl:space-x-1.5 shrink-0">
             {navLinks.map((link) => (
               <Link
                 key={link.path}
                 to={link.path}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
+                className={`px-3 py-1.5 xl:px-4 xl:py-2 rounded-full text-xs xl:text-sm font-medium transition-all duration-300 whitespace-nowrap ${
                   isActive(link.path)
                     ? "text-primary bg-primary/10"
                     : "text-muted-foreground hover:text-foreground hover:bg-secondary/50"
@@ -64,39 +87,43 @@ const Navbar = () => {
             {isAdmin && (
               <Link
                 to="/admin"
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 flex items-center ${
+                className={`px-3 py-1.5 xl:px-4 xl:py-2 rounded-full text-xs xl:text-sm font-medium transition-all duration-300 flex items-center whitespace-nowrap ${
                   isActive("/admin")
                     ? "text-primary bg-primary/10"
                     : "text-muted-foreground hover:text-foreground hover:bg-secondary/50"
                 }`}
               >
-                <Shield className="h-4 w-4 mr-1.5" />
+                <Shield className="h-3.5 w-3.5 xl:h-4 xl:w-4 mr-1.5 shrink-0" />
                 Admin
               </Link>
             )}
           </div>
 
           {/* CTA Button - Desktop */}
-          <div className="hidden md:flex items-center gap-3">
+          <div className="hidden lg:flex items-center gap-2 xl:gap-3 shrink-0">
             {isAdmin && user && (
               <Button
                 variant="ghost"
                 onClick={() => signOut()}
                 size="sm"
-                className="rounded-full"
+                className="rounded-full text-xs xl:text-sm h-9 px-3 whitespace-nowrap"
               >
-                <LogOut className="h-4 w-4 mr-2" />
+                <LogOut className="h-3.5 w-3.5 xl:h-4 xl:w-4 mr-1.5 shrink-0" />
                 Sign Out
               </Button>
             )}
-            <Button asChild className="bg-primary hover:bg-primary/90 text-primary-foreground font-medium rounded-full px-6">
-              <Link to="/contact">Get Started</Link>
+            <Button asChild size="sm" className="bg-primary hover:bg-primary/90 text-primary-foreground font-medium rounded-full px-4 xl:px-6 h-9 text-xs xl:text-sm whitespace-nowrap">
+              <Link to={ctaLink}>
+                <span data-editable-field="cta_text" data-field-label="CTA Button Text">
+                  {ctaText}
+                </span>
+              </Link>
             </Button>
           </div>
 
           {/* Mobile Menu Button */}
           <button
-            className="md:hidden p-2 text-foreground hover:text-primary transition-colors rounded-full hover:bg-secondary/50"
+            className="lg:hidden p-2 text-foreground hover:text-primary transition-colors rounded-full hover:bg-secondary/50"
             onClick={() => setIsOpen(!isOpen)}
             aria-label="Toggle menu"
           >
@@ -106,7 +133,7 @@ const Navbar = () => {
 
         {/* Mobile Navigation */}
         {isOpen && (
-          <div className="md:hidden py-6 bg-background/95 backdrop-blur-md rounded-2xl mt-2 mb-4 border border-border/30">
+          <div className="lg:hidden py-6 bg-background/95 backdrop-blur-md rounded-2xl mt-2 mb-4 border border-border/30">
             <div className="flex flex-col space-y-1 px-4">
               {navLinks.map((link) => (
                 <Link
@@ -132,7 +159,7 @@ const Navbar = () => {
                       : "text-muted-foreground hover:text-foreground hover:bg-secondary/50"
                   }`}
                 >
-                  <Shield className="h-4 w-4 mr-2" />
+                  <Shield className="h-4 w-4 mr-2 shrink-0" />
                   Admin
                 </Link>
               )}
@@ -144,14 +171,14 @@ const Navbar = () => {
                   }}
                   className="px-4 py-3 rounded-xl text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-secondary/50 transition-all flex items-center"
                 >
-                  <LogOut className="h-4 w-4 mr-2" />
+                  <LogOut className="h-4 w-4 mr-2 shrink-0" />
                   Sign Out
                 </button>
               )}
               <div className="pt-4">
                 <Button asChild className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-medium rounded-full">
-                  <Link to="/contact" onClick={() => setIsOpen(false)}>
-                    Get Started
+                  <Link to={ctaLink} onClick={() => setIsOpen(false)}>
+                    {ctaText}
                   </Link>
                 </Button>
               </div>

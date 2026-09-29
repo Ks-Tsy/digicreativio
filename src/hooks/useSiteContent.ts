@@ -15,17 +15,32 @@ interface SiteContent {
 export const useSiteContent = (pageName: string, sectionName: string) => {
   const builderContent = useContext(BuilderContext);
   const [content, setContent] = useState<SiteContent | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(!builderContent);
+
+  // If inside the builder, resolve live content synchronously from builderContent
+  const builderItem = builderContent
+    ? (builderContent.find(
+        (c) => c.page_name === pageName && c.section_name === sectionName
+      ) || (() => {
+        const pageTemplate = PAGE_TEMPLATES[pageName];
+        const sectionTemplate = pageTemplate?.sections.find(s => s.name === sectionName);
+        if (!sectionTemplate) return null;
+        const defaultData: Record<string, string> = {};
+        sectionTemplate.fields.forEach(f => {
+          defaultData[f.key] = f.value;
+        });
+        return {
+          id: `default-${pageName}-${sectionName}`,
+          page_name: pageName,
+          section_name: sectionName,
+          content_type: "text",
+          content_data: defaultData as Json
+        };
+      })())
+    : null;
 
   useEffect(() => {
-    // If we're inside the builder, use the live local content directly
     if (builderContent) {
-      const item = builderContent.find(
-        (c) => c.page_name === pageName && c.section_name === sectionName
-      );
-      if (item) {
-        setContent(item as SiteContent);
-      }
       setLoading(false);
       return;
     }
@@ -39,28 +54,32 @@ export const useSiteContent = (pageName: string, sectionName: string) => {
         .single();
 
       if (!error && data) {
-        setContent(data as SiteContent);
+        const raw = (data.content_data as any) || {};
+        // If _published snapshot exists, public visitors only see published content!
+        const publicData = raw._published !== undefined ? raw._published : raw;
+        setContent({
+          ...data,
+          content_data: publicData as Json,
+        } as SiteContent);
       } else {
         // Fallback to default content if not found
         const pageTemplate = PAGE_TEMPLATES[pageName];
         if (pageTemplate) {
-            const sectionTemplate = pageTemplate.sections.find(s => s.name === sectionName);
-            if (sectionTemplate) {
-                const defaultData: Record<string, string> = {};
-                sectionTemplate.fields.forEach(f => {
-                    defaultData[f.key] = f.value;
-                });
-                
-                const finalData = defaultData;
+          const sectionTemplate = pageTemplate.sections.find(s => s.name === sectionName);
+          if (sectionTemplate) {
+            const defaultData: Record<string, string> = {};
+            sectionTemplate.fields.forEach(f => {
+              defaultData[f.key] = f.value;
+            });
 
-                setContent({
-                    id: `default-${pageName}-${sectionName}`,
-                    page_name: pageName,
-                    section_name: sectionName,
-                    content_type: "text",
-                    content_data: finalData as Json
-                });
-            }
+            setContent({
+              id: `default-${pageName}-${sectionName}`,
+              page_name: pageName,
+              section_name: sectionName,
+              content_type: "text",
+              content_data: defaultData as Json
+            });
+          }
         }
       }
       setLoading(false);
@@ -69,6 +88,6 @@ export const useSiteContent = (pageName: string, sectionName: string) => {
     fetchContent();
   }, [pageName, sectionName, builderContent]);
 
-  return { content, loading };
+  return { content: (builderItem as SiteContent) || content, loading };
 };
 

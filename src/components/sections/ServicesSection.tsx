@@ -40,6 +40,8 @@ export const ServicesSection: React.FC = () => {
       <div className="container relative z-10">
         <div className="text-center mb-24">
           <motion.h2 
+            data-editable-field="title"
+            data-field-label="Section Title"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-100px" }}
@@ -49,6 +51,9 @@ export const ServicesSection: React.FC = () => {
             {data.title || "Capabilities"}
           </motion.h2>
           <motion.p 
+            data-editable-field="subtitle"
+            data-field-label="Section Subtitle"
+            data-field-type="textarea"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-100px" }}
@@ -60,32 +65,47 @@ export const ServicesSection: React.FC = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12 max-w-5xl mx-auto">
-          {services.map((service, index) => (
-            <FloatingElement key={index} delay={service.delay} duration={5 + index} yOffset={15} className={index % 2 === 1 ? 'md:mt-24' : ''}>
-              <motion.div
-                initial={{ opacity: 0, scale: 0.9 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true, margin: "-50px" }}
-                transition={{ duration: 0.8, delay: service.delay }}
-                className="h-full"
-              >
-                <TiltCard depth={15} className="h-full">
-                  <div className="glass h-full rounded-2xl p-8 lg:p-12 relative group overflow-hidden transition-all duration-500 hover:border-primary/50 hover:shadow-[0_0_40px_rgba(255,200,0,0.15)]">
-                    {/* Hover Glow Effect inside card */}
-                    <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                    
-                    <div className="text-4xl text-primary mb-6">{service.icon}</div>
-                    <h3 className="text-2xl font-heading font-semibold mb-4 text-foreground group-hover:text-primary transition-colors">
-                      {service.title}
-                    </h3>
-                    <p className="text-foreground/70 leading-relaxed">
-                      {service.description}
-                    </p>
-                  </div>
-                </TiltCard>
-              </motion.div>
-            </FloatingElement>
-          ))}
+          {services.map((service, index) => {
+            const itemNum = index + 1;
+            const itemTitle = data[`item_${itemNum}_title`] || service.title;
+            const itemDesc = data[`item_${itemNum}_desc`] || service.description;
+
+            return (
+              <FloatingElement key={index} delay={service.delay} duration={5 + index} yOffset={15} className={index % 2 === 1 ? 'md:mt-24' : ''}>
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true, margin: "-50px" }}
+                  transition={{ duration: 0.8, delay: service.delay }}
+                  className="h-full"
+                >
+                  <TiltCard depth={15} className="h-full">
+                    <div className="glass h-full rounded-2xl p-8 lg:p-12 relative group overflow-hidden transition-all duration-500 hover:border-primary/50 hover:shadow-[0_0_40px_rgba(255,200,0,0.15)]">
+                      {/* Hover Glow Effect inside card */}
+                      <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                      
+                      <div className="text-4xl text-primary mb-6">{service.icon}</div>
+                      <h3 
+                        data-editable-field={`item_${itemNum}_title`}
+                        data-field-label={`Service ${itemNum} Title`}
+                        className="text-2xl font-heading font-semibold mb-4 text-foreground group-hover:text-primary transition-colors"
+                      >
+                        {itemTitle}
+                      </h3>
+                      <p 
+                        data-editable-field={`item_${itemNum}_desc`}
+                        data-field-label={`Service ${itemNum} Description`}
+                        data-field-type="textarea"
+                        className="text-foreground/70 leading-relaxed"
+                      >
+                        {itemDesc}
+                      </p>
+                    </div>
+                  </TiltCard>
+                </motion.div>
+              </FloatingElement>
+            );
+          })}
         </div>
       </div>
     </section>
