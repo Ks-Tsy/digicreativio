@@ -369,3 +369,46 @@
   .stagger-4 { animation-delay: 0.4s; }
   .stagger-5 { animation-delay: 0.5s; }
 }
+
+/* ============================================================
+   MODERN BLACK / DARK ADMIN DASHBOARD THEME (Matches Weihu Model in Dark Mode)
+   ============================================================ */
+
+.admin-dark-theme {
+  background-color: #0b0d14;
+  color: #f1f5f9;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  color-scheme: dark;
+}
+
+/* Reset headings in admin so global gradient text doesn't conflict */
+.admin-dark-theme h1,
+.admin-dark-theme h2,
+.admin-dark-theme h3,
+.admin-dark-theme h4,
+.admin-dark-theme h5,
+.admin-dark-theme h6 {
+  background: none !important;
+  -webkit-background-clip: initial !important;
+  background-clip: initial !important;
+  -webkit-text-fill-color: initial !important;
+  color: #f8fafc !important;
+  padding-bottom: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+/* Sleek dark scrollbar for the board */
+.admin-dark-theme .board-scroll::-webkit-scrollbar {
+  height: 8px;
+  width: 8px;
+}
+.admin-dark-theme .board-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+.admin-dark-theme .board-scroll::-webkit-scrollbar-thumb {
+  background: #1f2538;
+  border-radius: 9999px;
+}
+.admin-dark-theme .board-scroll::-webkit-scrollbar-thumb:hover {
+  background: #333d59;
+}

@@ -45,6 +45,7 @@ export default function Admin() {
 
   const [loadingData, setLoadingData] = useState(true);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const [stats, setStats] = useState({
     totalContacts: 0,
@@ -870,11 +871,16 @@ export default function Admin() {
   // ============================================================
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="admin-dark-theme min-h-screen bg-[#0B0D14] text-slate-100 selection:bg-purple-900/60 selection:text-purple-200">
 
       <AdminSidebar
         activeTab={activeTab}
         onTabChange={setActiveTab}
+        collapsed={sidebarCollapsed}
+        onToggleCollapse={() => setSidebarCollapsed(!sidebarCollapsed)}
+        user={user}
+        onLogout={handleLogout}
+        newContactsCount={stats.newContacts}
       />
 
       <AdminHeader
@@ -882,7 +888,10 @@ export default function Admin() {
         onLogout={handleLogout}
         onRefresh={loadData}
         sidebarCollapsed={sidebarCollapsed}
+        onToggleSidebar={() => setSidebarCollapsed(!sidebarCollapsed)}
         activeTab={activeTab}
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
       />
 
       <main
@@ -907,7 +916,16 @@ export default function Admin() {
               userRoles={userRoles}
               contacts={contacts}
               portfolioItems={portfolioItems}
+              blogPosts={blogPosts}
+              testimonials={testimonials}
+              users={users}
+              user={user}
               onNavigate={setActiveTab}
+              onStatusUpdate={handleStatusUpdate}
+              onDeleteContact={handleDeleteContact}
+              onRefresh={loadData}
+              searchQuery={searchQuery}
+              onSearchChange={setSearchQuery}
             />
           )}
 
