@@ -15,9 +15,9 @@ export function ProtectedRoute({ children, requireAdmin = false }: ProtectedRout
   useEffect(() => {
     if (!loading) {
       if (!user) {
-        navigate("/auth");
+        navigate("/auth", { replace: true });
       } else if (requireAdmin && !isAdmin) {
-        navigate("/auth");
+        navigate("/auth", { replace: true });
       }
     }
   }, [user, isAdmin, loading, navigate, requireAdmin]);
@@ -25,15 +25,21 @@ export function ProtectedRoute({ children, requireAdmin = false }: ProtectedRout
   // Show loading spinner while checking auth
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+      <div className="min-h-screen flex flex-col items-center justify-center bg-[#0B0D14] text-slate-200">
+        <Loader2 className="h-8 w-8 animate-spin text-indigo-500 mb-3" />
+        <p className="text-xs text-slate-400">Verifying access...</p>
       </div>
     );
   }
 
-  // Don't render children if not authorized
+  // Don't render children if not authorized - show redirecting screen
   if (!user || (requireAdmin && !isAdmin)) {
-    return null;
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-[#0B0D14] text-slate-200">
+        <Loader2 className="h-8 w-8 animate-spin text-indigo-500 mb-3" />
+        <p className="text-xs text-slate-400">Redirecting to login...</p>
+      </div>
+    );
   }
 
   return <>{children}</>;

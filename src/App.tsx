@@ -25,18 +25,20 @@ import NotFound from "./pages/NotFound";
 const queryClient = new QueryClient();
 
 const AppLayout = () => {
-  const [isPreloaded, setIsPreloaded] = useState(false);
   const location = useLocation();
-  const isAdminRoute = location.pathname === "/admin" || location.pathname === "/admin-setup";
+  const isAdminRoute = location.pathname.startsWith("/admin") || location.pathname === "/admin-setup" || location.pathname === "/auth";
+  const [isPreloaded, setIsPreloaded] = useState(isAdminRoute);
   
   return (
-    <div className="flex flex-col min-h-screen">
-      <Preloader onComplete={() => setIsPreloaded(true)} />
-      {isPreloaded && (
+    <div className="flex flex-col min-h-screen bg-background text-foreground">
+      {!isAdminRoute && !isPreloaded && (
+        <Preloader onComplete={() => setIsPreloaded(true)} />
+      )}
+      {(isPreloaded || isAdminRoute) && (
         <motion.div 
-          initial={{ opacity: 0 }} 
+          initial={{ opacity: isAdminRoute ? 1 : 0 }} 
           animate={{ opacity: 1 }} 
-          transition={{ duration: 0.8 }}
+          transition={{ duration: isAdminRoute ? 0 : 0.8 }}
           className="flex flex-col min-h-screen w-full"
         >
           {!isAdminRoute && <Navbar />}
