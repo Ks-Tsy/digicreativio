@@ -71,7 +71,7 @@ export const PremiumHero = () => {
             transition={{ duration: 0.8, delay: 0.6 }}
             className="text-lg sm:text-xl text-[#858585] max-w-2xl mb-12 font-sans leading-relaxed"
           >
-            We design brands, build digital experiences, and create visual stories that move businesses forward.
+            We specialize in premium graphic design, high-performance web development, and compelling video editing to help brands stand out and grow.
           </motion.p>
 
           <motion.div

@@ -37,10 +37,10 @@ export const AboutStorySection = () => {
                   {storyData?.content || "DigiCreativio was born from a simple belief: that great design has the power to transform businesses and connect with people on a deeper level. Since our founding, we've been committed to pushing the boundaries of creativity while delivering practical, results-driven solutions."}
                 </p>
                 <p>
-                  Our journey began with a small team of passionate designers who shared a vision of creating a different kind of creative agency—one that combines artistic excellence with strategic thinking, technical expertise with human-centered design.
+                  Our journey began with a focus on graphic design, but we quickly realized that true digital impact requires a seamless blend of disciplines. Today, we bridge the gap between aesthetics and functionality, ensuring that every project not only looks beautiful but also performs flawlessly.
                 </p>
                 <p>
-                  Today, we've grown into a full-service digital creative agency, but our core values remain unchanged. We still approach every project with the same enthusiasm and dedication, treating each client's vision as our own.
+                  At DigiCreativio, we believe that design, web development, and video editing are not separate services—they are interconnected facets of a single, unified brand experience. By combining these core disciplines, we craft comprehensive digital solutions that resonate with audiences and drive real results.
                 </p>
               </div>
             </CardContent>

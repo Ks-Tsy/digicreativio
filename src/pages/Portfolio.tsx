@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { supabase } from "@/lib/supabase";
-import { Loader2, ExternalLink, Filter } from "lucide-react";
+import { Loader2, ExternalLink, Filter, Sparkles, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useSiteContent } from "@/hooks/useSiteContent";
 
@@ -109,12 +109,22 @@ const Portfolio = () => {
       <section className="py-24">
         <div className="container mx-auto px-4 lg:px-8">
           {projects.length === 0 ? (
-            <div className="text-center py-20">
-              <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-secondary mb-6">
-                <Filter className="w-10 h-10 text-muted-foreground" />
+            <div className="text-center py-32 max-w-2xl mx-auto">
+              <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-[#111111] border border-[#D4AF37]/20 mb-8 relative overflow-hidden">
+                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[#D4AF37]/20 to-transparent opacity-50" />
+                <Sparkles className="w-10 h-10 text-[#D4AF37] relative z-10" />
               </div>
-              <h3 className="text-2xl font-semibold mb-3">No portfolio items yet</h3>
-              <p className="text-muted-foreground text-lg">Check back soon for amazing work!</p>
+              <h3 className="text-3xl font-heading font-bold mb-4 text-[#F5F5F5]">Crafting New Experiences</h3>
+              <p className="text-[#858585] text-lg mb-8 leading-relaxed">
+                We are currently updating our portfolio with our latest client work. 
+                In the meantime, let's talk about how we can build something exceptional together.
+              </p>
+              <Button asChild size="lg" className="bg-[#D4AF37] hover:bg-[#F0C75E] text-[#050505] font-semibold rounded-full px-8 h-14">
+                <a href="/contact">
+                  Start Your Project
+                  <ArrowRight className="ml-2 w-5 h-5" />
+                </a>
+              </Button>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">

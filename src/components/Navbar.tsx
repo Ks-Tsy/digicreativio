@@ -118,7 +118,7 @@ const Navbar = () => {
                 Sign Out
               </Button>
             )}
-            <Button asChild size="sm" className="bg-[#090909] border border-[#D4AF37]/30 hover:border-[#D4AF37] text-[#F5F5F5] font-medium rounded-full px-4 xl:px-6 h-9 text-xs xl:text-sm whitespace-nowrap transition-all duration-300 group">
+            <Button asChild size="sm" className="bg-[#D4AF37] hover:bg-[#F0C75E] text-[#050505] font-medium rounded-full px-4 xl:px-6 h-9 text-xs xl:text-sm whitespace-nowrap transition-all duration-300">
               <Link to={ctaLink}>
                 <span data-editable-field="cta_text" data-field-label="CTA Button Text">
                   {ctaText}

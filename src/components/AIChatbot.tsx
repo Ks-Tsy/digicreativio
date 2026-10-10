@@ -105,11 +105,10 @@ const AIChatbot = () => {
         )}
       </button>
 
-      {/* Chat Window */}
       <div
         className={`fixed z-[60] transition-all duration-500 ${isExpanded
-          ? "bottom-20 right-4 sm:right-6 w-[600px] max-w-[calc(100vw-2rem)]"
-          : "bottom-20 right-4 sm:right-6 w-[380px] max-w-[calc(100vw-2rem)]"
+          ? "bottom-24 right-4 sm:right-6 w-[600px] max-w-[calc(100vw-2rem)]"
+          : "bottom-24 right-4 sm:right-6 w-[350px] max-w-[calc(100vw-2rem)]"
           } ${isOpen
             ? "opacity-100 translate-y-0 pointer-events-auto"
             : "opacity-0 translate-y-4 pointer-events-none"
@@ -146,7 +145,7 @@ const AIChatbot = () => {
           </div>
 
           {/* Messages */}
-          <div className={`overflow-y-auto p-5 space-y-4 scrollbar-thin ${isExpanded ? "h-[500px]" : "h-[400px]"}`}>
+          <div className={`overflow-y-auto p-5 space-y-4 scrollbar-thin ${isExpanded ? "h-[60vh] max-h-[500px]" : "h-[50vh] max-h-[400px]"}`}>
             {messages.map((message, index) => (
               <div
                 key={index}
