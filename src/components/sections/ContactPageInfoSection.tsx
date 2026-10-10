@@ -131,11 +131,11 @@ export const ContactPageInfoSection = () => {
           {/* Contact Info */}
           <div className="space-y-4">
             {contactCards.map((card, index) => (
-              <Card key={index} className="bg-card border-border/50 hover:border-primary/30 transition-all duration-300">
+              <Card key={index} className="bg-[#090909] border-[#111111] hover:border-[#D4AF37]/30 transition-all duration-300">
                 <CardContent className="p-6">
                   <div className="flex items-start space-x-4">
-                    <div className="flex-shrink-0 w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center">
-                      <card.icon className="w-5 h-5 text-primary" />
+                    <div className="flex-shrink-0 w-12 h-12 rounded-2xl bg-[#111111] flex items-center justify-center">
+                      <card.icon className="w-5 h-5 text-[#D4AF37]" />
                     </div>
                     <div className="flex-1">
                       <h3 className="font-semibold text-foreground mb-1">{card.title}</h3>
@@ -145,7 +145,7 @@ export const ContactPageInfoSection = () => {
                           data-editable-field={card.fieldKey}
                           data-field-label={card.fieldLabel}
                           data-field-type={card.fieldType}
-                          className="text-sm text-muted-foreground hover:text-primary transition-colors block"
+                          className="text-sm text-[#858585] hover:text-[#D4AF37] transition-colors block"
                         >
                           {card.content}
                         </a>
@@ -154,7 +154,7 @@ export const ContactPageInfoSection = () => {
                           data-editable-field={card.fieldKey}
                           data-field-label={card.fieldLabel}
                           data-field-type={card.fieldType}
-                          className="text-sm text-muted-foreground block"
+                          className="text-sm text-[#858585] block"
                         >
                           {card.content}
                         </p>
@@ -168,15 +168,15 @@ export const ContactPageInfoSection = () => {
 
           {/* Contact Form */}
           <div className="lg:col-span-2">
-            <Card className="bg-card border-border/50">
+            <Card className="bg-[#090909] border-[#111111]">
               <CardContent className="p-8 md:p-10">
                 {isSubmitted ? (
                   <div className="text-center py-12">
-                    <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-primary/10 mb-6">
-                      <CheckCircle2 className="w-10 h-10 text-primary" />
+                    <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-[#111111] mb-6">
+                      <CheckCircle2 className="w-10 h-10 text-[#D4AF37]" />
                     </div>
-                    <h3 className="text-2xl font-heading font-bold mb-3">Message Sent!</h3>
-                    <p className="text-muted-foreground">Thank you for reaching out. We'll get back to you within 24 hours.</p>
+                    <h3 className="text-2xl font-heading font-bold mb-3 text-[#F5F5F5]">Message Sent!</h3>
+                    <p className="text-[#858585]">Thank you for reaching out. We'll get back to you within 24 hours.</p>
                   </div>
                 ) : (
                   <>
@@ -191,7 +191,7 @@ export const ContactPageInfoSection = () => {
                       data-editable-field="form_subtitle"
                       data-field-label="Form Subtitle"
                       data-field-type="textarea"
-                      className="text-muted-foreground mb-8"
+                      className="text-[#858585] mb-8 font-light"
                     >
                       {infoData?.form_subtitle || "Fill out the form below and we'll get back to you as soon as possible."}
                     </p>
@@ -225,7 +225,7 @@ export const ContactPageInfoSection = () => {
                             name="name"
                             type="text"
                             placeholder="Your full name"
-                            className="bg-secondary/30 border-border focus:border-primary rounded-xl h-12"
+                            className="bg-[#111111] border-[#111111] focus:border-[#D4AF37] rounded-xl h-12 text-[#F5F5F5]"
                             value={formData.name}
                             onChange={handleChange}
                             required
@@ -238,7 +238,7 @@ export const ContactPageInfoSection = () => {
                             name="email"
                             type="email"
                             placeholder="your@email.com"
-                            className="bg-secondary/30 border-border focus:border-primary rounded-xl h-12"
+                            className="bg-[#111111] border-[#111111] focus:border-[#D4AF37] rounded-xl h-12 text-[#F5F5F5]"
                             value={formData.email}
                             onChange={handleChange}
                             required
@@ -254,7 +254,7 @@ export const ContactPageInfoSection = () => {
                             name="phone"
                             type="tel"
                             placeholder="+1 (234) 567-890"
-                            className="bg-secondary/30 border-border focus:border-primary rounded-xl h-12"
+                            className="bg-[#111111] border-[#111111] focus:border-[#D4AF37] rounded-xl h-12 text-[#F5F5F5]"
                             value={formData.phone}
                             onChange={handleChange}
                           />
@@ -266,7 +266,7 @@ export const ContactPageInfoSection = () => {
                             name="subject"
                             type="text"
                             placeholder="Project inquiry"
-                            className="bg-secondary/30 border-border focus:border-primary rounded-xl h-12"
+                            className="bg-[#111111] border-[#111111] focus:border-[#D4AF37] rounded-xl h-12 text-[#F5F5F5]"
                             value={formData.subject}
                             onChange={handleChange}
                           />
@@ -279,7 +279,7 @@ export const ContactPageInfoSection = () => {
                           id="message"
                           name="message"
                           placeholder="Tell us about your project..."
-                          className="min-h-[160px] bg-secondary/30 border-border focus:border-primary resize-none rounded-xl"
+                          className="min-h-[160px] bg-[#111111] border-[#111111] focus:border-[#D4AF37] resize-none rounded-xl text-[#F5F5F5]"
                           value={formData.message}
                           onChange={handleChange}
                           required
@@ -288,7 +288,7 @@ export const ContactPageInfoSection = () => {
 
                       <Button
                         type="submit"
-                        className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold h-14 rounded-full text-lg"
+                        className="w-full bg-[#050505] border border-[#D4AF37]/30 hover:border-[#D4AF37] hover:bg-[#D4AF37] text-[#F5F5F5] hover:text-[#050505] font-semibold h-14 rounded-full text-lg transition-all duration-300 group"
                         disabled={isSubmitting}
                       >
                         {isSubmitting ? (

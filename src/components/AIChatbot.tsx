@@ -92,40 +92,40 @@ const AIChatbot = () => {
       {/* Chat Toggle Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className={`fixed bottom-6 right-6 z-50 w-16 h-16 rounded-2xl flex items-center justify-center transition-all duration-500 shadow-2xl ${isOpen
-          ? "bg-secondary border border-border/50 rotate-0"
-          : "bg-primary text-primary-foreground glow-gold hover:scale-110"
+        className={`fixed bottom-6 right-4 sm:right-6 z-[60] w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center transition-all duration-500 shadow-2xl ${isOpen
+          ? "bg-[#111111] border border-[#111111] rotate-0 text-[#858585]"
+          : "bg-[#D4AF37] text-[#050505] shadow-[0_0_20px_rgba(212,175,55,0.3)] hover:scale-110"
           }`}
         aria-label={isOpen ? "Close chat" : "Open chat"}
       >
         {isOpen ? (
-          <X className="w-6 h-6" />
+          <X className="w-5 h-5 sm:w-6 sm:h-6" />
         ) : (
-          <MessageCircle className="w-7 h-7" />
+          <MessageCircle className="w-5 h-5 sm:w-6 sm:h-6" />
         )}
       </button>
 
       {/* Chat Window */}
       <div
-        className={`fixed z-50 transition-all duration-500 ${isExpanded
-          ? "bottom-6 right-6 w-[600px] max-w-[calc(100vw-3rem)]"
-          : "bottom-28 right-6 w-[400px] max-w-[calc(100vw-3rem)]"
+        className={`fixed z-[60] transition-all duration-500 ${isExpanded
+          ? "bottom-20 right-4 sm:right-6 w-[600px] max-w-[calc(100vw-2rem)]"
+          : "bottom-20 right-4 sm:right-6 w-[380px] max-w-[calc(100vw-2rem)]"
           } ${isOpen
             ? "opacity-100 translate-y-0 pointer-events-auto"
             : "opacity-0 translate-y-4 pointer-events-none"
           }`}
       >
-        <div className="glass-strong rounded-3xl overflow-hidden shadow-2xl shadow-background/50 border border-border/30">
+        <div className="bg-[#090909]/95 backdrop-blur-xl rounded-2xl overflow-hidden shadow-2xl border border-[#111111]">
           {/* Header */}
-          <div className="p-5 border-b border-border/30 bg-gradient-to-r from-primary/10 via-purple/5 to-cyan/5">
+          <div className="p-4 border-b border-[#111111] bg-[#050505]">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center">
-                  <Sparkles className="w-6 h-6 text-primary" />
+                <div className="w-10 h-10 rounded-xl bg-[#111111] border border-[#111111] flex items-center justify-center">
+                  <Sparkles className="w-5 h-5 text-[#D4AF37]" />
                 </div>
                 <div>
-                  <h3 className="font-heading font-semibold text-foreground">DigiCreativio AI</h3>
-                  <p className="text-xs text-muted-foreground flex items-center gap-1">
+                  <h3 className="font-heading font-medium text-[#F5F5F5] text-sm">DigiCreativio AI</h3>
+                  <p className="text-[10px] uppercase tracking-wider text-[#858585] flex items-center gap-1.5 mt-0.5">
                     <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
                     Always ready to help
                   </p>
@@ -154,21 +154,21 @@ const AIChatbot = () => {
                   }`}
               >
                 <div
-                  className={`flex-shrink-0 w-8 h-8 rounded-xl flex items-center justify-center ${message.role === "user"
-                    ? "bg-primary/10 border border-primary/20"
-                    : "bg-purple/10 border border-purple/20"
+                  className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center ${message.role === "user"
+                    ? "bg-[#111111]"
+                    : "bg-[#D4AF37]/10"
                     }`}
                 >
                   {message.role === "user" ? (
-                    <User className="w-4 h-4 text-primary" />
+                    <User className="w-4 h-4 text-[#858585]" />
                   ) : (
-                    <Bot className="w-4 h-4 text-purple" />
+                    <Bot className="w-4 h-4 text-[#D4AF37]" />
                   )}
                 </div>
                 <div
                   className={`max-w-[85%] rounded-2xl px-4 py-3 ${message.role === "user"
-                    ? "bg-primary text-primary-foreground rounded-br-md"
-                    : "bg-secondary/50 text-foreground border border-border/30 rounded-bl-md"
+                    ? "bg-[#111111] text-[#F5F5F5] rounded-tr-sm"
+                    : "bg-[#050505] text-[#F5F5F5] border border-[#111111] rounded-tl-sm"
                     }`}
                 >
                   {message.role === "assistant" ? (
@@ -187,10 +187,10 @@ const AIChatbot = () => {
             ))}
             {isLoading && (
               <div className="flex gap-3">
-                <div className="flex-shrink-0 w-8 h-8 rounded-xl bg-purple/10 border border-purple/20 flex items-center justify-center">
-                  <Bot className="w-4 h-4 text-purple" />
+                <div className="flex-shrink-0 w-8 h-8 rounded-full bg-[#D4AF37]/10 flex items-center justify-center">
+                  <Bot className="w-4 h-4 text-[#D4AF37]" />
                 </div>
-                <div className="bg-secondary/50 border border-border/30 rounded-2xl rounded-bl-md px-4 py-3">
+                <div className="bg-[#050505] border border-[#111111] rounded-2xl rounded-tl-sm px-4 py-3">
                   <div className="flex items-center gap-2">
                     <Loader2 className="w-4 h-4 animate-spin text-muted-foreground" />
                     <span className="text-sm text-muted-foreground">Thinking...</span>
@@ -210,7 +210,7 @@ const AIChatbot = () => {
                   <button
                     key={index}
                     onClick={() => handleSuggestedQuestion(question)}
-                    className="text-xs px-3 py-1.5 rounded-full bg-secondary/50 border border-border/30 text-muted-foreground hover:text-foreground hover:border-primary/30 transition-all"
+                    className="text-xs px-3 py-1.5 rounded-full bg-[#111111] border border-[#111111] text-[#858585] hover:text-[#D4AF37] hover:border-[#D4AF37]/30 transition-all"
                   >
                     {question}
                   </button>
@@ -220,20 +220,20 @@ const AIChatbot = () => {
           )}
 
           {/* Input */}
-          <div className="p-4 border-t border-border/30 bg-secondary/20">
+          <div className="p-4 border-t border-[#111111] bg-[#050505]">
             <div className="flex gap-2">
               <Input
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyPress={handleKeyPress}
-                placeholder="Ask me anything about DigiCreativio..."
-                className="flex-1 bg-background/50 border-border/50 focus:border-primary rounded-xl h-12"
+                placeholder="Ask me anything..."
+                className="flex-1 bg-[#111111] border-[#111111] text-[#F5F5F5] focus:border-[#D4AF37] rounded-xl h-12"
                 disabled={isLoading}
               />
               <Button
                 onClick={handleSend}
                 disabled={!input.trim() || isLoading}
-                className="bg-primary hover:bg-gold-bright text-primary-foreground rounded-xl h-12 w-12 p-0"
+                className="bg-[#D4AF37] hover:bg-[#F0C75E] text-[#050505] rounded-xl h-12 w-12 p-0 flex-shrink-0"
               >
                 <Send className="w-5 h-5" />
               </Button>

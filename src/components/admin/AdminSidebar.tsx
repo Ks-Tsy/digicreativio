@@ -132,22 +132,15 @@ export function AdminSidebar({
       <div className="flex flex-col flex-1 min-h-0">
         <div className="flex h-16 items-center justify-between px-4 border-b border-[#1C2030]">
           {!collapsed ? (
-            <div className="flex items-center gap-3">
-              <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-[#685CF6] to-[#5546EE] flex items-center justify-center text-white shadow-md shadow-[#5546EE]/30">
-                <Sparkles className="h-5 w-5 fill-white" />
-              </div>
-              <div className="flex flex-col">
-                <span className="font-bold text-sm text-white tracking-tight">
-                  DigiCreativio
-                </span>
-                <span className="text-[10px] font-medium text-slate-400">
-                  Workspace
-                </span>
-              </div>
+            <div className="flex flex-col min-w-0">
+              <span className="text-xs text-slate-400 font-medium">Welcome,</span>
+              <h1 className="text-base font-bold text-white capitalize truncate">
+                {userDisplayName}
+              </h1>
             </div>
           ) : (
-            <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-[#685CF6] to-[#5546EE] flex items-center justify-center text-white shadow-md mx-auto">
-              <Sparkles className="h-5 w-5 fill-white" />
+            <div className="h-9 w-9 rounded-xl bg-white/5 flex items-center justify-center text-white shadow-md mx-auto">
+              <span className="font-bold text-sm">{userInitial}</span>
             </div>
           )}
 

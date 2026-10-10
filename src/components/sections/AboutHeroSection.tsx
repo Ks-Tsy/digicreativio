@@ -12,7 +12,7 @@ export const AboutHeroSection = () => {
           <span 
             data-editable-field="badge"
             data-field-label="Hero Badge"
-            className="inline-block px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium mb-6"
+            className="inline-block px-4 py-2 rounded-full bg-[#111111] border border-[#D4AF37]/20 text-[#D4AF37] text-sm font-medium mb-6"
           >
             {heroData?.badge || "Who We Are"}
           </span>
@@ -27,7 +27,7 @@ export const AboutHeroSection = () => {
             data-editable-field="subtitle"
             data-field-label="Page Subtitle"
             data-field-type="textarea"
-            className="text-xl text-muted-foreground leading-relaxed"
+            className="text-xl text-[#858585] leading-relaxed"
           >
             {heroData?.subtitle || "We are a passionate team of designers, artists, and strategists dedicated to crafting digital experiences that make a lasting impact."}
           </p>

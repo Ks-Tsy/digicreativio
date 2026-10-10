@@ -1,8 +1,12 @@
 import React, { useEffect } from 'react';
-import { HeroSection } from '../components/sections/HeroSection';
-import { ServicesSection } from '../components/sections/ServicesSection';
-import { PortfolioSection } from '../components/sections/PortfolioSection';
-import { ContactSection } from '../components/sections/ContactSection';
+import { PremiumHero } from '../components/home/PremiumHero';
+import { Introduction } from '../components/home/Introduction';
+import { Capabilities } from '../components/home/Capabilities';
+import { SelectedWork } from '../components/home/SelectedWork';
+import { WhyUs } from '../components/home/WhyUs';
+import { Process } from '../components/home/Process';
+import { PortfolioCTA } from '../components/home/PortfolioCTA';
+import { CustomCursor } from '../components/home/CustomCursor';
 
 const Home: React.FC = () => {
   useEffect(() => {
@@ -11,12 +15,17 @@ const Home: React.FC = () => {
   }, []);
 
   return (
-    <div className="bg-background min-h-screen text-foreground selection:bg-primary/30 selection:text-primary">
+    <div className="bg-[#050505] min-h-screen text-[#F5F5F5] selection:bg-[#D4AF37]/30 selection:text-[#F5F5F5] font-sans">
+      <CustomCursor />
+      
       <main>
-        <HeroSection />
-        <ServicesSection />
-        <PortfolioSection />
-        <ContactSection />
+        <PremiumHero />
+        <Introduction />
+        <Capabilities />
+        <SelectedWork />
+        <WhyUs />
+        <Process />
+        <PortfolioCTA />
       </main>
     </div>
   );

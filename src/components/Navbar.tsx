@@ -75,13 +75,19 @@ const Navbar = () => {
               <Link
                 key={link.path}
                 to={link.path}
-                className={`px-3 py-1.5 xl:px-4 xl:py-2 rounded-full text-xs xl:text-sm font-medium transition-all duration-300 whitespace-nowrap ${
+                className={`px-3 py-1.5 xl:px-4 xl:py-2 rounded-full text-xs xl:text-sm font-medium transition-all duration-300 whitespace-nowrap relative group ${
                   isActive(link.path)
-                    ? "text-primary bg-primary/10"
-                    : "text-muted-foreground hover:text-foreground hover:bg-secondary/50"
+                    ? "text-[#F5F5F5]"
+                    : "text-[#858585] hover:text-[#F5F5F5]"
                 }`}
               >
                 {link.name}
+                {isActive(link.path) && (
+                  <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-4 h-1 bg-[#D4AF37] rounded-full" />
+                )}
+                {!isActive(link.path) && (
+                  <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-0 h-1 bg-[#D4AF37]/50 rounded-full transition-all duration-300 group-hover:w-4" />
+                )}
               </Link>
             ))}
             {isAdmin && (
@@ -112,7 +118,7 @@ const Navbar = () => {
                 Sign Out
               </Button>
             )}
-            <Button asChild size="sm" className="bg-primary hover:bg-primary/90 text-primary-foreground font-medium rounded-full px-4 xl:px-6 h-9 text-xs xl:text-sm whitespace-nowrap">
+            <Button asChild size="sm" className="bg-[#090909] border border-[#D4AF37]/30 hover:border-[#D4AF37] text-[#F5F5F5] font-medium rounded-full px-4 xl:px-6 h-9 text-xs xl:text-sm whitespace-nowrap transition-all duration-300 group">
               <Link to={ctaLink}>
                 <span data-editable-field="cta_text" data-field-label="CTA Button Text">
                   {ctaText}

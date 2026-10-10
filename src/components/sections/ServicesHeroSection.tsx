@@ -12,7 +12,7 @@ export const ServicesHeroSection = () => {
           <span 
             data-editable-field="badge"
             data-field-label="Hero Badge"
-            className="inline-block px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium mb-6"
+            className="inline-block px-4 py-2 rounded-full bg-[#111111] border border-[#D4AF37]/20 text-[#D4AF37] text-sm font-medium mb-6"
           >
             {heroData?.badge || "What We Offer"}
           </span>

@@ -15,6 +15,7 @@ export default {
   	extend: {
   		fontFamily: {
   			sans: [
+  				'Manrope',
   				'Inter',
   				'ui-sans-serif',
   				'system-ui',
@@ -25,6 +26,7 @@ export default {
   				'Noto Color Emoji'
   			],
   			heading: [
+  				'Space Grotesk',
   				'Sora',
   				'Poppins',
   				'sans-serif'

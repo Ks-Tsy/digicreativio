@@ -87,25 +87,25 @@ export default function Blog() {
           {loading ? (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
               {[1, 2, 3].map((i) => (
-                <Card key={i} className="overflow-hidden border-border/50">
-                  <Skeleton className="w-full h-48" />
+                <Card key={i} className="overflow-hidden bg-[#090909] border-[#111111]">
+                  <Skeleton className="w-full h-48 bg-[#111111]" />
                   <CardContent className="p-6">
-                    <Skeleton className="h-6 w-3/4 mb-2" />
-                    <Skeleton className="h-4 w-full mb-1" />
-                    <Skeleton className="h-4 w-2/3" />
+                    <Skeleton className="h-6 w-3/4 mb-2 bg-[#111111]" />
+                    <Skeleton className="h-4 w-full mb-1 bg-[#111111]" />
+                    <Skeleton className="h-4 w-2/3 bg-[#111111]" />
                   </CardContent>
                 </Card>
               ))}
             </div>
           ) : posts.length === 0 ? (
             <div className="text-center py-16">
-              <p className="text-muted-foreground text-lg">No blog posts yet. Check back soon!</p>
+              <p className="text-[#858585] text-lg">No blog posts yet. Check back soon!</p>
             </div>
           ) : (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
               {posts.map((post) => (
                 <Link key={post.id} to={`/blog/${post.slug}`} className="group">
-                  <Card className="overflow-hidden h-full bg-card border-border/50 hover:border-primary/30 transition-all duration-300">
+                  <Card className="overflow-hidden h-full bg-[#090909] border-[#111111] hover:border-[#D4AF37]/30 transition-all duration-300">
                     {post.cover_image_url ? (
                       <div className="relative h-48 overflow-hidden">
                         <img
@@ -115,14 +115,14 @@ export default function Blog() {
                         />
                       </div>
                     ) : (
-                      <div className="h-48 bg-secondary flex items-center justify-center">
-                        <span className="text-4xl font-heading font-bold text-primary/30">
+                      <div className="h-48 bg-[#111111] flex items-center justify-center">
+                        <span className="text-4xl font-heading font-bold text-[#D4AF37]/30">
                           {post.title.charAt(0)}
                         </span>
                       </div>
                     )}
                     <CardContent className="p-6">
-                      <div className="flex items-center gap-4 text-xs text-muted-foreground mb-3">
+                      <div className="flex items-center gap-4 text-xs text-[#858585] mb-3">
                         {post.published_at && (
                           <div className="flex items-center gap-1">
                             <Calendar className="h-3 w-3" />
@@ -134,15 +134,15 @@ export default function Blog() {
                           <span>{estimateReadTime(post.content)} min read</span>
                         </div>
                       </div>
-                      <h2 className="text-xl font-heading font-semibold mb-2 group-hover:text-primary transition-colors line-clamp-2">
+                      <h2 className="text-xl font-heading font-semibold mb-2 text-[#F5F5F5] group-hover:text-[#D4AF37] transition-colors line-clamp-2">
                         {post.title}
                       </h2>
                       {post.excerpt && (
-                        <p className="text-muted-foreground text-sm line-clamp-3 mb-4">
+                        <p className="text-[#858585] text-sm line-clamp-3 mb-4">
                           {post.excerpt}
                         </p>
                       )}
-                      <div className="flex items-center text-primary text-sm font-medium">
+                      <div className="flex items-center text-[#D4AF37] text-sm font-medium">
                         Read more
                         <ArrowRight className="h-4 w-4 ml-1 transition-transform group-hover:translate-x-1" />
                       </div>
@@ -156,13 +156,13 @@ export default function Blog() {
       </section>
 
       {/* Newsletter Section */}
-      <section data-section-id="newsletter" className="py-24 bg-secondary/30 border-t border-border/30">
+      <section data-section-id="newsletter" className="py-24 bg-[#050505] border-t border-[#111111]">
         <div className="container mx-auto px-4 lg:px-8">
-          <div className="max-w-3xl mx-auto text-center bg-card rounded-3xl p-10 md:p-14 border border-border/50">
+          <div className="max-w-3xl mx-auto text-center bg-[#090909] rounded-3xl p-10 md:p-14 border border-[#111111]">
             <span 
               data-editable-field="badge"
               data-field-label="Badge"
-              className="inline-block px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium mb-6"
+              className="inline-block px-4 py-2 rounded-full bg-[#111111] border border-[#D4AF37]/20 text-[#D4AF37] text-sm font-medium mb-6"
             >
               {newsletterData.badge || "Newsletter"}
             </span>
@@ -177,7 +177,7 @@ export default function Blog() {
               data-editable-field="subtitle"
               data-field-label="Section Subtitle"
               data-field-type="textarea"
-              className="text-lg text-muted-foreground mb-8 max-w-xl mx-auto leading-relaxed"
+              className="text-lg text-[#858585] mb-8 max-w-xl mx-auto leading-relaxed"
             >
               {newsletterData.subtitle || "Subscribe to our newsletter to receive the latest updates, design tips, and industry trends directly to your inbox."}
             </p>
@@ -185,11 +185,11 @@ export default function Blog() {
               <input
                 type="email"
                 placeholder="Enter your email"
-                className="bg-secondary/40 border border-border/60 focus:border-primary rounded-full px-5 py-3 text-sm text-foreground focus:outline-none flex-1"
+                className="bg-[#111111] border border-[#111111] focus:border-[#D4AF37] rounded-full px-5 py-3 text-sm text-[#F5F5F5] focus:outline-none flex-1"
               />
               <button 
                 type="button"
-                className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-6 py-3 rounded-full text-sm transition-colors"
+                className="bg-[#D4AF37] hover:bg-[#F0C75E] text-[#050505] font-semibold px-6 py-3 rounded-full text-sm transition-colors"
               >
                 <span data-editable-field="button_text" data-field-label="Button Text">
                   {newsletterData.button_text || "Subscribe"}

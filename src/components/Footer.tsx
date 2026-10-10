@@ -65,7 +65,7 @@ const Footer = () => {
   ];
 
   return (
-    <footer data-section-id="brand" className="border-t border-border/30 bg-card/50">
+    <footer data-section-id="brand" className="border-t border-[#111111] bg-[#050505]">
       <div className="container mx-auto px-4 lg:px-8 py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
           {/* Brand */}
@@ -102,7 +102,7 @@ const Footer = () => {
                   href={link.url} 
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center justify-center w-10 h-10 rounded-full bg-secondary/50 text-muted-foreground hover:text-primary hover:bg-primary/10 transition-all duration-300" 
+                  className="flex items-center justify-center w-10 h-10 rounded-full bg-[#090909] text-[#858585] border border-[#111111] hover:text-[#D4AF37] hover:border-[#D4AF37]/50 transition-all duration-300" 
                   aria-label={link.platform}
                 >
                   {renderIcon(link.icon_name)}
@@ -119,7 +119,7 @@ const Footer = () => {
                 <li key={link.path}>
                   <Link 
                     to={link.path} 
-                    className="group flex items-center text-sm text-muted-foreground hover:text-primary transition-colors duration-300"
+                    className="group flex items-center text-sm text-[#858585] hover:text-[#D4AF37] transition-colors duration-300"
                   >
                     <span>{link.name}</span>
                     <ArrowUpRight className="h-3 w-3 ml-1 opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -146,10 +146,10 @@ const Footer = () => {
             <h4 className="text-sm font-semibold text-foreground mb-6 uppercase tracking-wider">Get in Touch</h4>
             <a 
               href={`mailto:${contactEmail}`}
-              className="group flex items-center p-4 rounded-xl bg-secondary/30 hover:bg-primary/10 transition-all duration-300"
+              className="group flex items-center p-4 rounded-xl bg-[#090909] border border-[#111111] hover:border-[#D4AF37]/30 transition-all duration-300"
             >
-              <div className="flex items-center justify-center w-10 h-10 rounded-full bg-primary/10 mr-3">
-                <Mail className="h-5 w-5 text-primary" />
+              <div className="flex items-center justify-center w-10 h-10 rounded-full bg-[#111111] mr-3 group-hover:bg-[#D4AF37]/10 transition-colors">
+                <Mail className="h-5 w-5 text-[#858585] group-hover:text-[#D4AF37]" />
               </div>
               <div>
                 <div className="text-xs text-muted-foreground mb-0.5">Email us</div>

@@ -81,7 +81,7 @@ const Portfolio = () => {
 
       {/* Filter Bar */}
       {projects.length > 0 && (
-        <section className="py-6 border-y border-border/30 bg-secondary/30 sticky top-20 z-30 backdrop-blur-md">
+        <section className="py-6 border-y border-[#111111] bg-[#050505]/80 sticky top-20 z-30 backdrop-blur-md">
           <div className="container mx-auto px-4 lg:px-8">
             <div className="flex items-center justify-center gap-3 flex-wrap">
               <Filter className="w-4 h-4 text-muted-foreground" />
@@ -91,10 +91,10 @@ const Portfolio = () => {
                   variant={activeFilter === category ? "default" : "outline"}
                   size="sm"
                   onClick={() => setActiveFilter(category)}
-                  className={`rounded-full capitalize ${
+                  className={`rounded-full capitalize transition-all ${
                     activeFilter === category 
-                      ? "bg-primary text-primary-foreground" 
-                      : ""
+                      ? "bg-[#D4AF37] text-[#050505] hover:bg-[#F0C75E] border-transparent" 
+                      : "bg-[#090909] text-[#858585] border-[#111111] hover:text-[#F5F5F5] hover:border-[#D4AF37]/50"
                   }`}
                 >
                   {category}
@@ -121,7 +121,7 @@ const Portfolio = () => {
               {filteredProjects.map((project) => (
                 <Card
                   key={project.id}
-                  className="group bg-card border-border/50 hover:border-primary/30 transition-all duration-300 overflow-hidden"
+                  className="group bg-[#090909] border-[#111111] hover:border-[#D4AF37]/30 transition-all duration-500 overflow-hidden"
                 >
                   {/* Project Image/Video */}
                   <div className="relative h-64 overflow-hidden">
@@ -142,12 +142,12 @@ const Portfolio = () => {
                     )}
                     
                     {/* Overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300">
+                    <div className="absolute inset-0 bg-[#050505]/80 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-all duration-500">
                       {project.project_url && (
-                        <div className="absolute inset-0 flex items-center justify-center">
+                        <div className="absolute inset-0 flex items-center justify-center translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
                           <Button
                             size="sm"
-                            className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-full"
+                            className="bg-[#D4AF37] hover:bg-[#F0C75E] text-[#050505] rounded-full font-semibold px-6"
                             asChild
                           >
                             <a href={project.project_url} target="_blank" rel="noopener noreferrer">
@@ -161,16 +161,16 @@ const Portfolio = () => {
                   </div>
 
                   <CardContent className="p-6">
-                    <div className="mb-3">
-                      <Badge className="bg-primary/10 text-primary border-0 rounded-full capitalize">
+                    <div className="mb-4">
+                      <Badge className="bg-[#111111] text-[#D4AF37] hover:bg-[#111111] border border-[#D4AF37]/20 rounded-full capitalize text-xs px-3 py-1 font-medium">
                         {project.category}
                       </Badge>
                     </div>
-                    <h3 className="text-xl font-heading font-bold text-foreground mb-2 group-hover:text-primary transition-colors">
+                    <h3 className="text-xl font-heading font-bold text-[#F5F5F5] mb-2 group-hover:text-[#D4AF37] transition-colors">
                       {project.title}
                     </h3>
                     {project.description && (
-                      <p className="text-muted-foreground text-sm line-clamp-2 leading-relaxed">
+                      <p className="text-[#858585] text-sm line-clamp-2 leading-relaxed">
                         {project.description}
                       </p>
                     )}
@@ -183,16 +183,20 @@ const Portfolio = () => {
       </section>
 
       {/* Portfolio CTA Section */}
-      <section data-section-id="cta" className="py-24 bg-secondary/30 border-t border-border/30">
+      <section data-section-id="cta" className="py-24 bg-[#050505] border-t border-[#111111]">
         <div className="container mx-auto px-4 lg:px-8">
-          <div className="max-w-4xl mx-auto text-center bg-card rounded-3xl p-12 md:p-16 border border-border/50">
-            <span 
-              data-editable-field="badge"
-              data-field-label="CTA Badge"
-              className="inline-block px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium mb-6"
-            >
-              {ctaData.badge || "Start a Project"}
-            </span>
+          <div className="max-w-4xl mx-auto text-center bg-[#090909] rounded-[2rem] p-12 md:p-16 border border-[#111111] relative overflow-hidden">
+            {/* Subtle glow effect */}
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[#D4AF37]/5 via-transparent to-transparent opacity-50" />
+            
+            <div className="relative z-10">
+              <span 
+                data-editable-field="badge"
+                data-field-label="CTA Badge"
+                className="inline-block px-4 py-2 rounded-full bg-[#111111] border border-[#D4AF37]/20 text-[#D4AF37] text-sm font-medium mb-6"
+              >
+                {ctaData.badge || "Start a Project"}
+              </span>
             <h2 
               data-editable-field="title"
               data-field-label="CTA Title"
@@ -208,7 +212,7 @@ const Portfolio = () => {
             >
               {ctaData.subtitle || "Let's collaborate to create something truly exceptional. Reach out to discuss your ideas."}
             </p>
-            <Button asChild size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold rounded-full px-10">
+            <Button asChild size="lg" className="bg-[#D4AF37] hover:bg-[#F0C75E] text-[#050505] font-semibold rounded-full px-10 h-14 mt-4">
               <a href="/contact">
                 <span data-editable-field="button_text" data-field-label="Button Text">
                   {ctaData.button_text || "Get in Touch"}
@@ -216,6 +220,7 @@ const Portfolio = () => {
                 <ExternalLink className="ml-2 h-5 w-5" />
               </a>
             </Button>
+            </div>
           </div>
         </div>
       </section>

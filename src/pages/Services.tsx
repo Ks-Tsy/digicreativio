@@ -89,26 +89,26 @@ const Services = () => {
               return (
                 <Card
                   key={index}
-                  className="group bg-card border-border/50 hover:border-primary/30 transition-all duration-300 relative"
+                  className="group bg-[#090909] border-[#111111] hover:border-[#D4AF37]/30 transition-all duration-300 relative"
                 >
                   {service.popular && (
                     <div className="absolute top-4 right-4 z-10">
-                      <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-medium">
-                        <Star className="w-3 h-3 fill-primary" />
+                      <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-[#111111] text-[#D4AF37] border border-[#D4AF37]/20 text-xs font-medium">
+                        <Star className="w-3 h-3 fill-[#D4AF37]" />
                         Popular
                       </span>
                     </div>
                   )}
                   
                   <CardContent className="p-8">
-                    <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-primary/10 mb-6 group-hover:scale-110 transition-transform duration-300">
-                      <service.icon className="w-7 h-7 text-primary" />
+                    <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-[#111111] mb-6 group-hover:scale-110 transition-transform duration-300">
+                      <service.icon className="w-7 h-7 text-[#D4AF37]" />
                     </div>
                     
                     <h3 
                       data-editable-field={`service_${serviceNum}_title`}
                       data-field-label={`Service ${serviceNum} Title`}
-                      className="text-2xl font-heading font-bold mb-4 group-hover:text-primary transition-colors"
+                      className="text-2xl font-heading font-bold mb-4 text-[#F5F5F5] group-hover:text-[#D4AF37] transition-colors"
                     >
                       {currentTitle}
                     </h3>
@@ -116,7 +116,7 @@ const Services = () => {
                       data-editable-field={`service_${serviceNum}_desc`}
                       data-field-label={`Service ${serviceNum} Description`}
                       data-field-type="textarea"
-                      className="text-muted-foreground mb-6 leading-relaxed"
+                      className="text-[#858585] mb-6 leading-relaxed"
                     >
                       {currentDesc}
                     </p>
@@ -124,13 +124,13 @@ const Services = () => {
                     <div className="space-y-2 mb-8">
                       {service.features.map((feature, idx) => (
                         <div key={idx} className="flex items-center text-sm">
-                          <CheckCircle2 className="w-4 h-4 text-primary mr-3 flex-shrink-0" />
-                          <span className="text-muted-foreground">{feature}</span>
+                          <CheckCircle2 className="w-4 h-4 text-[#D4AF37] mr-3 flex-shrink-0" />
+                          <span className="text-[#858585]">{feature}</span>
                         </div>
                       ))}
                     </div>
 
-                    <Button asChild variant="outline" className="w-full rounded-full">
+                    <Button asChild variant="outline" className="w-full rounded-full border-[#111111] hover:border-[#D4AF37] hover:bg-[#D4AF37]/5 text-[#F5F5F5]">
                       <Link to="/contact">
                         Learn More
                         <ArrowRight className="ml-2 h-4 w-4" />
@@ -145,13 +145,13 @@ const Services = () => {
       </section>
 
       {/* CTA Section */}
-      <section data-section-id="cta" className="py-24 bg-secondary/30">
+      <section data-section-id="cta" className="py-24 bg-[#050505] border-t border-[#111111]">
         <div className="container mx-auto px-4 lg:px-8">
-          <div className="max-w-4xl mx-auto text-center bg-card rounded-3xl p-12 md:p-16 border border-border/50">
+          <div className="max-w-4xl mx-auto text-center bg-[#090909] rounded-3xl p-12 md:p-16 border border-[#111111]">
             <span 
               data-editable-field="badge"
               data-field-label="CTA Badge"
-              className="inline-block px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium mb-6"
+              className="inline-block px-4 py-2 rounded-full bg-[#111111] border border-[#D4AF37]/20 text-[#D4AF37] text-sm font-medium mb-6"
             >
               {ctaData?.badge || "Start Your Project"}
             </span>
@@ -166,11 +166,11 @@ const Services = () => {
               data-editable-field="subtitle"
               data-field-label="CTA Subtitle"
               data-field-type="textarea"
-              className="text-xl text-muted-foreground mb-10 max-w-2xl mx-auto leading-relaxed"
+              className="text-xl text-[#858585] mb-10 max-w-2xl mx-auto leading-relaxed"
             >
               {ctaData?.subtitle || "Let's discuss your project and create something amazing together"}
             </p>
-            <Button asChild size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold rounded-full px-10">
+            <Button asChild size="lg" className="bg-[#D4AF37] hover:bg-[#F0C75E] text-[#050505] font-semibold rounded-full px-10 h-14">
               <Link to="/contact">
                 <span data-editable-field="cta_text" data-field-label="Button Text">
                   {ctaData?.cta_text || "Contact Us Today"}

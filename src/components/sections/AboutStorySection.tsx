@@ -11,12 +11,12 @@ export const AboutStorySection = () => {
     <section data-section-id="story" className="py-24">
       <div className="container mx-auto px-4 lg:px-8">
         <div className="max-w-4xl mx-auto">
-          <Card className="bg-card border-border/50">
+          <Card className="bg-[#090909] border-[#111111]">
             <CardContent className="p-10 md:p-14">
               <div
                 data-editable-field="badge"
                 data-field-label="Story Badge"
-                className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-medium mb-6"
+                className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#111111] border border-[#D4AF37]/20 text-[#D4AF37] text-xs font-medium mb-6"
               >
                 <Sparkles className="w-3 h-3" />
                 <span>{storyData?.badge || "Our Journey"}</span>
@@ -28,7 +28,7 @@ export const AboutStorySection = () => {
               >
                 {storyData?.title || "Our Story"}
               </h2>
-              <div className="space-y-6 text-muted-foreground leading-relaxed text-lg">
+              <div className="space-y-6 text-[#858585] leading-relaxed text-lg">
                 <p
                   data-editable-field="content"
                   data-field-label="Story Content"

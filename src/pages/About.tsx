@@ -61,12 +61,12 @@ const About = () => {
       <AboutHeroSection />
 
       {/* Capabilities Bar */}
-      <section data-section-id="capabilities" className="py-8 border-y border-border/30 bg-secondary/30">
+      <section data-section-id="capabilities" className="py-8 border-y border-[#111111] bg-[#090909]">
         <div className="container mx-auto px-4 lg:px-8">
           <div className="flex flex-wrap justify-center gap-8 md:gap-16">
             {capabilities.map((cap) => (
-              <div key={cap.key} className="flex items-center gap-3 text-muted-foreground">
-                <cap.icon className="w-5 h-5 text-primary" />
+              <div key={cap.key} className="flex items-center gap-3 text-[#858585]">
+                <cap.icon className="w-5 h-5 text-[#D4AF37]" />
                 <span 
                   data-editable-field={cap.key}
                   data-field-label={cap.label}
@@ -84,13 +84,13 @@ const About = () => {
       <AboutStorySection />
 
       {/* Values Section */}
-      <section data-section-id="values" className="py-24 bg-secondary/30">
+      <section data-section-id="values" className="py-24 bg-[#050505]">
         <div className="container mx-auto px-4 lg:px-8">
           <div className="text-center mb-16">
             <span 
               data-editable-field="badge"
               data-field-label="Values Badge"
-              className="inline-block px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium mb-6"
+              className="inline-block px-4 py-2 rounded-full bg-[#111111] border border-[#D4AF37]/20 text-[#D4AF37] text-sm font-medium mb-6"
             >
               {valData.badge || "Our Foundation"}
             </span>
@@ -105,7 +105,7 @@ const About = () => {
               data-editable-field="subtitle"
               data-field-label="Values Subtitle"
               data-field-type="textarea"
-              className="text-xl text-muted-foreground max-w-2xl mx-auto"
+              className="text-xl text-[#858585] max-w-2xl mx-auto"
             >
               {valData.subtitle || "Our values guide everything we do and shape the way we work with our clients"}
             </p>
@@ -119,16 +119,16 @@ const About = () => {
               return (
                 <Card
                   key={index}
-                  className="group bg-card border-border/50 hover:border-primary/30 transition-all duration-300"
+                  className="group bg-[#090909] border-[#111111] hover:border-[#D4AF37]/30 transition-all duration-300"
                 >
                   <CardContent className="p-8">
-                    <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-primary/10 mb-6 group-hover:scale-110 transition-transform duration-300">
-                      <value.icon className="w-7 h-7 text-primary" />
+                    <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-[#111111] mb-6 group-hover:scale-110 transition-transform duration-300">
+                      <value.icon className="w-7 h-7 text-[#D4AF37]" />
                     </div>
                     <h3 
                       data-editable-field={value.titleKey}
                       data-field-label={`${value.label} Title`}
-                      className="text-2xl font-heading font-semibold mb-4 group-hover:text-primary transition-colors"
+                      className="text-2xl font-heading font-semibold mb-4 text-[#F5F5F5] group-hover:text-[#D4AF37] transition-colors"
                     >
                       {currentTitle}
                     </h3>
@@ -136,7 +136,7 @@ const About = () => {
                       data-editable-field={value.descKey}
                       data-field-label={`${value.label} Description`}
                       data-field-type="textarea"
-                      className="text-muted-foreground leading-relaxed"
+                      className="text-[#858585] leading-relaxed"
                     >
                       {currentDesc}
                     </p>
@@ -155,7 +155,7 @@ const About = () => {
             <span 
               data-editable-field="badge"
               data-field-label="Team Badge"
-              className="inline-block px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium mb-6"
+              className="inline-block px-4 py-2 rounded-full bg-[#111111] border border-[#D4AF37]/20 text-[#D4AF37] text-sm font-medium mb-6"
             >
               {teamData.badge || "The Team"}
             </span>
@@ -170,17 +170,17 @@ const About = () => {
               data-editable-field="subtitle"
               data-field-label="Team Subtitle"
               data-field-type="textarea"
-              className="text-xl text-muted-foreground mb-12 leading-relaxed"
+              className="text-xl text-[#858585] mb-12 leading-relaxed"
             >
               {teamData.subtitle || "A diverse group of talented individuals united by a passion for creativity and innovation. Our team brings together expertise in design, technology, and strategy to deliver exceptional results."}
             </p>
-            <Card className="bg-card border-border/50">
+            <Card className="bg-[#090909] border-[#111111]">
               <CardContent className="p-10 md:p-14">
                 <p 
                   data-editable-field="card_content"
                   data-field-label="Team Card Text"
                   data-field-type="textarea"
-                  className="text-lg text-muted-foreground leading-relaxed"
+                  className="text-lg text-[#F5F5F5] leading-relaxed"
                 >
                   {teamData.card_content || "With years of combined experience across various industries, our team has the knowledge and skills to tackle any creative challenge. We stay at the forefront of design trends and technologies, ensuring that our clients always receive cutting-edge solutions that give them a competitive advantage."}
                 </p>
